@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Contacts;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Contact;
+use App\ContactSocialLinks;
 use Carbon\Carbon;
 use Hash;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
@@ -46,6 +47,9 @@ class CreateController extends Controller
 				$contact->picture = $fileName;
 			}
 			$contact->save();
+
+			$social = new ContactSocialLinks(['contact_id' => $contact->id]);
+			$social->save();
 
 			return response()->json("Contact Created");
 		} else {

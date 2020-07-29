@@ -41,7 +41,7 @@ class EditController extends Controller
                 $contact->picture = $this->uploadPic(request()->get('picture'), $slug);
             }
 
-            $social_links = new ContactSocialLinks(['contact_id' => $contact->id]);
+            $social_links = $contact->social;
 
             if (request('twitter')) {
                 $social_links->twitter = $payload['twitter'];
