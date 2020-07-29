@@ -163,6 +163,36 @@ const router = new Router({
                         requiresAuth: true,
                         requiresAdmin: false
                     }
+                },
+                {
+                    path: "/create-type",
+                    name: "contact-type-create",
+                    component: () =>
+                        import("@/views/pages/ContactTypes/TypeCreate.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        requiresAdmin: false
+                    }
+                },
+                {
+                    path: "/types/:slug/edit",
+                    name: "contact-contact-edit",
+                    component: () =>
+                        import("@/views/pages/ContactTypes/TypeEdit.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        requiresAdmin: false
+                    }
+                },
+                {
+                    path: "/types",
+                    name: "types",
+                    component: () =>
+                        import("@/views/pages/ContactTypes/TypesIndex.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        requiresAdmin: false
+                    }
                 }
             ]
         },

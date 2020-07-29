@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\ContactTypes;
 
 use App\ContactType;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ContactTypeController extends Controller

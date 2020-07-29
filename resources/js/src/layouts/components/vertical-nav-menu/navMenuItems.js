@@ -17,6 +17,14 @@ export default [
         admin: false
     },
     {
+        url: "/types",
+        name: "Types des Contacts",
+        slug: "contact-types",
+        icon: "TagIcon",
+        i18n: "Types",
+        admin: false
+    },
+    {
         url: null,
         name: "Contacts",
         slug: "contacts",
