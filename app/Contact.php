@@ -7,16 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
 
-    protected $appends = ['Picture'];
+    // protected $appends = ['Picture'];
 
     public static function fetchBySlug($slug)
     {
-
-        return self::where('slug', $slug)->first();
+        return self::with('social')->where('slug', $slug)->first();
     }
 
-    public function getPictureAttribute()
+    // public function getPictureAttribute()
+    // {
+    //     return "/images/contacts/" . $model->picture;
+    // }
+
+    public function social()
     {
-        return "/images/contacts/" . $this->picture;
+        return $this->hasOne(ContactSocialLinks::class);
     }
 }

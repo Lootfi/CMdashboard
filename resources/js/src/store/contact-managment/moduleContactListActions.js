@@ -1,0 +1,76 @@
+/*=========================================================================================
+  File Name: moduleCalendarActions.js
+  Description: Calendar Module Actions
+  ----------------------------------------------------------------------------------------
+  Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+  Author: Pixinvent
+  Author URL: http://www.themeforest.net/user/pixinvent
+==========================================================================================*/
+
+import axios from "@/axios.js";
+
+export default {
+    addItem({ commit }, item) {
+        return new Promise((resolve, reject) => {
+            axios
+                .post("/api/contacts/create", { item })
+                .then(response => {
+                    commit(
+                        "ADD_ITEM",
+                        Object.assign(item, { id: response.data.id })
+                    );
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    },
+    fetchDataListItems({ commit }) {
+        return new Promise((resolve, reject) => {
+            axios
+                .get("/api/articles", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                .then(response => {
+                    commit("SET_PRODUCTS", response.data);
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    },
+    updateItem({ commit }, item) {
+        return new Promise((resolve, reject) => {
+            axios
+                .post(`/api/data-list/products/${item.id}`, { item })
+                .then(response => {
+                    commit("UPDATE_PRODUCT", response.data);
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    },
+    removeItem({ commit }, itemSlug) {
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`/api/articles/${itemSlug}/delete`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                .then(response => {
+                    commit("REMOVE_ITEM", itemSlug);
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
+    }
+};

@@ -47,7 +47,7 @@
 
       <div class="my-4">
         <clipper-upload
-          class="inline-block p-2 my-2 bg-primary rounded text-white"
+          class="inline-block p-2 my-2 bg-primary rounded text-white cursor-pointer"
           v-model="imgURL"
         >Importer La photo de Contact</clipper-upload>
         <div class="flex" style="max-width: 100%;">

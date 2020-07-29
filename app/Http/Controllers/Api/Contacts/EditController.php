@@ -3,14 +3,20 @@
 namespace App\Http\Controllers\Api\Contacts;
 
 use App\Contact;
+use App\ContactSocialLinks;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
+
 
 class EditController extends Controller
 {
     public function edit($slug)
     {
-        $payload = request(['name', 'email', 'mobile', 'country', 'state', 'adresse', 'picture', 'facebook', 'twitter', 'instagram']);
+        $payload = request(['name', 'email', 'mobile', 'country', 'state', 'adresse', 'picture', 'instagram', 'twitter', 'linkedin']);
 
         if ($contact = Contact::fetchBySlug($slug)) {
             if (request('name')) {
@@ -31,22 +37,44 @@ class EditController extends Controller
             if (request('adresse')) {
                 $contact->adresse = $payload['adresse'];
             }
-            if (request('twitter')) {
-                $contact->twitter = $payload['twitter'];
+            if (request('picture')) {
+                $contact->picture = $this->uploadPic(request()->get('picture'), $slug);
             }
-            if (request('facebook')) {
-                $contact->facebook = $payload['facebook'];
+
+            $social_links = new ContactSocialLinks(['contact_id' => $contact->id]);
+
+            if (request('twitter')) {
+                $social_links->twitter = $payload['twitter'];
+            }
+            if (request('linkedin')) {
+                $social_links->linkedin = $payload['linkedin'];
             }
             if (request('instagram')) {
-                $contact->instagram = $payload['instagram'];
+                $social_links->instagram = $payload['instagram'];
             }
+
+
             $contact->updated_at = now();
             $contact->save();
+            $social_links->save();
             return response()->json([
                 'contact' => $contact,
             ]);
         }
 
         return response()->json("Contact not found ! ");
+    }
+
+    public function uploadPic($imageData, $slug)
+    {
+        $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
+        $PicturePath = public_path('images/contacts/') . $fileName;
+        $oldPicture = public_path('images/contacts/') . Contact::where('slug', $slug)->first()->picture;
+
+        File::delete($oldPicture);
+        Image::make($imageData)->save($PicturePath);
+        ImageOptimizer::optimize($PicturePath);
+
+        return $fileName;
     }
 }

@@ -6,8 +6,10 @@ use App\Contact;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use ImageOptimizer;
-use File;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
+
 
 class PictureController extends Controller
 {
@@ -15,7 +17,7 @@ class PictureController extends Controller
 	{
 
 		if ($contact = Contact::fetchBySlug($slug)) {
-			if ($request->get('avatar')) {
+			if ($request->get('picture')) {
 				$imageData = $request->get('picture');
 
 				$fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
@@ -23,7 +25,7 @@ class PictureController extends Controller
 				$oldPicture = public_path('images/contacts/') . $contact->picture;
 
 				File::delete($oldPicture);
-				\Image::make($request->get('avatar'))->save($PicturePath);
+				Image::make($request->get('avatar'))->save($PicturePath);
 				ImageOptimizer::optimize($PicturePath);
 
 				$contact->picture = $fileName;
