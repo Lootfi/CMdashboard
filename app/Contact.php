@@ -23,4 +23,9 @@ class Contact extends Model
     {
         return $this->hasOne(ContactSocialLinks::class);
     }
+
+    public function type()
+    {
+        return $this->belongsTo(ContactType::class);
+    }
 }

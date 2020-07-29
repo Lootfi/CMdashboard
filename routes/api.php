@@ -42,4 +42,12 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 		Route::post('/{slug}/edit', 'EditController@edit')->withoutMiddleware('admin');
 		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar')->withoutMiddleware('admin');
 	});
+
+	Route::group(['prefix' => 'types', 'namespace' => 'ContactTypes'], function () {
+		Route::get('/', 'ContactTypeController@index');
+		Route::post('/create', 'ContactTypeController@store');
+		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
+		Route::get('/{slug}', 'ContactTypeController@show');
+		Route::post('/{slug}/edit', 'ContactTypeController@update');
+	});
 });
