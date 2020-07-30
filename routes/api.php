@@ -26,6 +26,29 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 	Route::post('/auth/password-reset', 'Auth\PasswordReset@reset');
 });
 
+// SUPER ADMIN ROUTES
+
+Route::group(['middleware' => ['jwt.verify:Admin']], function () {
+
+	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
+		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
+		Route::post('/{slug}/edit', 'ContactTypeController@update');
+	});
+
+	Route::group(['prefix' => 'editors', 'namespace' => 'Editors'], function () {
+		Route::get('/', 'IndexController@getAll');
+		Route::post('/create', 'CreateController@create');
+		Route::get('/{slug}/delete', 'DeleteController@delete');
+		Route::get('/{slug}/activate', 'StatusController@activate');
+		Route::get('/{slug}/suspend', 'StatusController@suspend');
+		Route::get('/{slug}', 'ShowController@show');
+		Route::post('/{slug}/edit', 'EditController@edit');
+		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar');
+	});
+});
+
+
+// SUPER ADMIN AND EDITOR ROUTES
 
 Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
 
@@ -47,15 +70,12 @@ Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
 	});
 });
 
-Route::group(['middleware' => ['jwt.verify:Admin']], function () {
-	Route::group(['prefix' => 'editors', 'namespace' => 'Editors'], function () {
-		Route::get('/', 'IndexController@getAll');
-		Route::post('/create', 'CreateController@create');
-		Route::get('/{slug}/delete', 'DeleteController@delete');
-		Route::get('/{slug}/activate', 'StatusController@activate');
-		Route::get('/{slug}/suspend', 'StatusController@suspend');
-		Route::get('/{slug}', 'ShowController@show');
-		Route::post('/{slug}/edit', 'EditController@edit');
-		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar');
+
+// SUPER ADMIN AND COMMERCIAL ADMIN ROUTES
+
+Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
+	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
+		Route::get('/', 'ContactTypeController@index');
+		Route::get('/{slug}', 'ContactTypeController@show');
 	});
 });

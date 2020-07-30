@@ -11,7 +11,6 @@ import Vue from "vue";
 import Router from "vue-router";
 import Profile from "./views/pages/User/Profile.vue";
 import ProfileSetting from "./views/pages/User/ProfileSettings/ProfileSetting.vue";
-import axios from "./axios.js";
 
 Vue.use(Router);
 
@@ -91,7 +90,7 @@ const router = new Router({
                     }
                 },
                 {
-                    path: "/settings/artists",
+                    path: "/artists",
                     name: "artists",
                     component: () =>
                         import(
@@ -210,10 +209,15 @@ const router = new Router({
                 }
             ]
         },
+        {
+            path: "/404",
+            name: "page-error-404",
+            component: () => import("@/views/pages/Error404.vue")
+        },
         // Redirect to 404 page, if no match found
         {
             path: "*",
-            redirect: "/pages/error-404"
+            redirect: "/404"
         }
     ]
 });

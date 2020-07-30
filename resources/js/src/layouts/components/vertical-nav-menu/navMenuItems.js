@@ -70,14 +70,14 @@ export default [
     },
     {
         url: null,
-        name: "Paramètres",
-        slug: "settings",
-        icon: "SettingsIcon",
-        i18n: "settings",
+        name: "Artistes",
+        slug: "artists",
+        icon: "MusicIcon",
+        i18n: "artists",
         admin: true,
         submenu: [
             {
-                url: "/settings/artists",
+                url: "/artists",
                 name: "Liste des artistes",
                 slug: "listeartists",
                 i18n: "Artistes"
