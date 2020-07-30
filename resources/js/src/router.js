@@ -11,6 +11,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Profile from "./views/pages/User/Profile.vue";
 import ProfileSetting from "./views/pages/User/ProfileSettings/ProfileSetting.vue";
+import axios from "@/axios.js";
 
 Vue.use(Router);
 
@@ -26,14 +27,14 @@ const router = new Router({
             // =============================================================================
             // MAIN LAYOUT ROUTES
             // =============================================================================
-            path: "",
+            path: "/",
             component: () => import("./layouts/main/Main.vue"),
             children: [
                 // =============================================================================
                 // Theme Routes
                 // ============================================================================
                 {
-                    path: "/dashboard",
+                    path: "/",
                     name: "dashboard",
                     component: () => import("@/views/pages/Dashboard.vue"),
                     meta: {
@@ -64,7 +65,7 @@ const router = new Router({
                     component: () => import("@/views/pages/Editors/Editor.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: true
+                        requiresEditor: true
                     }
                 },
                 {
@@ -98,7 +99,8 @@ const router = new Router({
                         ),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: true
+                        requiresAdmin: true,
+                        requiresCommercial: true
                     }
                 },
                 {
@@ -108,7 +110,8 @@ const router = new Router({
                         import("@/views/pages/Settings/Artists/Artist.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: true
+                        requiresAdmin: true,
+                        requiresCommercial: true
                     }
                 },
                 {
@@ -121,7 +124,6 @@ const router = new Router({
                         requiresAdmin: true
                     }
                 },
-
                 // CONTACTS
                 {
                     path: "/create-contact",
@@ -130,7 +132,8 @@ const router = new Router({
                         import("@/views/pages/Contacts/ContactCreate.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true,
+                        requiresEditor: true
                     }
                 },
                 {
@@ -140,7 +143,8 @@ const router = new Router({
                         import("@/views/pages/Contacts/ContactEdit.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true,
+                        requiresEditor: true
                     }
                 },
                 {
@@ -150,7 +154,8 @@ const router = new Router({
                         import("@/views/pages/Contacts/ContactsIndex.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true,
+                        requiresEditor: true
                     }
                 },
                 {
@@ -160,7 +165,8 @@ const router = new Router({
                         import("@/views/pages/Contacts/Contact.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresEditor: true,
+                        requiresAdmin: true
                     }
                 },
                 {
@@ -170,7 +176,7 @@ const router = new Router({
                         import("@/views/pages/ContactTypes/TypeCreate.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true
                     }
                 },
                 {
@@ -180,7 +186,7 @@ const router = new Router({
                         import("@/views/pages/ContactTypes/TypeEdit.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true
                     }
                 },
                 {
@@ -190,7 +196,7 @@ const router = new Router({
                         import("@/views/pages/ContactTypes/TypesIndex.vue"),
                     meta: {
                         requiresAuth: true,
-                        requiresAdmin: false
+                        requiresAdmin: true
                     }
                 }
             ]
@@ -200,7 +206,7 @@ const router = new Router({
             component: () => import("@/layouts/full-page/FullPage.vue"),
             children: [
                 {
-                    path: "/login",
+                    path: "/",
                     name: "page-login",
                     component: () => import("@/views/pages/Auth/Login.vue"),
                     meta: {
@@ -225,60 +231,74 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     let requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
+    let requiresEditor = to.matched.some(record => record.meta.requiresEditor);
+    let requiresCommercial = to.matched.some(
+        record => record.meta.requiresCommercial
+    );
     let guest = to.matched.some(record => record.meta.guest);
+    let activated = to.matched.some(record => record.meta.activated);
 
-    if (window.location.pathname == "/")
-        window.location.pathname = "/dashboard";
-    // if (to == "/") next("/dashboard");
+    if (
+        requiresAuth &&
+        !requiresAdmin &&
+        !requiresEditor &&
+        !requiresCommercial
+    ) {
+        axios
+            .get("/api/checkauth")
+            .then(res => next())
+            .catch(err =>
+                next({
+                    name: "page-login",
+                    params: { nextUrl: to.fullPath }
+                })
+            );
+    } else if (
+        requiresAuth &&
+        requiresAdmin &&
+        !requiresEditor &&
+        !requiresCommercial
+    ) {
+        axios
+            .get("/api/checkadmin")
+            .then(res => next())
+            .catch(err =>
+                next({
+                    name: "dashboard"
+                })
+            );
+    } else if (
+        requiresAuth &&
+        (requiresAdmin || requiresEditor) &&
+        !requiresCommercial
+    ) {
+        axios
+            .get("/api/check-admin-or-editor")
+            .then(res => next())
+            .catch(err =>
+                next({
+                    name: "dashboard"
+                })
+            );
+    } else if (
+        requiresAuth &&
+        (requiresAdmin || requiresCommercial) &&
+        !requiresEditor
+    ) {
+        axios
+            .get("/api/check-admin-or-commercial")
+            .then(res => next())
 
-    // if (
-    //     (!localStorage.getItem("jwt") || !localStorage.getItem("user")) &&
-    //     !requiresAuth
-    // ) {
-    //     //if there are no token or user in storage and the route doesn't require auth
-    //     next({
-    //         path: "/login",
-    //         params: { nextUrl: to.fullPath }
-    //     });
-    // } else {
-    //     // check if jwt and user verify and match database here
-    //     // if they don't match do this
-    //     localStorage.removeItem("jwt");
-    //     localStorage.removeItem("user");
-    //     next({
-    //         path: "/login",
-    //         params: { nextUrl: to.fullPath }
-    //     });
-
-    //     //if they do match do this
-    //     let user = JSON.parse(localStorage.getItem("user"));
-    // }
-
-    if (requiresAuth) {
-        if (localStorage.getItem("jwt") == null) {
-            next({
-                name: "page-login",
-                params: { nextUrl: to.fullPath }
-            });
-        } else {
-            //we need to check the "jwt" and "user" before using them
-
-            let user = JSON.parse(localStorage.getItem("user"));
-            if (requiresAdmin) {
-                if (user.role == "Admin") {
-                    next();
-                } else {
-                    next("/dashboard");
-                }
-            } else {
-                next();
-            }
-        }
+            .catch(err =>
+                next({
+                    name: "dashboard"
+                })
+            );
     } else if (guest) {
         if (localStorage.getItem("jwt") == null) {
             next();
         } else {
-            next("/dashboard");
+            next({ name: "dashboard" });
         }
     } else {
         next();

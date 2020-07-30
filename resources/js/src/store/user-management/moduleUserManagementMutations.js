@@ -7,13 +7,15 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
 export default {
-  SET_USERS (state, users) {
-    state.users = users
-  },
-  REMOVE_ITEM (state, userSlug) {
-    const ItemIndex = state.users.findIndex((p) => p.slug === userSlug)
-    state.users.splice(ItemIndex, 1)
-  }
-}
+    SET_USERS(state, users) {
+        state.users = users;
+    },
+    REMOVE_ITEM(state, userSlug) {
+        const ItemIndex = state.users.findIndex(p => p.slug === userSlug);
+        state.users.splice(ItemIndex, 1);
+    },
+    SET_USER(state, user) {
+        state.user = user;
+    }
+};

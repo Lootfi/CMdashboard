@@ -22,13 +22,15 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 	Route::get('user', function (Request $request) {
 		return response()->json($request->user(), 200);
 	});
-	Route::get('/auth/checkAuthToken', 'Auth\LoginController@checkAuth');
+	Route::get('/auth/checkauth', 'Auth\LoginController@checkAuth');
 	Route::post('/auth/password-reset', 'Auth\PasswordReset@reset');
 });
 
 // SUPER ADMIN ROUTES
 
 Route::group(['middleware' => ['jwt.verify:Admin']], function () {
+
+	Route::get('/auth/checkadmin', 'Auth\LoginController@checkAdmin');
 
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
 		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
@@ -48,9 +50,11 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 });
 
 
-// SUPER ADMIN AND EDITOR ROUTES
+// SUPER ADMIN OR EDITOR ROUTES
 
 Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
+
+	Route::get('/auth/check-admin-or-editor', 'Auth\LoginController@checkEditor');
 
 	Route::group(['prefix' => 'types', 'namespace' => 'ContactTypes'], function () {
 		Route::get('/', 'ContactTypeController@index');
@@ -71,9 +75,12 @@ Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
 });
 
 
-// SUPER ADMIN AND COMMERCIAL ADMIN ROUTES
+// SUPER ADMIN OR COMMERCIAL ADMIN ROUTES
 
 Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
+
+	Route::get('/auth/check-admin-or-commercial', 'Auth\LoginController@checkCommercial');
+
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
 		Route::get('/', 'ContactTypeController@index');
 		Route::get('/{slug}', 'ContactTypeController@show');

@@ -34,11 +34,12 @@ export default {
                 });
         });
     },
-    fetchUser(context) {
+    fetchUser() {
         return new Promise((resolve, reject) => {
             axios
                 .get(`/api/user`)
                 .then(response => {
+                    commit("SET_USER", response.data);
                     resolve(response);
                 })
                 .catch(error => {

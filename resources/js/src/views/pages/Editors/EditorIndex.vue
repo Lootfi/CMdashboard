@@ -233,7 +233,6 @@ export default {
   },
   computed: {
     usersData() {
-      console.log(this.$store.state.userManagement.users);
       return this.$store.state.userManagement.users;
     },
     paginationPageSize() {
