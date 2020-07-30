@@ -34,10 +34,10 @@ export default {
                 });
         });
     },
-    fetchUser(context, userId) {
+    fetchUser(context) {
         return new Promise((resolve, reject) => {
             axios
-                .get(`/api/users/${userSlug}`)
+                .get(`/api/user`)
                 .then(response => {
                     resolve(response);
                 })

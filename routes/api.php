@@ -19,9 +19,23 @@ Route::get('/auth/logout', 'Auth\LoginController@logout');
 
 
 Route::group(['middleware' => ['jwt.verify']], function () {
-
+	Route::get('user', function (Request $request) {
+		return response()->json($request->user(), 200);
+	});
 	Route::get('/auth/checkAuthToken', 'Auth\LoginController@checkAuth');
 	Route::post('/auth/password-reset', 'Auth\PasswordReset@reset');
+});
+
+
+Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
+
+	Route::group(['prefix' => 'types', 'namespace' => 'ContactTypes'], function () {
+		Route::get('/', 'ContactTypeController@index');
+		Route::post('/create', 'ContactTypeController@store');
+		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
+		Route::get('/{slug}', 'ContactTypeController@show');
+		Route::post('/{slug}/edit', 'ContactTypeController@update');
+	});
 
 	Route::group(['prefix' => 'contacts', 'namespace' => 'Contacts'], function () {
 		Route::get('/', 'IndexController@getAll');
@@ -31,23 +45,17 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 		Route::get('/{slug}/delete', 'DeleteController@delete');
 		Route::post('/{slug}/uploadPicture', 'PictureController@upload');
 	});
+});
 
-	Route::group(['prefix' => 'editors', 'namespace' => 'Editors', 'middleware' => ['admin']], function () {
+Route::group(['middleware' => ['jwt.verify:Admin']], function () {
+	Route::group(['prefix' => 'editors', 'namespace' => 'Editors'], function () {
 		Route::get('/', 'IndexController@getAll');
 		Route::post('/create', 'CreateController@create');
 		Route::get('/{slug}/delete', 'DeleteController@delete');
 		Route::get('/{slug}/activate', 'StatusController@activate');
 		Route::get('/{slug}/suspend', 'StatusController@suspend');
-		Route::get('/{slug}', 'ShowController@show')->withoutMiddleware('admin');
-		Route::post('/{slug}/edit', 'EditController@edit')->withoutMiddleware('admin');
-		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar')->withoutMiddleware('admin');
-	});
-
-	Route::group(['prefix' => 'types', 'namespace' => 'ContactTypes'], function () {
-		Route::get('/', 'ContactTypeController@index');
-		Route::post('/create', 'ContactTypeController@store');
-		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
-		Route::get('/{slug}', 'ContactTypeController@show');
-		Route::post('/{slug}/edit', 'ContactTypeController@update');
+		Route::get('/{slug}', 'ShowController@show');
+		Route::post('/{slug}/edit', 'EditController@edit');
+		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar');
 	});
 });
