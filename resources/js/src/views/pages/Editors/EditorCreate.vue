@@ -3,9 +3,7 @@
     <!-- Content Row -->
     <vs-card>
       <div slot="header">
-        <h3>
-          Créer Un editeur
-        </h3>
+        <h3>Créer Un editeur</h3>
       </div>
       <div class="vx-row">
         <div class="vx-col md:w-1/2 w-full">
@@ -16,9 +14,11 @@
             v-model="username"
             v-validate="'alpha_num|required'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('username')">{{
+          <span class="text-danger text-sm" v-show="errors.has('username')">
+            {{
             errors.first("username")
-          }}</span>
+            }}
+          </span>
           <vs-input
             class="w-full mt-4"
             label="Nom"
@@ -26,9 +26,11 @@
             v-model="name"
             v-validate="'alpha_spaces|required'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('name')">{{
+          <span class="text-danger text-sm" v-show="errors.has('name')">
+            {{
             errors.first("name")
-          }}</span>
+            }}
+          </span>
 
           <vs-input
             class="w-full mt-4"
@@ -38,9 +40,11 @@
             name="email"
             v-model="email"
           />
-          <span class="text-danger text-sm" v-show="errors.has('email')">{{
+          <span class="text-danger text-sm" v-show="errors.has('email')">
+            {{
             errors.first("email")
-          }}</span>
+            }}
+          </span>
           <vs-input
             class="w-full mt-4"
             label="Mot de passe"
@@ -50,9 +54,11 @@
             name="password"
             v-model="password"
           />
-          <span class="text-danger text-sm" v-show="errors.has('password')">{{
+          <span class="text-danger text-sm" v-show="errors.has('password')">
+            {{
             errors.first("password")
-          }}</span>
+            }}
+          </span>
           <vs-input
             class="w-full mt-4"
             label="Confirmation du mot de passe"
@@ -64,8 +70,7 @@
           <span
             class="text-danger text-sm"
             v-show="errors.has('confirmPassword')"
-            >{{ errors.first("confirmPassword") }}</span
-          >
+          >{{ errors.first("confirmPassword") }}</span>
           <vs-textarea
             class="w-full mt-4"
             label="Bio"
@@ -74,30 +79,17 @@
             placeholder="Biographie"
             v-model="biography"
           />
-          <span class="text-danger text-sm" v-show="errors.has('biography')">{{
+          <span class="text-danger text-sm" v-show="errors.has('biography')">
+            {{
             errors.first("biography")
-          }}</span>
+            }}
+          </span>
         </div>
 
         <div class="vx-col md:w-1/2 w-full">
-          <vs-input
-            class="w-full mt-4"
-            label="Adresse"
-            v-model="adresse"
-            name="adresse"
-          />
-          <vs-input
-            class="w-full mt-4"
-            label="Pays"
-            v-model="country"
-            name="country"
-          />
-          <vs-input
-            class="w-full mt-4"
-            label="Mobile"
-            v-model="mobile"
-            name="mobile"
-          />
+          <vs-input class="w-full mt-4" label="Adresse" v-model="adresse" name="adresse" />
+          <vs-input class="w-full mt-4" label="Pays" v-model="country" name="country" />
+          <vs-input class="w-full mt-4" label="Mobile" v-model="mobile" name="mobile" />
           <div class="mt-4">
             <label class="vs-input--label">Etat</label>
             <v-select
@@ -108,9 +100,11 @@
               v-model="status"
               v-validate="'required'"
             />
-            <span class="text-danger text-sm" v-show="errors.has('status')">{{
+            <span class="text-danger text-sm" v-show="errors.has('status')">
+              {{
               errors.first("status")
-            }}</span>
+              }}
+            </span>
           </div>
 
           <div class="mt-4">
@@ -123,52 +117,51 @@
               v-model="role"
               v-validate="'required'"
             />
-            <span class="text-danger text-sm" v-show="errors.has('role')">{{
+            <span class="text-danger text-sm" v-show="errors.has('role')">
+              {{
               errors.first("role")
-            }}</span>
+              }}
+            </span>
           </div>
           <div class="mt-4">
             <label class="text-sm">Sexe</label>
             <div class="mt-2">
-              <vs-radio vs-value="Male" v-model="gender" class="mr-4"
-                >Male</vs-radio
-              >
-              <vs-radio vs-value="Female" v-model="gender" class="mr-4"
-                >Female</vs-radio
-              >
+              <vs-radio vs-value="Male" v-model="gender" class="mr-4">Male</vs-radio>
+              <vs-radio vs-value="Female" v-model="gender" class="mr-4">Female</vs-radio>
             </div>
           </div>
         </div>
       </div>
 
-     <div class="my-4">
-      <clipper-upload class="inline-block p-2 my-2 bg-primary rounded text-white" v-model="imgURL">Importer La photo de l'éditeur</clipper-upload>
-      <div class="flex" style="max-width: 100%;">
-      <clipper-basic 
-      class=" flex-grow-3"
-      ref="clipper" 
-      :src="imgURL" 
-      preview="my-preview"
-      :rotate="rotation">
-      </clipper-basic>
-      <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper" >
-      </clipper-preview>
-    </div>
-     <div class="centerx" v-if="imgURL">
-       <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation"/>
+      <div class="my-4">
+        <clipper-upload
+          class="inline-block p-2 my-2 bg-primary rounded text-white"
+          v-model="imgURL"
+        >Importer La photo de l'éditeur</clipper-upload>
+        <div class="flex" style="max-width: 100%;">
+          <clipper-basic
+            class="flex-grow-3"
+            ref="clipper"
+            :src="imgURL"
+            preview="my-preview"
+            :rotate="rotation"
+          ></clipper-basic>
+          <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
+        </div>
+        <div class="centerx" v-if="imgURL">
+          <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation" />
+        </div>
       </div>
-    </div>
-
     </vs-card>
     <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
           <vs-button
             class="ml-auto mt-2"
+            id="save-button"
             @click="handleAccountSubmit"
             :disabled="isSending"
-            >Save Changes</vs-button
-          >
+          >Save Changes</vs-button>
         </div>
       </div>
     </div>
@@ -185,12 +178,12 @@ export default {
     Cropper,
     vSelect,
   },
-  props: {
-    data: {
-      type: Object,
-      required: true,
-    },
-  },
+  // props: {
+  //   data: {
+  //     type: Object,
+  //     required: true,
+  //   },
+  // },
   data() {
     return {
       username: "",
@@ -203,8 +196,8 @@ export default {
       role: "",
       country: "",
       mobile: "",
-      imgURL: '',
-      rotation:0,
+      imgURL: "",
+      rotation: 0,
       adresse: "",
       gender: "",
       avatar: "",
@@ -216,12 +209,12 @@ export default {
       roleOptions: [
         { label: "Administrateur", value: "Admin" },
         { label: "Editeur", value: "Editor" },
+        { label: "Commercial", value: "Commercial" },
       ],
     };
   },
 
   methods: {
-
     handleAccountSubmit(e) {
       e.preventDefault();
       this.$validator.validateAll().then((result) => {
@@ -229,41 +222,41 @@ export default {
           const canvas = this.$refs.clipper.clip();
           const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
           this.isSending = true;
+          this.$vs.loading({
+            container: "#save-button",
+            scale: 0.45,
+          });
+          let self = this;
           this.$http
-            .post(
-              `/api/users/add-new-user`,
-              {
-                username: this.username,
-                full_name: this.name,
-                email: this.email,
-                status: this.status,
-                role: this.role,
-                password: this.password,
-                biography: this.biography,
-                country: this.country,
-                mobile: this.mobile,
-                adresse: this.adresse,
-                gender: this.gender,
-                avatar: this.ResultAvatar,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-                },
-              }
-            )
+            .post(`/api/editors/create`, {
+              username: this.username,
+              full_name: this.name,
+              email: this.email,
+              status: this.status,
+              role: this.role,
+              password: this.password,
+              biography: this.biography,
+              country: this.country,
+              mobile: this.mobile,
+              adresse: this.adresse,
+              gender: this.gender,
+              avatar: this.ResultAvatar,
+            })
             .then((response) => {
-              this.isSending = false;
-              this.$vs.dialog({
+              self.isSending = false;
+              self.$vs.loading.close("#save-button > .con-vs-loading");
+              self.$vs.dialog({
                 color: "primary",
                 title: ``,
                 text: "Editeur crée ! ",
               });
               this.$router.push("/editors");
             })
-            .catch(function(error) {
-              this.isSending = false;
-              this.$vs.dialog({
+            .catch(function (err) {
+              console.log(err.response.data);
+              self.isSending = false;
+              self.$vs.loading.close("#save-button > .con-vs-loading");
+              self.$vs.dialog({
                 color: "danger",
                 title: ``,
                 text: "Erreur lors de la création",

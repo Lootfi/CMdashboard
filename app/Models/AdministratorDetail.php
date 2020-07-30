@@ -11,8 +11,10 @@ class AdministratorDetail extends Model
      *
      * @var string
      */
-    protected $table = 'r2f_new_administrator_details';
-    
+    protected $table = 'admin_details';
+
+    protected $fillable = ['admin_id'];
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -24,10 +26,11 @@ class AdministratorDetail extends Model
      *
      * @var array
      */
-    protected $hidden = ['id','admin_id'];
+    protected $hidden = ['id'];
 
-    public function administrator(){
+    public function administrator()
+    {
 
-    	return $this->hasOne('\App\Models\Administrator','id','admin_id');
+        return $this->hasOne('\App\Models\Administrator', 'id', 'admin_id');
     }
 }

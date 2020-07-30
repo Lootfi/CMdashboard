@@ -9,11 +9,11 @@
 
 <template>
   <div id="page-user-view">
-    <vs-alert color="danger" title="User Not Found" :active.sync="user_not_found">
+    <vs-alert color="danger" title="Contact Not Found" :active.sync="user_not_found">
       <span>Contact record with slug: {{ $route.params.slug }} not found.</span>
       <span>
         <span>Check</span>
-        <router-link :to="{ name: 'page-user-list' }" class="text-inherit underline">All Users</router-link>
+        <router-link :to="{ name: 'contacts' }" class="text-inherit underline">All Contacts</router-link>
       </span>
     </vs-alert>
 
@@ -177,15 +177,9 @@ export default {
   },
   created() {
     const slug = this.$route.params.slug;
-    console.log("SLUG", slug);
     this.$http
-      .get("/api/contacts/" + slug, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      })
+      .get("/api/contacts/" + slug)
       .then((res) => {
-        console.log("CONTACT", res.data);
         this.contact = res.data;
       })
       .catch((err) => {

@@ -9,10 +9,10 @@ use App\Models\Administrator;
 class IndexController extends Controller
 {
 
-	public function getAllUsers()
+	public function getAll()
 	{
 
-		$users = Administrator::all();
+		$users = Administrator::with('details')->get();
 		return $users;
 	}
 }

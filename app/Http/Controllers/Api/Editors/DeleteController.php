@@ -9,7 +9,7 @@ use File;
 
 class DeleteController extends Controller
 {
-    public function deleteUser($slug)
+    public function delete($slug)
     {
 
         if ($administrator = Administrator::fetchBySlug($slug)) {

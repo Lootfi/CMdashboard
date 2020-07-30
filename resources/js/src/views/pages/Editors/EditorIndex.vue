@@ -49,18 +49,18 @@
             <div
               class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
             >
-              <span class="mr-2"
-                >{{
-                  currentPage * paginationPageSize - (paginationPageSize - 1)
+              <span class="mr-2">
+                {{
+                currentPage * paginationPageSize - (paginationPageSize - 1)
                 }}
                 -
                 {{
-                  usersData.length - currentPage * paginationPageSize > 0
-                    ? currentPage * paginationPageSize
-                    : usersData.length
+                usersData.length - currentPage * paginationPageSize > 0
+                ? currentPage * paginationPageSize
+                : usersData.length
                 }}
-                de {{ usersData.length }}</span
-              >
+                de {{ usersData.length }}
+              </span>
               <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
             </div>
             <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
@@ -108,8 +108,7 @@
         :paginationPageSize="paginationPageSize"
         :suppressPaginationPanel="true"
         :enableRtl="$vs.rtl"
-      >
-      </ag-grid-vue>
+      ></ag-grid-vue>
 
       <vs-pagination :total="totalPages" :max="7" v-model="currentPage" />
     </div>
@@ -176,12 +175,6 @@ export default {
           cellRendererFramework: "CellRendererLink",
         },
         {
-          headerName: "Nom d'utilisateur",
-          field: "username",
-          filter: true,
-          width: 210,
-        },
-        {
           headerName: "Email",
           field: "email",
           filter: true,
@@ -189,7 +182,7 @@ export default {
         },
         {
           headerName: "Nom",
-          field: "Full_Name",
+          field: "full_name",
           filter: true,
           width: 200,
         },
@@ -207,13 +200,12 @@ export default {
           cellRendererFramework: "CellRendererStatus",
         },
         {
-          headerName: 'Actions',
-          field: 'transactions',
+          headerName: "Actions",
+          field: "transactions",
           width: 150,
-          cellRendererFramework: 'CellRendererActions'
-        }
+          cellRendererFramework: "CellRendererActions",
+        },
       ],
-
       // Cell Renderer Components
       components: {
         CellRendererLink,
@@ -241,6 +233,7 @@ export default {
   },
   computed: {
     usersData() {
+      console.log(this.$store.state.userManagement.users);
       return this.$store.state.userManagement.users;
     },
     paginationPageSize() {

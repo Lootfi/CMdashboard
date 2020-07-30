@@ -8,7 +8,7 @@ use App\Models\Administrator;
 
 class EditController extends Controller
 {
-    public function editUser($slug)
+    public function edit($slug)
     {
 
         $payload = request(['full_name', 'username', 'email', 'password', 'role', 'status', 'mobile', 'country', 'adresse', 'gender', 'biography', 'facebook', 'twitter', 'instagram']);

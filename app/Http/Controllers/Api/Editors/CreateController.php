@@ -12,19 +12,22 @@ use ImageOptimizer;
 
 class CreateController extends Controller
 {
-	public function createUser()
+	public function create()
 	{
 
 		$payload = request(['full_name', 'username', 'email', 'password', 'role', 'biography', 'picture', 'mobile', 'adresse', 'gender', 'country', 'status', 'avatar']);
 
 		if (!Administrator::where('email', $payload['email'])->first()) {
-			$administrator = new Administrator();
-			$administrator->full_name = $payload['full_name'];
-			$administrator->username = $payload['username'];
-			$administrator->email = $payload['email'];
-			$administrator->password = Hash::make($payload['password']);
-			$administrator->slug = str_slug($payload['full_name']) . "-" . substr(md5(mt_rand()), 0, 6);
-			$administrator->role = $payload['role']['value'];
+			$administrator = Administrator::create(
+				[
+					'email' => $payload['email'],
+					'full_name' => $payload['full_name'],
+					'username' => $payload['username'],
+					'password' => Hash::make($payload['password']),
+					'slug' => str_slug($payload['full_name']) . "-" . substr(md5(mt_rand()), 0, 6),
+					'role' => $payload['role']['value'],
+				]
+			);
 			if (request('status')['label'] == "Activé") {
 				$administrator->status = 1;
 			}
@@ -34,10 +37,10 @@ class CreateController extends Controller
 			$administrator->created_at = now();
 			$administrator->updated_at = now();
 			$administrator->save();
-			$details = new AdministratorDetail();
-			$details->biography = $payload['biography'];
-			$details->picture = $payload['avatar'];
-			$details->admin_id = $administrator->id;
+			$details = new AdministratorDetail(['admin_id' => $administrator->id]);
+			if (request('biography')) {
+				$details->biography = $payload['biography'];
+			}
 			if (request('mobile')) {
 				$details->mobile = $payload['mobile'];
 			}

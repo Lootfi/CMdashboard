@@ -40,13 +40,28 @@ class LoginController extends Controller
         ]);
     }
 
-    public function checkAuth()
+    // public function checkAuth()
+    // {
+
+    //     if (JWTAuth::parseToken()->authenticate()) {
+
+    //         return response()->json(['authentificated' => true], 200);
+    //     }
+    //     return response()->json(['NonToken' => true], 401);
+    // }
+
+    public function checkAdmin()
     {
+        return response()->json(true, 200);
+    }
 
-        if (JWTAuth::parseToken()->authenticate()) {
+    public function checkEditor()
+    {
+        return response()->json(true, 200);
+    }
 
-            return response()->json(['authentificated' => true], 200);
-        }
-        return response()->json(['NonToken' => true], 401);
+    public function checkCommercial()
+    {
+        return response()->json(true, 200);
     }
 }

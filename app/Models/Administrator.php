@@ -14,7 +14,9 @@ class Administrator extends Authenticatable implements JWTSubject
      *
      * @var string
      */
-    protected $table = 'r2f_new_adminstrators';
+    protected $table = 'admins';
+
+    protected $fillable = ['full_name', 'username', 'email', 'role', 'slug', 'status', 'password'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -111,4 +113,9 @@ class Administrator extends Authenticatable implements JWTSubject
 
     //     return $this->hasMany('\App\Models\Article', 'admin_creator_id', 'id')->latest();
     // }
+
+    public function details()
+    {
+        return $this->hasOne(AdministratorDetail::class, 'admin_id', 'id');
+    }
 }

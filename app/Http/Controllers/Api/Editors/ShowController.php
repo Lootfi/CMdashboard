@@ -8,7 +8,7 @@ use App\Models\Administrator;
 
 class ShowController extends Controller
 {
-	public function showUser($slug)
+	public function show($slug)
 	{
 
 		if ($admin = Administrator::fetchBySlug($slug)) {

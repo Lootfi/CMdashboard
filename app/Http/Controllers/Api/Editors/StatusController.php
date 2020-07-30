@@ -8,7 +8,7 @@ use App\Models\Administrator;
 
 class StatusController extends Controller
 {
-	public function activateUser($slug)
+	public function activate($slug)
 	{
 
 		if ($administrator = Administrator::fetchBySlug($slug)) {
@@ -29,7 +29,7 @@ class StatusController extends Controller
 		return response()->json("Administrator not found ! ");
 	}
 
-	public function suspendUser($slug)
+	public function suspend($slug)
 	{
 
 		if ($administrator = Administrator::fetchBySlug($slug)) {
