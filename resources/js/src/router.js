@@ -34,7 +34,7 @@ const router = new Router({
                 // Theme Routes
                 // ============================================================================
                 {
-                    path: "/",
+                    path: "/dashboard",
                     name: "dashboard",
                     component: () => import("@/views/pages/Dashboard.vue"),
                     meta: {
@@ -206,7 +206,7 @@ const router = new Router({
             component: () => import("@/layouts/full-page/FullPage.vue"),
             children: [
                 {
-                    path: "/",
+                    path: "/login",
                     name: "page-login",
                     component: () => import("@/views/pages/Auth/Login.vue"),
                     meta: {
