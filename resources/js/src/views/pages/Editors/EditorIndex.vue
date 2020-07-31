@@ -305,7 +305,7 @@ export default {
       moduleUserManagement.isRegistered = true;
     }
     this.$store.dispatch("userManagement/fetchUsers").catch((err) => {
-      console.error(err);
+      console.error(err.response.data);
     });
   },
 };

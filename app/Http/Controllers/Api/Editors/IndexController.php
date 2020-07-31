@@ -12,7 +12,7 @@ class IndexController extends Controller
 	public function getAll()
 	{
 
-		$users = Administrator::with('details')->get();
+		$users = Administrator::all();
 		return $users;
 	}
 }

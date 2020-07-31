@@ -16,7 +16,7 @@ class Administrator extends Authenticatable implements JWTSubject
      */
     protected $table = 'admins';
 
-    protected $fillable = ['full_name', 'username', 'email', 'role', 'slug', 'status', 'password'];
+    protected $fillable = ['full_name', 'username', 'email', 'role', 'slug', 'status', 'password', 'picture'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -30,7 +30,7 @@ class Administrator extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-    protected $appends = ['Details', 'StatusName', 'Avatar', 'RoleName'];
+    protected $appends = ['StatusName', 'Avatar', 'RoleName'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -47,14 +47,6 @@ class Administrator extends Authenticatable implements JWTSubject
         'created_at' => 'datetime:Y-m-d',
         'updated_at' => 'datetime:Y-m-d',
     ];
-
-    public function getDetailsAttribute()
-    {
-
-
-        return \App\Models\AdministratorDetail::where('admin_id', $this->id)->first();
-    }
-
 
     public function getStatusNameAttribute()
     {
@@ -83,9 +75,7 @@ class Administrator extends Authenticatable implements JWTSubject
 
     public function getAvatarAttribute()
     {
-
-        $detail = \App\Models\AdministratorDetail::where('admin_id', $this->id)->first();
-        return "/images/admin/users/avatars/" . $detail->picture;
+        return "/images/admin/users/avatars/" . $this->picture;
     }
     public static function fetchBySlug($slug)
     {
@@ -106,16 +96,5 @@ class Administrator extends Authenticatable implements JWTSubject
     public function getAuthPassword()
     {
         return $this->password;
-    }
-
-    // public function articles()
-    // {
-
-    //     return $this->hasMany('\App\Models\Article', 'admin_creator_id', 'id')->latest();
-    // }
-
-    public function details()
-    {
-        return $this->hasOne(AdministratorDetail::class, 'admin_id', 'id');
     }
 }

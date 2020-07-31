@@ -6,11 +6,7 @@
     :key="isSmallerScreen"
   >
     <!-- GENERAL -->
-    <vs-tab
-      icon-pack="feather"
-      icon="icon-user"
-      :label="!isSmallerScreen ? 'Generale' : ''"
-    >
+    <vs-tab icon-pack="feather" icon="icon-user" :label="!isSmallerScreen ? 'Generale' : ''">
       <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
         <profile-settings-general />
       </div>
@@ -24,41 +20,17 @@
         <profile-settings-change-password />
       </div>
     </vs-tab>
-    <vs-tab
-      icon-pack="feather"
-      icon="icon-info"
-      :label="!isSmallerScreen ? 'Informations' : ''"
-    >
-      <div class="tab-info md:ml-4 md:mt-0 mt-4 ml-0">
-        <profile-settings-info />
-      </div>
-    </vs-tab>
-        <vs-tab
-      icon-pack="feather"
-      icon="icon-share-2"
-      :label="!isSmallerScreen ? 'Reseaux Sociaux' : ''"
-    >
-      <div class="tab-info md:ml-4 md:mt-0 mt-4 ml-0">
-        <profile-settings-social-links />
-      </div>
-    </vs-tab>
-
   </vs-tabs>
 </template>
 
 <script>
 import ProfileSettingsGeneral from "./ProfileSettingsGeneral.vue";
 import ProfileSettingsChangePassword from "./ProfileSettingsChangePassword.vue";
-import ProfileSettingsInfo from "./ProfileSettingsInfo.vue";
-import ProfileSettingsSocialLinks from "./ProfileSettingsSocialLinks.vue";
-
 
 export default {
   components: {
     ProfileSettingsGeneral,
     ProfileSettingsChangePassword,
-    ProfileSettingsInfo,
-    ProfileSettingsSocialLinks,
   },
   data() {
     return {};

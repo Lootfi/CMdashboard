@@ -19,6 +19,9 @@ Route::get('/auth/logout', 'Auth\LoginController@logout');
 
 
 Route::group(['middleware' => ['jwt.verify:Admin,Editor,Commercial']], function () {
+	Route::post('editors/{slug}/uploadAvatar', 'Editors\AvatarController@uploadAvatar');
+
+
 	Route::get('role', function (Request $request) {
 		return response()->json($request->user()->role);
 	});
@@ -48,7 +51,6 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 		Route::get('/{slug}/suspend', 'StatusController@suspend');
 		Route::get('/{slug}', 'ShowController@show');
 		Route::post('/{slug}/edit', 'EditController@edit');
-		Route::post('/{slug}/uploadAvatar', 'AvatarController@uploadAvatar');
 	});
 });
 

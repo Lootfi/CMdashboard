@@ -71,25 +71,9 @@
             class="text-danger text-sm"
             v-show="errors.has('confirmPassword')"
           >{{ errors.first("confirmPassword") }}</span>
-          <vs-textarea
-            class="w-full mt-4"
-            label="Bio"
-            name="biography"
-            v-validate="'required'"
-            placeholder="Biographie"
-            v-model="biography"
-          />
-          <span class="text-danger text-sm" v-show="errors.has('biography')">
-            {{
-            errors.first("biography")
-            }}
-          </span>
         </div>
 
         <div class="vx-col md:w-1/2 w-full">
-          <vs-input class="w-full mt-4" label="Adresse" v-model="adresse" name="adresse" />
-          <vs-input class="w-full mt-4" label="Pays" v-model="country" name="country" />
-          <vs-input class="w-full mt-4" label="Mobile" v-model="mobile" name="mobile" />
           <div class="mt-4">
             <label class="vs-input--label">Etat</label>
             <v-select
@@ -123,13 +107,6 @@
               }}
             </span>
           </div>
-          <div class="mt-4">
-            <label class="text-sm">Sexe</label>
-            <div class="mt-2">
-              <vs-radio vs-value="Male" v-model="gender" class="mr-4">Male</vs-radio>
-              <vs-radio vs-value="Female" v-model="gender" class="mr-4">Female</vs-radio>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -139,13 +116,13 @@
           v-model="imgURL"
         >Importer La photo de l'éditeur</clipper-upload>
         <div class="flex" style="max-width: 100%;">
-          <clipper-basic
+          <clipper-fixed
             class="flex-grow-3"
             ref="clipper"
             :src="imgURL"
             preview="my-preview"
             :rotate="rotation"
-          ></clipper-basic>
+          ></clipper-fixed>
           <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
         </div>
         <div class="centerx" v-if="imgURL">
@@ -191,15 +168,10 @@ export default {
       email: "a@gmail.com",
       password: "aaa",
       confirmPassword: "aaa",
-      biography: "a",
       status: "",
       role: "",
-      country: "",
-      mobile: "",
       imgURL: "",
       rotation: 0,
-      adresse: "",
-      gender: "",
       avatar: "",
       isSending: false,
       statusOptions: [
@@ -235,11 +207,6 @@ export default {
               status: this.status,
               role: this.role,
               password: this.password,
-              biography: this.biography,
-              country: this.country,
-              mobile: this.mobile,
-              adresse: this.adresse,
-              gender: this.gender,
               avatar: ResultAvatar,
             })
             .then((response) => {

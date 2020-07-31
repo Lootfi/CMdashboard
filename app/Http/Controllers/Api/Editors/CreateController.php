@@ -15,7 +15,7 @@ class CreateController extends Controller
 	public function create()
 	{
 
-		$payload = request(['full_name', 'username', 'email', 'password', 'role', 'biography', 'picture', 'mobile', 'adresse', 'gender', 'country', 'status', 'avatar']);
+		$payload = request(['full_name', 'username', 'email', 'password', 'role', 'picture', 'status', 'avatar']);
 		if (!Administrator::where('email', $payload['email'])->first()) {
 			$administrator = Administrator::create(
 				[
@@ -33,25 +33,7 @@ class CreateController extends Controller
 			if (request('status')['label'] == "Suspendu") {
 				$administrator->status = 2;
 			}
-			$administrator->created_at = now();
-			$administrator->updated_at = now();
-			$administrator->save();
-			$details = new AdministratorDetail(['admin_id' => $administrator->id]);
-			if (request('biography')) {
-				$details->biography = $payload['biography'];
-			}
-			if (request('mobile')) {
-				$details->mobile = $payload['mobile'];
-			}
-			if (request('country')) {
-				$details->country = $payload['country'];
-			}
-			if (request('adresse')) {
-				$details->adresse = $payload['adresse'];
-			}
-			if (request('gender')) {
-				$details->gender = $payload['gender'];
-			}
+
 			if (request('avatar')) {
 				$imageData = request('avatar');
 				$fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
@@ -59,11 +41,11 @@ class CreateController extends Controller
 				\Image::make(request('avatar'))->save($AvatarPath);
 				ImageOptimizer::optimize($AvatarPath);
 
-				$details->picture = $fileName;
+				$administrator->picture = $fileName;
 			}
-			$details->created_at = now();
-			$details->updated_at = now();
-			$details->save();
+			$administrator->created_at = now();
+			$administrator->updated_at = now();
+			$administrator->save();
 
 			return response()->json("Administrator Created");
 		} else {

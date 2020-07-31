@@ -11,7 +11,7 @@ class EditController extends Controller
     public function edit($slug)
     {
 
-        $payload = request(['full_name', 'username', 'email', 'password', 'role', 'status', 'mobile', 'country', 'adresse', 'gender', 'biography', 'facebook', 'twitter', 'instagram']);
+        $payload = request(['full_name', 'username', 'email', 'password', 'role', 'status']);
 
         if ($administrator = Administrator::fetchBySlug($slug)) {
             if (request('full_name')) {
@@ -35,38 +35,6 @@ class EditController extends Controller
                 }
             }
 
-            $details = $administrator->Details;
-
-            if (request('mobile')) {
-                $details->mobile = $payload['mobile'];
-            }
-            if (request('country')) {
-                $details->country = $payload['country'];
-            }
-            if (request('adresse')) {
-                $details->adresse = $payload['adresse'];
-            }
-            if (request('biography')) {
-                $details->biography = $payload['biography'];
-            }
-            if (request('gender')) {
-                $details->gender = $payload['gender'];
-            }
-            if (request('twitter')) {
-
-                $details->twitter = $payload['twitter'];
-            }
-            if (request('facebook')) {
-
-                $details->facebook = $payload['facebook'];
-            }
-            if (request('instagram')) {
-
-                $details->instagram = $payload['instagram'];
-            }
-
-            $details->updated_at = now();
-            $details->save();
             $administrator->updated_at = now();
             $administrator->save();
             return response()->json([
