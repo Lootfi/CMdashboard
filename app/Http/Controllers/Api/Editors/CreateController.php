@@ -16,7 +16,6 @@ class CreateController extends Controller
 	{
 
 		$payload = request(['full_name', 'username', 'email', 'password', 'role', 'biography', 'picture', 'mobile', 'adresse', 'gender', 'country', 'status', 'avatar']);
-
 		if (!Administrator::where('email', $payload['email'])->first()) {
 			$administrator = Administrator::create(
 				[

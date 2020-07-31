@@ -186,12 +186,12 @@ export default {
   // },
   data() {
     return {
-      username: "",
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      biography: "",
+      username: "a",
+      name: "a",
+      email: "a@gmail.com",
+      password: "aaa",
+      confirmPassword: "aaa",
+      biography: "a",
       status: "",
       role: "",
       country: "",
@@ -240,10 +240,11 @@ export default {
               mobile: this.mobile,
               adresse: this.adresse,
               gender: this.gender,
-              avatar: this.ResultAvatar,
+              avatar: ResultAvatar,
             })
             .then((response) => {
               self.isSending = false;
+              console.log(response.data);
               self.$vs.loading.close("#save-button > .con-vs-loading");
               self.$vs.dialog({
                 color: "primary",
