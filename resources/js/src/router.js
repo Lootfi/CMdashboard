@@ -243,37 +243,29 @@ router.beforeEach((to, from, next) => {
                 params: { nextUrl: to.fullPath }
             });
         } else {
-            let role = "";
-            axios
-                .get("/api/role")
-                .then(res => {
-                    role = res.data;
-                })
-                .then(res => {
-                    if (!admin && !editor && !commercial && role != "") {
-                        next();
-                    } else if (admin || editor || commercial) {
-                        if (
-                            (admin && role == "Admin") ||
-                            (editor && role == "Editor") ||
-                            (commercial && role == "Commercial")
-                        ) {
-                            next();
-                        } else {
-                            next({ name: "dashboard" });
-                        }
-                    } else {
-                        if (
-                            activated &&
-                            localStorage.getItem("user").StatusName ==
-                                "Suspendu"
-                        ) {
-                            next({ name: "dashboard" });
-                        } else {
-                            next();
-                        }
-                    }
-                });
+            let role = JSON.parse(localStorage.getItem("user")).role;
+            if (!admin && !editor && !commercial && role != "") {
+                next();
+            } else if (admin || editor || commercial) {
+                if (
+                    (admin && role == "Admin") ||
+                    (editor && role == "Editor") ||
+                    (commercial && role == "Commercial")
+                ) {
+                    next();
+                } else {
+                    next({ name: "dashboard" });
+                }
+            } else {
+                if (
+                    activated &&
+                    localStorage.getItem("user").StatusName == "Suspendu"
+                ) {
+                    next({ name: "dashboard" });
+                } else {
+                    next();
+                }
+            }
         }
     } else if (to.matched.some(record => record.meta.guest)) {
         if (localStorage.getItem("jwt") == null) {
