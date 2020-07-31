@@ -34,7 +34,7 @@ const router = new Router({
                 // Theme Routes
                 // ============================================================================
                 {
-                    path: "/dashboard",
+                    path: "/",
                     name: "dashboard",
                     component: () => import("@/views/pages/Dashboard.vue"),
                     meta: {
@@ -206,7 +206,7 @@ const router = new Router({
             component: () => import("@/layouts/full-page/FullPage.vue"),
             children: [
                 {
-                    path: "/login",
+                    path: "/",
                     name: "page-login",
                     component: () => import("@/views/pages/Auth/Login.vue"),
                     meta: {
@@ -229,72 +229,53 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-    let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    let requiresAdmin = to.matched.some(record => record.meta.requiresAdmin);
-    let requiresEditor = to.matched.some(record => record.meta.requiresEditor);
-    let requiresCommercial = to.matched.some(
+    const auth = to.matched.some(record => record.meta.requiresAuth);
+    const admin = to.matched.some(record => record.meta.requiresAdmin);
+    const editor = to.matched.some(record => record.meta.requiresEditor);
+    const commercial = to.matched.some(
         record => record.meta.requiresCommercial
     );
-    let guest = to.matched.some(record => record.meta.guest);
-    let activated = to.matched.some(record => record.meta.activated);
-
-    if (
-        requiresAuth &&
-        !requiresAdmin &&
-        !requiresEditor &&
-        !requiresCommercial
-    ) {
-        axios
-            .get("/api/checkauth")
-            .then(res => next())
-            .catch(err =>
-                next({
-                    name: "page-login",
-                    params: { nextUrl: to.fullPath }
+    const activated = to.matched.some(record => record.meta.activated);
+    if (auth) {
+        if (localStorage.getItem("jwt") == null) {
+            next({
+                name: "page-login",
+                params: { nextUrl: to.fullPath }
+            });
+        } else {
+            let role = "";
+            axios
+                .get("/api/role")
+                .then(res => {
+                    role = res.data;
                 })
-            );
-    } else if (
-        requiresAuth &&
-        requiresAdmin &&
-        !requiresEditor &&
-        !requiresCommercial
-    ) {
-        axios
-            .get("/api/checkadmin")
-            .then(res => next())
-            .catch(err =>
-                next({
-                    name: "dashboard"
-                })
-            );
-    } else if (
-        requiresAuth &&
-        (requiresAdmin || requiresEditor) &&
-        !requiresCommercial
-    ) {
-        axios
-            .get("/api/check-admin-or-editor")
-            .then(res => next())
-            .catch(err =>
-                next({
-                    name: "dashboard"
-                })
-            );
-    } else if (
-        requiresAuth &&
-        (requiresAdmin || requiresCommercial) &&
-        !requiresEditor
-    ) {
-        axios
-            .get("/api/check-admin-or-commercial")
-            .then(res => next())
-
-            .catch(err =>
-                next({
-                    name: "dashboard"
-                })
-            );
-    } else if (guest) {
+                .then(res => {
+                    if (!admin && !editor && !commercial && role != "") {
+                        next();
+                    } else if (admin || editor || commercial) {
+                        if (
+                            (admin && role == "Admin") ||
+                            (editor && role == "Editor") ||
+                            (commercial && role == "Commercial")
+                        ) {
+                            next();
+                        } else {
+                            next({ name: "dashboard" });
+                        }
+                    } else {
+                        if (
+                            activated &&
+                            localStorage.getItem("user").StatusName ==
+                                "Suspendu"
+                        ) {
+                            next({ name: "dashboard" });
+                        } else {
+                            next();
+                        }
+                    }
+                });
+        }
+    } else if (to.matched.some(record => record.meta.guest)) {
         if (localStorage.getItem("jwt") == null) {
             next();
         } else {

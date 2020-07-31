@@ -18,7 +18,10 @@ Route::post('/auth/login', 'Auth\LoginController@login');
 Route::get('/auth/logout', 'Auth\LoginController@logout');
 
 
-Route::group(['middleware' => ['jwt.verify']], function () {
+Route::group(['middleware' => ['jwt.verify:Admin,Editor,Commercial']], function () {
+	Route::get('role', function (Request $request) {
+		return response()->json($request->user()->role);
+	});
 	Route::get('user', function (Request $request) {
 		return response()->json($request->user(), 200);
 	});

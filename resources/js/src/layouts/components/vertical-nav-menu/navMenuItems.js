@@ -9,7 +9,7 @@
 
 export default [
     {
-        url: "/dashboard",
+        url: "/",
         name: "Dashboard",
         slug: "dashboard",
         icon: "HomeIcon",

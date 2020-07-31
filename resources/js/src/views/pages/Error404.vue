@@ -20,7 +20,7 @@
         whistler shallopy biosystematy area bertram plotting unstarting
         quarterstaff.
       </p>
-      <vs-button size="large" to="{name:'dashboard'}">Back to Home</vs-button>
+      <vs-button size="large" :to="{name:'dashboard'}">Back to Home</vs-button>
     </div>
   </div>
 </template>
