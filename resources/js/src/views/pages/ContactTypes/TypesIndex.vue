@@ -31,28 +31,7 @@
               <vs-dropdown-item>
                 <span class="flex items-center">
                   <feather-icon icon="TrashIcon" svgClasses="h-4 w-4" class="mr-2" />
-                  <span>Delete</span>
-                </span>
-              </vs-dropdown-item>
-
-              <vs-dropdown-item>
-                <span class="flex items-center">
-                  <feather-icon icon="ArchiveIcon" svgClasses="h-4 w-4" class="mr-2" />
-                  <span>Archive</span>
-                </span>
-              </vs-dropdown-item>
-
-              <vs-dropdown-item>
-                <span class="flex items-center">
-                  <feather-icon icon="FileIcon" svgClasses="h-4 w-4" class="mr-2" />
-                  <span>Print</span>
-                </span>
-              </vs-dropdown-item>
-
-              <vs-dropdown-item>
-                <span class="flex items-center">
-                  <feather-icon icon="SaveIcon" svgClasses="h-4 w-4" class="mr-2" />
-                  <span>Another Action</span>
+                  <span>Supprimer</span>
                 </span>
               </vs-dropdown-item>
             </vs-dropdown-menu>
@@ -64,7 +43,7 @@
             @click="addNewData"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Add New</span>
+            <span class="ml-2 text-base text-primary">Ajouter un nouveau type</span>
           </div>
         </div>
 
@@ -98,9 +77,8 @@
 
       <template slot="thead">
         <!-- <vs-th :v-for="field in fields" sort-key="field">{{field}}</vs-th> -->
-        <vs-th sort-key="name">Name</vs-th>
-        <vs-th sort-key="name">Contacts Num</vs-th>
-        <vs-th>Action</vs-th>
+        <vs-th sort-key="name">Nom</vs-th>
+        <vs-th>Actions</vs-th>
       </template>
 
       <template slot-scope="{data}">

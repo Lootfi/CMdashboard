@@ -9,38 +9,20 @@
 
 <template>
   <div id="page-user-edit">
-    <vs-alert
-      color="danger"
-      title="User Not Found"
-      :active.sync="user_not_found"
-    >
-      <span>User record with id: {{ $route.params.userId }} not found. </span>
+    <vs-alert color="danger" title="User Not Found" :active.sync="user_not_found">
+      <span>Editeur not found</span>
       <span>
-        <span>Check </span
-        ><router-link
-          :to="{ name: 'page-user-list' }"
-          class="text-inherit underline"
-          >All Users</router-link
-        >
+        <span>Check</span>
+        <router-link :to="{ name: 'editors' }" class="text-inherit underline">Editeurs</router-link>
       </span>
     </vs-alert>
 
     <vx-card v-if="user_data">
-      <div v-model="activeTab" slot="no-body" class="tabs-container px-6 pt-6">
-        <vs-tabs class="tab-action-btn-fill-conatiner">
+      <div slot="no-body" class="tabs-container px-6 pt-6">
+        <vs-tabs v-model="activeTab" class="tab-action-btn-fill-conatiner">
           <vs-tab label="Account" icon-pack="feather" icon="icon-user">
             <div class="tab-text">
               <editor-edit-tab-account class="mt-4" :data="user_data" />
-            </div>
-          </vs-tab>
-          <vs-tab label="Information" icon-pack="feather" icon="icon-info">
-            <div class="tab-text">
-              <editor-edit-tab-information class="mt-4" :data="user_data" />
-            </div>
-          </vs-tab>
-          <vs-tab label="Réseaux Sociaux" icon-pack="feather" icon="icon-share-2">
-            <div class="tab-text">
-              <editor-edit-tab-links class="mt-4" :data="user_data" />
             </div>
           </vs-tab>
         </vs-tabs>
@@ -51,15 +33,10 @@
 
 <script>
 import EditorEditTabAccount from "./EditorEditTabAccount.vue";
-import EditorEditTabInformation from "./EditorEditTabInformation.vue";
-import EditorEditTabLinks from "./EditorEditTabLinks.vue";
-
 
 export default {
   components: {
     EditorEditTabAccount,
-    EditorEditTabInformation,
-    EditorEditTabLinks
   },
   data() {
     return {
@@ -80,15 +57,11 @@ export default {
   methods: {
     fetch_user_data(slug) {
       this.$http
-        .get(`/api/users/${slug}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
+        .get(`/api/editors/${slug}`)
+        .then((res) => {
+          this.user_data = res.data;
         })
-        .then((response) => {
-          this.user_data = response.data;
-        })
-        .catch(function(error) {
+        .catch(function (error) {
           this.user_not_found = true;
         });
     },

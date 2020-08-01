@@ -14,11 +14,10 @@
             v-model="username"
             v-validate="'alpha_num|required'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('username')">
-            {{
-            errors.first("username")
-            }}
-          </span>
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('username')"
+          >{{ errors.first("username") }}</span>
           <vs-input
             class="w-full mt-4"
             label="Nom"
@@ -26,11 +25,7 @@
             v-model="name"
             v-validate="'alpha_spaces|required'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('name')">
-            {{
-            errors.first("name")
-            }}
-          </span>
+          <span class="text-danger text-sm" v-show="errors.has('name')">{{ errors.first("name") }}</span>
 
           <vs-input
             class="w-full mt-4"
@@ -40,11 +35,7 @@
             name="email"
             v-model="email"
           />
-          <span class="text-danger text-sm" v-show="errors.has('email')">
-            {{
-            errors.first("email")
-            }}
-          </span>
+          <span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first("email") }}</span>
           <vs-input
             class="w-full mt-4"
             label="Mot de passe"
@@ -54,11 +45,10 @@
             name="password"
             v-model="password"
           />
-          <span class="text-danger text-sm" v-show="errors.has('password')">
-            {{
-            errors.first("password")
-            }}
-          </span>
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('password')"
+          >{{ errors.first("password") }}</span>
           <vs-input
             class="w-full mt-4"
             label="Confirmation du mot de passe"
@@ -84,11 +74,10 @@
               v-model="status"
               v-validate="'required'"
             />
-            <span class="text-danger text-sm" v-show="errors.has('status')">
-              {{
-              errors.first("status")
-              }}
-            </span>
+            <span
+              class="text-danger text-sm"
+              v-show="errors.has('status')"
+            >{{ errors.first("status") }}</span>
           </div>
 
           <div class="mt-4">
@@ -101,11 +90,7 @@
               v-model="role"
               v-validate="'required'"
             />
-            <span class="text-danger text-sm" v-show="errors.has('role')">
-              {{
-              errors.first("role")
-              }}
-            </span>
+            <span class="text-danger text-sm" v-show="errors.has('role')">{{ errors.first("role") }}</span>
           </div>
         </div>
       </div>
@@ -116,13 +101,13 @@
           v-model="imgURL"
         >Importer La photo de l'éditeur</clipper-upload>
         <div class="flex" style="max-width: 100%;">
-          <clipper-fixed
+          <clipper-basic
             class="flex-grow-3"
             ref="clipper"
             :src="imgURL"
             preview="my-preview"
             :rotate="rotation"
-          ></clipper-fixed>
+          ></clipper-basic>
           <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
         </div>
         <div class="centerx" v-if="imgURL">
@@ -138,7 +123,7 @@
             id="save-button"
             @click="handleAccountSubmit"
             :disabled="isSending"
-          >Save Changes</vs-button>
+          >{{ $t("save") }}</vs-button>
         </div>
       </div>
     </div>

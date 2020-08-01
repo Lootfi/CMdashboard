@@ -10,20 +10,13 @@
 export default [
     {
         url: "/",
-        name: "Dashboard",
+        name: "Tableau de bord",
         slug: "dashboard",
         icon: "HomeIcon",
         i18n: "Dashboard",
         admin: false
     },
-    {
-        url: "/types",
-        name: "Types des Contacts",
-        slug: "contact-types",
-        icon: "TagIcon",
-        i18n: "Types",
-        admin: false
-    },
+
     {
         url: null,
         name: "Contacts",
@@ -33,16 +26,31 @@ export default [
         admin: false,
         submenu: [
             {
+                url: "/types",
+                name: "Types des Contacts",
+                slug: "contact-types",
+                i18n: "Types",
+                admin: true,
+                editor: false,
+                commercial: false
+            },
+            {
                 url: "/contacts",
                 name: "Liste des contacts",
                 slug: "listecontacts",
-                i18n: "Contacts"
+                i18n: "Contacts",
+                admin: true,
+                editor: true,
+                commercial: false
             },
             {
                 url: "/create-contact",
                 name: "Ajouter un Contact",
                 slug: "ajouter-contact",
-                i18n: "Contacts"
+                i18n: "Contacts",
+                admin: true,
+                editor: true,
+                commercial: false
             }
         ]
     },
@@ -74,7 +82,7 @@ export default [
         slug: "artists",
         icon: "MusicIcon",
         i18n: "artists",
-        admin: true,
+        admin: false,
         submenu: [
             {
                 url: "/artists",

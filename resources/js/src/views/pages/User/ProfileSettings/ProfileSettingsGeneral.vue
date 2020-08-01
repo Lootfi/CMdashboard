@@ -18,14 +18,13 @@
             v-model="imgURL"
           >Importer La photo de l'éditeur</clipper-upload>
           <div class="flex" style="max-width: 100%;">
-            <clipper-fixed
-              bg-color="black"
+            <clipper-basic
               class="flex-grow-3"
               ref="clipper"
               :src="imgURL"
               preview="my-preview"
               :rotate="rotation"
-            ></clipper-fixed>
+            ></clipper-basic>
             <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
           </div>
           <div class="centerx" v-if="imgURL">

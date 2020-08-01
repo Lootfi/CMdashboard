@@ -16,6 +16,6 @@ class ShowController extends Controller
 			return $admin;
 		}
 
-		return response()->json("User not found");
+		return response()->json("User not found", 404);
 	}
 }

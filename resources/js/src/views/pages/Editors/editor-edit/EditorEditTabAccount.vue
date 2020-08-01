@@ -9,37 +9,38 @@
 
 <template>
   <div id="user-edit-tab-info">
-        <div slot="header" class="flex items-center justify-between ">
-          <vs-avatar size="150px" :src="avatar" />
-          <vs-button @click="activePrompt = true" >Changer la photo de profile</vs-button>
-        </div>
-        <vs-prompt
-
-            title="Changer La photo"
-            @cancel="val=''"
-            @accept="handleAvatarUpload"
-            @close="close"
-            :active.sync="activePrompt">
-            <div class="con-exemple-prompt">
-             <div class="my-4">
-              <clipper-upload class="inline-block p-2 my-2 bg-primary rounded text-white" v-model="imgURL">Importer La photo de l'éditeur</clipper-upload>
-              <div class="flex" style="max-width: 100%;">
-              <clipper-basic 
-              class=" flex-grow-3"
-              ref="clipper" 
-              :src="imgURL" 
+    <div slot="header" class="flex items-center justify-between">
+      <vs-avatar size="150px" :src="avatar" />
+      <vs-button @click="activePrompt = true">Changer la photo de profile</vs-button>
+    </div>
+    <vs-prompt
+      title="Changer La photo"
+      @cancel="val=''"
+      @accept="handleAvatarUpload"
+      :active.sync="activePrompt"
+    >
+      <div class="con-exemple-prompt">
+        <div class="my-4">
+          <clipper-upload
+            class="inline-block p-2 my-2 bg-primary rounded text-white"
+            v-model="imgURL"
+          >Importer La photo de l'éditeur</clipper-upload>
+          <div class="flex" style="max-width: 100%;">
+            <clipper-basic
+              class="flex-grow-3"
+              ref="clipper"
+              :src="imgURL"
               preview="my-preview"
-              :rotate="rotation">
-              </clipper-basic>
-              <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper" >
-              </clipper-preview>
-            </div>
-            <div class="centerx" v-if="imgURL">
-       <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation"/>
+              :rotate="rotation"
+            ></clipper-basic>
+            <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
+          </div>
+          <div class="centerx" v-if="imgURL">
+            <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation" />
+          </div>
+        </div>
       </div>
-            </div>
-            </div>
-        </vs-prompt>
+    </vs-prompt>
     <!-- Content Row -->
     <div class="vx-row">
       <div class="vx-col md:w-1/2 w-full">
@@ -50,20 +51,24 @@
           name="username"
           v-validate="'alpha_num|required'"
         />
-        <span class="text-danger text-sm" v-show="errors.has('username')">{{
+        <span class="text-danger text-sm" v-show="errors.has('username')">
+          {{
           errors.first("username")
-        }}</span>
+          }}
+        </span>
 
         <vs-input
           class="w-full mt-4"
           label="Name"
-          v-model="data_local.Full_Name"
+          v-model="data_local.full_name"
           name="name"
           v-validate="'alpha_spaces|required'"
         />
-        <span class="text-danger text-sm" v-show="errors.has('name')">{{
+        <span class="text-danger text-sm" v-show="errors.has('name')">
+          {{
           errors.first("name")
-        }}</span>
+          }}
+        </span>
 
         <vs-input
           class="w-full mt-4"
@@ -73,9 +78,11 @@
           name="email"
           v-validate="'email|required'"
         />
-        <span class="text-danger text-sm" v-show="errors.has('email')">{{
+        <span class="text-danger text-sm" v-show="errors.has('email')">
+          {{
           errors.first("email")
-        }}</span>
+          }}
+        </span>
       </div>
 
       <div class="vx-col md:w-1/2 w-full">
@@ -89,9 +96,11 @@
             name="status"
             :dir="$vs.rtl ? 'rtl' : 'ltr'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('status')">{{
+          <span class="text-danger text-sm" v-show="errors.has('status')">
+            {{
             errors.first("status")
-          }}</span>
+            }}
+          </span>
         </div>
 
         <div class="mt-4">
@@ -104,15 +113,17 @@
             name="role"
             :dir="$vs.rtl ? 'rtl' : 'ltr'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('role')">{{
+          <span class="text-danger text-sm" v-show="errors.has('role')">
+            {{
             errors.first("role")
-          }}</span>
+            }}
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Permissions -->
-    <vx-card class="mt-base" no-shadow card-border> </vx-card>
+    <vx-card class="mt-base" no-shadow card-border></vx-card>
 
     <!-- Save & Reset Button -->
     <div class="vx-row">
@@ -122,8 +133,7 @@
             class="ml-auto mt-2"
             @click="handleAccountSubmit"
             :disabled="ChangeIsSending"
-            >Save Changes</vs-button
-          >
+          >Save Changes</vs-button>
         </div>
       </div>
     </div>
@@ -133,7 +143,6 @@
 <script>
 import vSelect from "vue-select";
 
-
 export default {
   data() {
     return {
@@ -142,9 +151,9 @@ export default {
       authentificatedUser: this.$store.state.AppActiveUser.user,
       avatarIsSending: false,
       ChangeIsSending: false,
-      imgURL: '',
-      rotation:0,
-      activePrompt:false,
+      imgURL: "",
+      rotation: 0,
+      activePrompt: false,
 
       statusOptions: [
         { label: "Activé", value: "1" },
@@ -167,21 +176,14 @@ export default {
   },
 
   methods: {
-    
     handleAvatarUpload(e) {
       this.avatarIsSending = true;
       const canvas = this.$refs.clipper.clip();
       const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
       this.$http
-        .post(
-          `/api/users/${this.data.slug}/uploadAvatar`,
-          { avatar: ResultAvatar },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-            },
-          }
-        )
+        .post(`/api/editors/${this.data.slug}/uploadAvatar`, {
+          avatar: ResultAvatar,
+        })
         .then((response) => {
           if (this.authentificatedUser.slug == response.data.user.slug) {
             localStorage.setItem("user", JSON.stringify(response.data.user));
@@ -199,7 +201,7 @@ export default {
           });
           this.avatarIsSending = false;
         })
-        .catch(function(error) {
+        .catch(function (error) {
           this.avatarIsSending = false;
           this.$vs.dialog({
             color: "primary",
@@ -219,7 +221,7 @@ export default {
               `/api/users/${this.data.slug}/edit`,
               {
                 username: this.data_local.username,
-                full_name: this.data_local.Full_Name,
+                full_name: this.data_local.full_name,
                 email: this.data_local.email,
                 status: this.data_local.StatusName,
                 role: this.data_local.role,

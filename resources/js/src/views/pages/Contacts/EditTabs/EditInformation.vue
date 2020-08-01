@@ -19,13 +19,14 @@
     </div>
     <!-- Picture preview -->
     <div class="flex" style="max-width: 100%;">
-      <clipper-basic
+      <clipper-fixed
+        bg-color="black"
         class="flex-grow-3"
         ref="clipper"
         :src="imgURL"
         preview="my-preview"
         :rotate="rotation"
-      ></clipper-basic>
+      ></clipper-fixed>
       <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
     </div>
     <div class="centerx" v-if="imgURL">
