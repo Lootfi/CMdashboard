@@ -26,6 +26,6 @@ class Contact extends Model
 
     public function type()
     {
-        return $this->belongsTo(ContactType::class);
+        return $this->belongsTo(ContactType::class, 'type_id', 'id');
     }
 }

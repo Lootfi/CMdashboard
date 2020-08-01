@@ -15,7 +15,13 @@ class ContactTypeController extends Controller
      */
     public function index()
     {
-        return ContactType::all();
+        $types = ContactType::all();
+
+        foreach ($types as $type) {
+            $type['contacts_num'] = count($type->contacts);
+        }
+
+        return $types;
     }
 
     /**

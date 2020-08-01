@@ -78,6 +78,7 @@
       <template slot="thead">
         <!-- <vs-th :v-for="field in fields" sort-key="field">{{field}}</vs-th> -->
         <vs-th sort-key="name">Nom</vs-th>
+        <vs-th sort-key="num">Nombre des contacts</vs-th>
         <vs-th>Actions</vs-th>
       </template>
 
@@ -89,7 +90,7 @@
             </vs-td>
 
             <vs-td>
-              <p class="type-contacts-num">100</p>
+              <p class="type-contacts-num">{{tr.contacts_num}}</p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
