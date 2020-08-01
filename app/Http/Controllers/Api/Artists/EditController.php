@@ -17,14 +17,28 @@ class EditController extends Controller
 
 		if ($artist = Artist::fetchBySlug($slug)) {
 
-			$artist->name = request('name');
-			$artist->password = Hash::make(request('password'));
-			$artist->email = request('email', '');
-			$artist->status = request('status');
-			$artist->payment_method = request('payment_method');
-			$artist->payment_confirmed = request('payment_confirmed');
-			$artist->provider = request('provider', null);
-			$artist->provider_id = request('provider_id', null);
+			$artist->name = request('name', $artist->name);
+			if (request('password')) {
+				$artist->password = Hash::make(request('password'));
+			}
+			if (request('email')) {
+				$artist->email = request('email');
+			}
+			if (request('status')) {
+				$artist->status = request('status');
+			}
+			if (request('payment_method')) {
+				$artist->payment_method = request('payment_method');
+			}
+			if (request('payment_confirmed')) {
+				$artist->payment_confirmed = request('payment_confirmed');
+			}
+			if (request('provider')) {
+				$artist->provider = request('provider');
+			}
+			if (request('provider_id')) {
+				$artist->provider_id = request('provider_id');
+			}
 
 			if (request('avatar')) {
 				$imageData = request('avatar');

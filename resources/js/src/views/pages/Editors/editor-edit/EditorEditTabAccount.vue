@@ -27,6 +27,7 @@
           >Importer La photo de l'éditeur</clipper-upload>
           <div class="flex" style="max-width: 100%;">
             <clipper-basic
+              ratio="1"
               class="flex-grow-3"
               ref="clipper"
               :src="imgURL"
@@ -87,7 +88,7 @@
 
       <div class="vx-col md:w-1/2 w-full">
         <div class="mt-4">
-          <label class="vs-input--label">Status</label>
+          <label class="vs-input--label">Etat</label>
           <v-select
             v-validate="'required'"
             v-model="data_local.StatusName"
