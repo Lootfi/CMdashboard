@@ -162,6 +162,7 @@ export default {
       roleOptions: [
         { label: "Administrateur", value: "Admin" },
         { label: "Editeur", value: "Editor" },
+        { label: "Commercial", value: "Commercial" },
       ],
     };
   },
