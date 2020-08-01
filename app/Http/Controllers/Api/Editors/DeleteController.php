@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Editors;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Administrator;
-use File;
+use Illuminate\Support\Facades\File;
 
 class DeleteController extends Controller
 {

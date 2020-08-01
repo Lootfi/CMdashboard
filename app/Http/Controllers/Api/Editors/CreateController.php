@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\Editors;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Administrator;
-use App\Models\AdministratorDetail;
-use Carbon\Carbon;
 use Hash;
-use ImageOptimizer;
+use Carbon\Carbon;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class CreateController extends Controller
 {
@@ -38,7 +39,7 @@ class CreateController extends Controller
 				$imageData = request('avatar');
 				$fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
 				$AvatarPath = public_path('images/admin/users/avatars/') . $fileName;
-				\Image::make(request('avatar'))->save($AvatarPath);
+				Image::make(request('avatar'))->save($AvatarPath);
 				ImageOptimizer::optimize($AvatarPath);
 
 				$administrator->picture = $fileName;

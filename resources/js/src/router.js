@@ -98,6 +98,8 @@ const router = new Router({
                         requiresAdmin: true
                     }
                 },
+
+                //ARTISTS
                 {
                     path: "/artists",
                     name: "artists",

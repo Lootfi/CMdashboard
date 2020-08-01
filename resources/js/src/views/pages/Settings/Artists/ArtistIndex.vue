@@ -18,18 +18,18 @@
             <div
               class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
             >
-              <span class="mr-2"
-                >{{
-                  currentPage * paginationPageSize - (paginationPageSize - 1)
+              <span class="mr-2">
+                {{
+                currentPage * paginationPageSize - (paginationPageSize - 1)
                 }}
                 -
                 {{
-                  usersData.length - currentPage * paginationPageSize > 0
-                    ? currentPage * paginationPageSize
-                    : usersData.length
+                artistsData.length - currentPage * paginationPageSize > 0
+                ? currentPage * paginationPageSize
+                : artistsData.length
                 }}
-                de {{ usersData.length }}</span
-              >
+                de {{ artistsData.length }}
+              </span>
               <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
             </div>
             <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
@@ -77,7 +77,7 @@
         class="ag-theme-material w-100 my-4 ag-grid-table"
         :columnDefs="columnDefs"
         :defaultColDef="defaultColDef"
-        :rowData="usersData"
+        :rowData="artistsData"
         rowSelection="multiple"
         colResizeDefault="shift"
         :animateRows="true"
@@ -86,8 +86,7 @@
         :paginationPageSize="paginationPageSize"
         :suppressPaginationPanel="true"
         :enableRtl="$vs.rtl"
-      >
-      </ag-grid-vue>
+      ></ag-grid-vue>
 
       <vs-pagination :total="totalPages" :max="7" v-model="currentPage" />
     </div>
@@ -140,17 +139,11 @@ export default {
       },
       columnDefs: [
         {
-          headerName: "Avatar",
-          field: "image",
+          headerName: "Nom",
+          field: "avatar",
           filter: true,
-          width: 100,
+          width: 200,
           cellRendererFramework: "CellRendererLink",
-        },
-        {
-          headerName: "Name",
-          field: "name",
-          filter: true,
-          width: 400,
         },
         {
           headerName: "Status",
@@ -158,6 +151,18 @@ export default {
           filter: true,
           width: 150,
           cellRendererFramework: "CellRendererStatus",
+        },
+        {
+          headerName: "Méthode de Payment",
+          field: "PaymentMethodName",
+          filter: true,
+          width: 180,
+        },
+        {
+          headerName: "Connecté via",
+          field: "ConnectedVia",
+          filter: true,
+          width: 180,
         },
       ],
 
@@ -176,7 +181,7 @@ export default {
     },
   },
   computed: {
-    usersData() {
+    artistsData() {
       return this.$store.state.artistManagement.artists;
     },
     paginationPageSize() {
@@ -225,20 +230,6 @@ export default {
   },
   mounted() {
     this.gridApi = this.gridOptions.api;
-
-    /* =================================================================
-      NOTE:
-      Header is not aligned properly in RTL version of agGrid table.
-      However, we given fix to this issue. If you want more robust solution please contact them at gitHub
-    ================================================================= */
-    if (this.$vs.rtl) {
-      const header = this.$refs.agGridTable.$el.querySelector(
-        ".ag-header-container"
-      );
-      header.style.left = `-${String(
-        Number(header.style.transform.slice(11, -3)) + 9
-      )}px`;
-    }
   },
   created() {
     if (!moduleArtistManagement.isRegistered) {
@@ -246,7 +237,7 @@ export default {
       moduleArtistManagement.isRegistered = true;
     }
     this.$store.dispatch("artistManagement/fetchArtists").catch((err) => {
-      console.error(err);
+      console.error(err.response.data);
     });
   },
 };

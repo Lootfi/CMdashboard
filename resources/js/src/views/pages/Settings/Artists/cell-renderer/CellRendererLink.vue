@@ -1,11 +1,7 @@
 <template>
   <div class="flex items-center">
-    <vs-avatar
-      :src="photoUrl"
-      class="flex-shrink-0 mr-2"
-      size="30px"
-      @click="$router.push(url)"
-    />
+    <vs-avatar :src="photoUrl" class="flex-shrink-0 mr-2" size="40px" @click="$router.push(url)" />
+    <router-link :to="url" @click.stop.prevent class="text-inherit hover:text-primary">{{ name }}</router-link>
   </div>
 </template>
 
@@ -14,11 +10,11 @@ export default {
   name: "CellRendererLink",
 
   computed: {
-    username() {
-      return this.params.data.username;
+    name() {
+      return this.params.data.name;
     },
     photoUrl() {
-      return this.params.data.Avatar;
+      return this.params.data.AvatarLink;
     },
     url() {
       return `/artists/${this.params.data.slug}`;

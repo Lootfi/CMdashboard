@@ -11,8 +11,14 @@ class Artist extends Model
      *
      * @var string
      */
-    protected $table = 'r2f_new_actualite-artistes';
-    
+    protected $table = 'users';
+
+    protected $attributes = [
+        'avatar' => '',
+        'payment_method' => ''
+    ];
+
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -23,39 +29,51 @@ class Artist extends Model
      *
      * @var array
      */
-    protected $appends = ['StatusName','Avatar'];
+    protected $appends = ['StatusName', 'PaymentMethodName', 'AvatarLink', 'ConnectedVia'];
 
-    
+
     public $timestamps = false;
-     
 
-    public function getStatusNameAttribute(){
 
-        if($this->status == 1){
+    public function getStatusNameAttribute()
+    {
+
+        if ($this->status == 1) {
 
             return "Activé";
         }
-        if($this->status == 2){
+        if ($this->status == 2) {
 
             return "suspended";
         }
     }
-    public function getAvatarAttribute(){
 
-        return "/images/admin/artists/avatars/" . $this->image; 
-    }
-
-    public static function fetchBySlug($slug){
-
-        return self::where('slug',$slug)->first();
-    }
-
-
-     public function articles()
-
+    public function getConnectedViaAttribute()
     {
-        return $this->belongsToMany(\App\Models\Article::class, 'r2f_new_article_artist');
-                    
+        return $this->provider ? ucfirst($this->provider) : 'Email';
     }
 
+
+    public function getPaymentMethodNameAttribute()
+    {
+        if ($this->payment_confirmed == 0) return 'Pas encore';
+        else if (preg_match('/.*(stripe).*/', $this->payment_method)) return 'Stripe';
+        else return 'PayPal';
+    }
+
+    public function getAvatarLinkAttribute()
+    {
+        return filter_var($this->avatar, FILTER_VALIDATE_URL) ? $this->avatar : '/images/artists/' . $this->avatar;
+    }
+
+    public static function fetchBySlug($slug)
+    {
+
+        return self::where('slug', $slug)->first();
+    }
+
+    public static function fetchByEmail($email)
+    {
+        return self::where('email', $email)->first();
+    }
 }

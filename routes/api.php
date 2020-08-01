@@ -39,8 +39,8 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 	Route::get('/auth/checkadmin', 'Auth\LoginController@checkAdmin');
 
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
-		Route::get('/{slug}/delete', 'ContactTypeController@destroy');
-		Route::post('/{slug}/edit', 'ContactTypeController@update');
+		Route::get('/{slug}/delete', 'DeleteController@delete');
+		Route::post('/{slug}/edit', 'ContactTypeController@edit');
 	});
 
 	Route::group(['prefix' => 'editors', 'namespace' => 'Editors'], function () {
@@ -50,6 +50,14 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 		Route::get('/{slug}/activate', 'StatusController@activate');
 		Route::get('/{slug}/suspend', 'StatusController@suspend');
 		Route::get('/{slug}', 'ShowController@show');
+		Route::post('/{slug}/edit', 'EditController@edit');
+	});
+
+	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
+		Route::post('/create', 'CreateController@create');
+		Route::get('/{slug}/delete', 'DeleteController@delete');
+		Route::get('/{slug}/activate', 'StatusController@activate');
+		Route::get('/{slug}/suspend', 'StatusController@suspend');
 		Route::post('/{slug}/edit', 'EditController@edit');
 	});
 });
@@ -87,7 +95,7 @@ Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
 	Route::get('/auth/check-admin-or-commercial', 'Auth\LoginController@checkCommercial');
 
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
-		Route::get('/', 'ContactTypeController@index');
-		Route::get('/{slug}', 'ContactTypeController@show');
+		Route::get('/', 'IndexController@getAll');
+		Route::get('/{slug}', 'ShowController@show');
 	});
 });

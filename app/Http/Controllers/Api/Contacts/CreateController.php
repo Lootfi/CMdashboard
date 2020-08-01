@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Contact;
 use App\ContactSocialLinks;
-use Carbon\Carbon;
 use Hash;
+use Carbon\Carbon;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 use Intervention\Image\Facades\Image;
 
