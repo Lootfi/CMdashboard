@@ -14,8 +14,10 @@ class Artist extends Model
     protected $table = 'users';
 
     protected $attributes = [
+        'name' => '',
         'avatar' => '',
-        'payment_method' => ''
+        'payment_method' => '',
+        'status' => false
     ];
 
 

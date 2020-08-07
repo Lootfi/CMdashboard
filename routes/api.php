@@ -109,4 +109,6 @@ Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
 
 Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::post('validate-email', 'Auth\RegisterController@validateEmail');
+	Route::post('paypal-payment-complete', 'Auth\RegisterController@paypalPaymentConfirmed');
+	Route::post('setup-profile', 'Auth\RegisterController@setupProfile');
 });

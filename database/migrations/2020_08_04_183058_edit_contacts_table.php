@@ -13,7 +13,7 @@ class EditContactsTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('contacts', function (Blueprint $table) {
             $table->string('title');
             $table->string('prenom');
             $table->string('username');
@@ -28,7 +28,7 @@ class EditContactsTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('contacts', function (Blueprint $table) {
             $table->dropColumn(['title', 'prenom', 'username']);
             $table->string('adresse');
         });

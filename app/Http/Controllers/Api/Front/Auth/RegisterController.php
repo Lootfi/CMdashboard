@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Front\Auth;
 
 use App\Http\Controllers\Controller;
-use App\User;
+use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -78,8 +78,14 @@ class RegisterController extends Controller
 
         if ($validation->fails()) return response()->json(['status' => 'invalid', 'errors' => $validation->errors()]);
 
+        $user = new Artist();
 
-        return response()->json(['status' => 'valid']);
+        $user->email = request('email');
+        $user->slug = explode('@', request('email'))[0] . '-' . substr(md5(mt_rand()), 0, 6);
+        $user->save();
+
+
+        return response()->json(['status' => 'valid', 'email' => $user->email]);
         // $curl = curl_init();
         // curl_setopt_array($curl, array(
         //     CURLOPT_URL => 'https://api.clearout.io/v2/email_verify/instant',
@@ -108,5 +114,25 @@ class RegisterController extends Controller
         //     return response()->json(['status' => $response['data']['status']]);
         // }
         // return;
+    }
+
+    public function paypalPaymentConfirmed()
+    {
+        $artist = Artist::where('email', request('email'))->first();
+
+        $artist->payment_method = 'paypal_' . request('order_id');
+        $artist->name = request('name');
+        $artist->payment_confirmed = true;
+        $artist->status = true;
+
+        $artist->save();
+    }
+
+    public function setupProfile()
+    {
+        $artist = Artist::where('email', request('email'))->first();
+
+        $artist->name = request('name');
+        $artist->password = Hash::make(request('password'));
     }
 }
