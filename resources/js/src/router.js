@@ -38,6 +38,7 @@ const router = new Router({
                     name: "dashboard",
                     component: () => import("@/views/pages/Dashboard.vue"),
                     meta: {
+                        rule: "all",
                         requiresAuth: true
                     }
                 },
@@ -46,6 +47,7 @@ const router = new Router({
                     name: "profile-setting",
                     component: ProfileSetting,
                     meta: {
+                        rule: "all",
                         requiresAuth: true
                     }
                 },
@@ -54,6 +56,7 @@ const router = new Router({
                     name: "profile",
                     component: Profile,
                     meta: {
+                        rule: "all",
                         requiresAuth: true
                     }
                 },
@@ -63,6 +66,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Editors/EditorIndex.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -72,6 +76,7 @@ const router = new Router({
                     name: "editor",
                     component: () => import("@/views/pages/Editors/Editor.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresEditor: true
                     }
@@ -84,6 +89,7 @@ const router = new Router({
                             "@/views/pages/Editors/editor-edit/EditorEdit.vue"
                         ),
                     meta: {
+                        rule: "Admin",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -94,6 +100,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Editors/EditorCreate.vue"),
                     meta: {
+                        rule: "Admin",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -101,35 +108,38 @@ const router = new Router({
 
                 //ARTISTS
                 {
-                    path: "/artists",
-                    name: "artists",
+                    path: "/clients",
+                    name: "clients",
                     component: () =>
                         import(
                             "@/views/pages/Settings/Artists/ArtistIndex.vue"
                         ),
                     meta: {
+                        rule: "Commercial",
                         requiresAuth: true,
                         requiresAdmin: true,
                         requiresCommercial: true
                     }
                 },
                 {
-                    path: "/artists/:slug",
-                    name: "artist",
+                    path: "/clients/:slug",
+                    name: "client",
                     component: () =>
                         import("@/views/pages/Settings/Artists/Artist.vue"),
                     meta: {
+                        rule: "Commercial",
                         requiresAuth: true,
                         requiresAdmin: true,
                         requiresCommercial: true
                     }
                 },
                 {
-                    path: "/artists/:slug/edit",
-                    name: "artist-edit",
+                    path: "/clients/:slug/edit",
+                    name: "client-edit",
                     component: () =>
                         import("@/views/pages/Settings/Artists/ArtistEdit.vue"),
                     meta: {
+                        rule: "Admin",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -141,9 +151,10 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Contacts/ContactCreate.vue"),
                     meta: {
-                        requiresAuth: true,
-                        requiresAdmin: true,
-                        requiresEditor: true
+                        rule: "Editor"
+                        // requiresAuth: true,
+                        // requiresAdmin: true,
+                        // requiresEditor: true
                     }
                 },
                 {
@@ -152,6 +163,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Contacts/ContactEdit.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true,
                         requiresEditor: true
@@ -163,6 +175,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Contacts/ContactsIndex.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true,
                         requiresEditor: true
@@ -174,6 +187,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/Contacts/Contact.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresEditor: true,
                         requiresAdmin: true
@@ -185,6 +199,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/ContactTypes/TypeCreate.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -195,6 +210,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/ContactTypes/TypeEdit.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -205,6 +221,7 @@ const router = new Router({
                     component: () =>
                         import("@/views/pages/ContactTypes/TypesIndex.vue"),
                     meta: {
+                        rule: "Editor",
                         requiresAuth: true,
                         requiresAdmin: true
                     }
@@ -220,7 +237,8 @@ const router = new Router({
                     name: "page-login",
                     component: () => import("@/views/pages/Auth/Login.vue"),
                     meta: {
-                        guest: true
+                        guest: true,
+                        rule: "guest"
                     }
                 }
             ]
@@ -233,60 +251,61 @@ const router = new Router({
         // Redirect to 404 page, if no match found
         {
             path: "*",
+            rule: "all",
             redirect: "/404"
         }
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    const auth = to.matched.some(record => record.meta.requiresAuth);
-    const admin = to.matched.some(record => record.meta.requiresAdmin);
-    const editor = to.matched.some(record => record.meta.requiresEditor);
-    const commercial = to.matched.some(
-        record => record.meta.requiresCommercial
-    );
-    const activated = to.matched.some(record => record.meta.activated);
-    if (auth) {
-        if (localStorage.getItem("jwt") == null) {
-            next({
-                name: "page-login",
-                params: { nextUrl: to.fullPath }
-            });
-        } else {
-            let role = JSON.parse(localStorage.getItem("user")).role;
-            if (!admin && !editor && !commercial && role != "") {
-                next();
-            } else if (admin || editor || commercial) {
-                if (
-                    (admin && role == "Admin") ||
-                    (editor && role == "Editor") ||
-                    (commercial && role == "Commercial")
-                ) {
-                    next();
-                } else {
-                    next({ name: "dashboard" });
-                }
-            } else {
-                if (
-                    activated &&
-                    localStorage.getItem("user").StatusName == "Suspendu"
-                ) {
-                    next({ name: "dashboard" });
-                } else {
-                    next();
-                }
-            }
-        }
-    } else if (to.matched.some(record => record.meta.guest)) {
-        if (localStorage.getItem("jwt") == null) {
-            next();
-        } else {
-            next({ name: "dashboard" });
-        }
-    } else {
-        next();
-    }
-});
+// router.beforeEach((to, from, next) => {
+//     const auth = to.matched.some(record => record.meta.requiresAuth);
+//     const admin = to.matched.some(record => record.meta.requiresAdmin);
+//     const editor = to.matched.some(record => record.meta.requiresEditor);
+//     const commercial = to.matched.some(
+//         record => record.meta.requiresCommercial
+//     );
+//     const activated = to.matched.some(record => record.meta.activated);
+//     if (auth) {
+//         if (localStorage.getItem("jwt") == null) {
+//             next({
+//                 name: "page-login",
+//                 params: { nextUrl: to.fullPath }
+//             });
+//         } else {
+//             let role = JSON.parse(localStorage.getItem("user")).role;
+//             if (!admin && !editor && !commercial && role != "") {
+//                 next();
+//             } else if (admin || editor || commercial) {
+//                 if (
+//                     (admin && role == "Admin") ||
+//                     (editor && role == "Editor") ||
+//                     (commercial && role == "Commercial")
+//                 ) {
+//                     next();
+//                 } else {
+//                     next({ name: "dashboard" });
+//                 }
+//             } else {
+//                 if (
+//                     activated &&
+//                     localStorage.getItem("user").StatusName == "Suspendu"
+//                 ) {
+//                     next({ name: "dashboard" });
+//                 } else {
+//                     next();
+//                 }
+//             }
+//         }
+//     } else if (to.matched.some(record => record.meta.guest)) {
+//         if (localStorage.getItem("jwt") == null) {
+//             next();
+//         } else {
+//             next({ name: "dashboard" });
+//         }
+//     } else {
+//         next();
+//     }
+// });
 
 router.afterEach(() => {
     // Remove initial loading

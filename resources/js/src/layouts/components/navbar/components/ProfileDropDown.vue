@@ -52,7 +52,7 @@ export default {
     logout() {
       localStorage.removeItem("jwt");
       localStorage.removeItem("user");
-      this.$router.push({ name: "page-login" }).catch(() => {});
+      window.location.reload();
     },
   },
 };

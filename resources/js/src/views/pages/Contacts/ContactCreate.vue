@@ -12,14 +12,44 @@
             label="Nom"
             name="name"
             v-model="name"
-            v-validate="'alpha_spaces|required'"
+            v-validate="'alpha|required'"
           />
           <span class="text-danger text-sm" v-show="errors.has('name')">{{ errors.first("name") }}</span>
         </div>
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             class="w-full mt-4"
-            v-validate="'email|required'"
+            v-validate="'alpha'"
+            label="Prénom"
+            type="prenom"
+            v-model="prenom"
+          />
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('prenom')"
+          >{{ errors.first("prenom") }}</span>
+        </div>
+      </div>
+      <div class="vx-row">
+        <div class="vx-col md:w-1/2 w-full">
+          <vs-input
+            class="w-full mt-4"
+            v-validate="'alpha_num'"
+            label="Username"
+            name="username"
+            v-model="username"
+          />
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('username')"
+          >{{ errors.first("username") }}</span>
+        </div>
+
+        <div class="vx-col md:w-1/2 w-full">
+          <vs-input
+            ref="email"
+            class="w-full mt-4"
+            v-validate="'email|required_if:mobile,'"
             label="Email"
             type="email"
             name="email"
@@ -31,20 +61,52 @@
 
       <div class="vx-row">
         <div class="vx-col md:w-1/2 w-full">
-          <vs-input class="w-full mt-4" label="Pays" v-model="country" name="country" />
+          <label class="vs-input--label">Pays</label>
+          <v-select
+            class="py-2"
+            :clearable="false"
+            :options="countryOptions"
+            name="role"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            v-model="country"
+            v-validate="'required'"
+          />
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('country')"
+          >{{ errors.first("country") }}</span>
         </div>
         <div class="vx-col md:w-1/2 w-full">
-          <vs-input class="w-full mt-4" label="Etat" v-model="state" name="state" />
-        </div>
-        <div class="vx-col md:w-1/2 w-full">
-          <vs-input class="w-full mt-4" label="Adresse" v-model="adresse" name="adresse" />
-        </div>
-        <div class="vx-col md:w-1/2 w-full">
-          <vs-input class="w-full mt-4" label="Mobile" v-model="mobile" name="mobile" />
+          <vs-input class="w-full mt-4" label="Ville" v-model="state" name="state" />
         </div>
       </div>
       <!-- </div> -->
-
+      <div class="vx-row">
+        <div class="vx-col md:w-1/2 w-full">
+          <vs-input
+            ref="mobile"
+            v-validate="'required_if:email,'"
+            class="w-full mt-4"
+            label="Mobile"
+            v-model="mobile"
+            name="mobile"
+          />
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('mobile')"
+          >{{ errors.first("mobile") }}</span>
+        </div>
+        <div class="vx-col md:w-1/2 w-full">
+          <vs-input
+            class="w-full mt-4"
+            v-validate="'alpha_spaces|required'"
+            label="Titre de travail"
+            name="title"
+            v-model="title"
+          />
+          <span class="text-danger text-sm" v-show="errors.has('title')">{{ errors.first("title") }}</span>
+        </div>
+      </div>
       <div class="my-4">
         <clipper-upload
           class="inline-block p-2 my-2 bg-primary rounded text-white cursor-pointer"
@@ -52,7 +114,7 @@
         >Importer La photo de Contact</clipper-upload>
         <div class="flex" style="max-width: 100%;">
           <clipper-basic
-            ratio="1"
+            :ratio="1"
             bg-color="black"
             class="flex-grow-3"
             ref="clipper"
@@ -100,14 +162,27 @@ export default {
     return {
       name: "AA",
       email: "lo@g.com",
-      country: "AA",
+      country: "France",
       state: "AA",
       mobile: "06666",
+      title: "",
+      prenom: "",
+      username: "",
       imgURL: "",
       rotation: 0,
       adresse: "AAA",
       avatar: "",
       isSending: false,
+      countryOptions: [
+        { label: "France", value: "France" },
+        { label: "Belgique", value: "Belgique" },
+        { label: "Suisse", value: "Suisse" },
+        { label: "Etats-Unis", value: "Etats-Unis" },
+        { label: "Maroc", value: "Maroc" },
+        { label: "Canada", value: "Canada" },
+        { label: "Espagne", value: "Espagne" },
+        { label: "Allemagne", value: "Allemagne" },
+      ],
     };
   },
 
@@ -121,23 +196,17 @@ export default {
           const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
           self.isSending = true;
           this.$http
-            .post(
-              `/api/contacts/create`,
-              {
-                name: self.name,
-                email: self.email,
-                mobile: self.mobile,
-                country: self.country,
-                state: self.state,
-                adresse: self.adresse,
-                picture: ResultAvatar,
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-                },
-              }
-            )
+            .post(`/api/contacts/create`, {
+              title: this.title,
+              prenom: this.prenom,
+              username: this.username,
+              name: self.name,
+              email: self.email,
+              mobile: self.mobile,
+              country: self.country,
+              state: self.state,
+              picture: ResultAvatar,
+            })
             .then((response) => {
               console.log(response.data);
               self.isSending = false;

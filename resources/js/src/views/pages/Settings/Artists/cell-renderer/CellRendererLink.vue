@@ -17,7 +17,7 @@ export default {
       return this.params.data.AvatarLink;
     },
     url() {
-      return `/artists/${this.params.data.slug}`;
+      return `/clients/${this.params.data.slug}`;
 
       // Below line will be for actual product
       // Currently it's commented due to demo purpose - Above url is for demo purpose

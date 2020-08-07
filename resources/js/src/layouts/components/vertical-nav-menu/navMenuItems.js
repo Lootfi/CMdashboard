@@ -26,15 +26,6 @@ export default [
         admin: false,
         submenu: [
             {
-                url: "/types",
-                name: "Types des Contacts",
-                slug: "contact-types",
-                i18n: "Types",
-                admin: true,
-                editor: false,
-                commercial: false
-            },
-            {
                 url: "/contacts",
                 name: "Liste des contacts",
                 slug: "listecontacts",
@@ -50,6 +41,15 @@ export default [
                 i18n: "Contacts",
                 admin: true,
                 editor: true,
+                commercial: false
+            },
+            {
+                url: "/types",
+                name: "Types des Contacts",
+                slug: "contact-types",
+                i18n: "Types",
+                admin: true,
+                editor: false,
                 commercial: false
             }
         ]
@@ -78,17 +78,17 @@ export default [
     },
     {
         url: null,
-        name: "Artistes",
-        slug: "artists",
+        name: "Clients",
+        slug: "clients",
         icon: "MusicIcon",
-        i18n: "artists",
+        i18n: "clients",
         admin: false,
         submenu: [
             {
-                url: "/artists",
-                name: "Liste des artistes",
-                slug: "listeartists",
-                i18n: "Artistes"
+                url: "/clients",
+                name: "Liste des clients",
+                slug: "listeclients",
+                i18n: "Clients"
             }
         ]
     }

@@ -1,6 +1,7 @@
 <template>
   <div class="my-4">
-    <div class="vx-row">
+    <artist-edit-account :imgURL="imgURL" v-if="artistData" :artistData="artistData" />
+    <!-- <div class="vx-row">
       <div class="vx-col sm:w-1/2 w-full mb-2">
         <vs-input
           class="w-full my-4"
@@ -29,9 +30,9 @@
           }}
         </span>
       </div>
-    </div>
+    </div>-->
 
-    <div class="vx-row">
+    <!-- <div class="vx-row">
       <div class="vx-col sm:w-1/2 w-full mb-2">
         <label class="vs-input--label">Etat</label>
         <v-select
@@ -44,9 +45,69 @@
         />
         <span class="text-danger text-sm" v-show="errors.has('status')">{{ errors.first("status") }}</span>
       </div>
-    </div>
+    </div>-->
 
-    <div>
+    <vs-divider />
+
+    <!-- Password -->
+    <vx-card class="mt-base" no-shadow card-border>
+      <div class="vx-row">
+        <div class="vx-col w-full">
+          <div class="flex items-end px-3">
+            <feather-icon svgClasses="w-6 h-6" icon="LockIcon" class="mr-2" />
+            <span class="font-medium text-lg leading-none">Mot de passe</span>
+          </div>
+          <vs-divider />
+        </div>
+      </div>
+
+      <div class="block overflow-x-auto">
+        <vs-input
+          class="w-full mb-base"
+          v-validate="'required|min:3|max:35'"
+          label-placeholder="Mot de passe actuelle"
+          v-model="old_password"
+          name="old_password"
+          type="password"
+        />
+        <span class="text-danger text-sm" v-show="errors.has('old_password')">
+          {{
+          errors.first("old_password")
+          }}
+        </span>
+        <vs-input
+          class="w-full mb-base"
+          name="password"
+          ref="password"
+          v-validate="'required|min:3|max:35'"
+          label-placeholder="Nouveau Mot de passe"
+          v-model="password"
+          type="password"
+        />
+        <span class="text-danger text-sm" v-show="errors.has('password')">
+          {{
+          errors.first("password")
+          }}
+        </span>
+        <vs-input
+          class="w-full mb-base"
+          label-placeholder="Confirmation du nouveau mot de passe"
+          v-model="confirm_password"
+          name="confirm_password"
+          v-validate="'required|confirmed:password'"
+          type="password"
+        />
+        <span class="text-danger text-sm" v-show="errors.has('confirm_password')">
+          {{
+          errors.first("confirm_password")
+          }}
+        </span>
+      </div>
+    </vx-card>
+
+    <!-- Password end -->
+    <!-- IMAGE -->
+    <!-- <div>
       <div style="max-width: 100%;">
         <div class="my-4">
           <clipper-upload
@@ -72,8 +133,11 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="vx-row">
+    </div>-->
+
+    <!-- Image end -->
+
+    <!-- <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
           <vs-button
@@ -83,32 +147,29 @@
           >Sauvegarder l'artiste</vs-button>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
 import Cropper from "cropperjs";
 import vSelect from "vue-select";
 import debounce from "lodash/debounce";
+import ArtistEditAccount from "./ArtistEditAccount";
+import ArtistEditPassword from "./ArtistEditPassword";
 
 export default {
+  components: {
+    ArtistEditAccount,
+    ArtistEditPassword,
+  },
   data() {
     return {
-      name: "",
-      avatar: "",
       artistData: {},
-      isSending: false,
-      status: "",
       imgURL: "",
-      rotation: 0,
-      statusOptions: [
-        { label: "Activé", value: "1" },
-        { label: "Suspendu", value: "2" },
-      ],
+      old_password: "",
+      password: "",
+      confirm_password: "",
     };
-  },
-  components: {
-    vSelect,
   },
   mounted() {
     this.$vs.loading({
@@ -120,48 +181,19 @@ export default {
       .get(`/api/artists/${this.$route.params.slug}`)
       .then((response) => {
         if (response.data == "Artist not found") {
-          this.$router.push("/artists");
+          this.$router.push("/clients");
         }
         this.$vs.loading.close();
         console.log(response.data);
 
         this.artistData = response.data;
-        this.name = response.data.name;
-        this.status = response.data.StatusName;
+        // this.name = response.data.name;
+        // this.status = response.data.StatusName;
         this.imgURL = response.data.AvatarLink;
       })
       .catch(function (error) {
         console.error(error.response.data);
       });
-  },
-  methods: {
-    handleSave(e) {
-      e.preventDefault();
-      this.$validator.validateAll().then((result) => {
-        if (result) {
-          this.isSending = true;
-          const canvas = this.$refs.clipper.clip();
-          const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
-          this.$http
-            .post(`/api/artists/${this.$route.params.slug}/edit`, {
-              name: this.name,
-              avatar: ResultAvatar,
-            })
-            .then((response) => {
-              this.isSending = false;
-              this.$router.push(`/artists/${response.data.slug}`);
-            })
-            .catch(function (error) {
-              this.isSending = false;
-              this.$vs.dialog({
-                color: "danger",
-                title: ``,
-                text: "Erreur lors de la modification",
-              });
-            });
-        }
-      });
-    },
   },
 };
 </script>

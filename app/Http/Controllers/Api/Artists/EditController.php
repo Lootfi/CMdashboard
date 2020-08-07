@@ -16,7 +16,6 @@ class EditController extends Controller
 	{
 
 		if ($artist = Artist::fetchBySlug($slug)) {
-
 			$artist->name = request('name', $artist->name);
 			if (request('password')) {
 				$artist->password = Hash::make(request('password'));
@@ -25,7 +24,12 @@ class EditController extends Controller
 				$artist->email = request('email');
 			}
 			if (request('status')) {
-				$artist->status = request('status');
+				if (request('status')['label'] == "Activé") {
+					$artist->status = 1;
+				}
+				if (request('status')['label'] == "Suspendu") {
+					$artist->status = 2;
+				}
 			}
 			if (request('payment_method')) {
 				$artist->payment_method = request('payment_method');

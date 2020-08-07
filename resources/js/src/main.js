@@ -7,70 +7,66 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
-
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 // Vuesax Component Framework
-import Vuesax from 'vuesax'
+import Vuesax from "vuesax";
 
-Vue.use(Vuesax)
+Vue.use(Vuesax);
 
-import VuejsClipper from 'vuejs-clipper'
-Vue.use(VuejsClipper)
+import VuejsClipper from "vuejs-clipper";
+Vue.use(VuejsClipper);
 
-
-import EditorJS from '@editorjs/editorjs';
+import EditorJS from "@editorjs/editorjs";
 
 // axios
-import axios from './axios.js'
-Vue.prototype.$http = axios
+import axios from "./axios.js";
+Vue.prototype.$http = axios;
 
 // Filters
-import './filters/filters.js'
+import "./filters/filters.js";
 
-import i18n from './i18n/i18n'
+import i18n from "./i18n/i18n";
 
 // Theme Configurations
-import '../themeConfig.js'
-
+import "../themeConfig.js";
 
 // Globally Registered Components
-import './globalComponents.js'
-
+import "./globalComponents.js";
 
 // Vue Router
-import router from './router'
+import router from "./router";
 
+// Access Control
+import acl from "./acl/acl";
 
 // Vuex Store
-import store from './store/store'
+import store from "./store/store";
 
-import VeeValidate from 'vee-validate'
-Vue.use(VeeValidate)
-
+import VeeValidate from "vee-validate";
+Vue.use(VeeValidate);
 
 // Vuejs - Vue wrapper for hammerjs
-import { VueHammer } from 'vue2-hammer'
-Vue.use(VueHammer)
+import { VueHammer } from "vue2-hammer";
+Vue.use(VueHammer);
 
-import Vuetify from 'vuetify'
-Vue.use(Vuetify)
+import Vuetify from "vuetify";
+Vue.use(Vuetify);
 
 // PrismJS
-import 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
-
+import "prismjs";
+import "prismjs/themes/prism-tomorrow.css";
 
 // Vue select css
 // Note: In latest version you have to add it separately
 // import 'vue-select/dist/vue-select.css';
 
-
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 new Vue({
-  router,
-  store,
-  i18n,
-  render: h => h(App)
-}).$mount('#app')
+    router,
+    store,
+    i18n,
+    acl,
+    render: h => h(App)
+}).$mount("#app");

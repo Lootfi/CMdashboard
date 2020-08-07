@@ -54,7 +54,7 @@ export default {
             localStorage.setItem("user", JSON.stringify(response.data.user));
             localStorage.setItem("jwt", response.data.access_token);
             this.$store.state.AppActiveUser.user = response.data.user;
-            this.$router.push({ name: "dashboard" });
+            window.location.reload();
           })
           .catch((error) => {
             this.isSending = false;

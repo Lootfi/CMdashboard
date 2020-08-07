@@ -36,6 +36,10 @@ Route::group(['middleware' => ['jwt.verify:Admin,Editor,Commercial']], function 
 
 Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 
+	Route::get('price', 'PriceController@show');
+
+	Route::post('price-change', 'PriceController@change');
+
 	Route::get('/auth/checkadmin', 'Auth\LoginController@checkAdmin');
 
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
@@ -92,10 +96,17 @@ Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
 
 Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
 
+
+	Route::get('potential-clients', 'Artists\IndexController@potentials');
 	Route::get('/auth/check-admin-or-commercial', 'Auth\LoginController@checkCommercial');
 
 	Route::group(['prefix' => 'artists', 'namespace' => 'Artists'], function () {
 		Route::get('/', 'IndexController@getAll');
 		Route::get('/{slug}', 'ShowController@show');
 	});
+});
+
+
+Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
+	Route::post('validate-email', 'Auth\RegisterController@validateEmail');
 });

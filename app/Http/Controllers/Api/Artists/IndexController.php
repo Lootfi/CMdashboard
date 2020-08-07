@@ -13,4 +13,9 @@ class IndexController extends Controller
     {
         return Artist::all();
     }
+
+    public function potentials()
+    {
+        return Artist::where('payment_confirmed', false)->get();
+    }
 }

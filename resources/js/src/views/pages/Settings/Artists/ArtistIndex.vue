@@ -10,7 +10,7 @@
 <template>
   <div id="page-user-list">
     <div class="vx-card p-6">
-      <h1 class="pb-4">Liste des artistes</h1>
+      <h1 class="pb-4">Liste des clients</h1>
       <div class="flex flex-wrap items-center">
         <!-- ITEMS PER PAGE -->
         <div class="flex-grow">
@@ -51,14 +51,7 @@
         </div>
 
         <!-- ADD NEW -->
-        <div
-          style="flex : 0 0 auto"
-          class="p-3 mr-4 rounded-lg cursor-pointer flex items-center text-lg font-medium text-base text-primary border border-solid border-primary"
-          @click="$router.push('/settings/create-artist')"
-        >
-          <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-          <span class="ml-2 text-base text-primary">Ajouter un artiste</span>
-        </div>
+
         <!-- TABLE ACTION COL-2: SEARCH & EXPORT AS CSV -->
         <vs-input
           class="sm:mr-4 mr-0 sm:w-auto w-full sm:order-normal order-3 sm:mt-0 mt-4"

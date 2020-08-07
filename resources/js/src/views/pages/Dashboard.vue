@@ -1,15 +1,19 @@
 <template>
-	<h1>This is the dashboard</h1>
+  <div>
+    <h1 class="mb-4">Tableau de bord</h1>
+    <price />
+    <vs-divider />
+    <prospects />
+  </div>
 </template>
 
 <script>
-	
-
-	export default {
-
-
-		mounted(){
-		
-		}
-	}
+import Price from "@/views/components/price/Price";
+import Prospects from "@/views/components/prospects/Prospects";
+export default {
+  components: {
+    Price,
+    Prospects,
+  },
+};
 </script>

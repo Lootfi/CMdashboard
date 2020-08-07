@@ -24,7 +24,11 @@
 
                   <vs-dropdown-menu>
                     <vs-dropdown-item
-                      @click="$router.push(`/artists/${artist_data.slug}/edit`)"
+                      @click="
+                                                $router.push(
+                                                    `/clients/${artist_data.slug}/edit`
+                                                )
+                                            "
                     >Modifier</vs-dropdown-item>
                   </vs-dropdown-menu>
                 </vs-dropdown>

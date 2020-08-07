@@ -30,7 +30,7 @@
           >Importer La photo de l'éditeur</clipper-upload>
           <div class="flex" style="max-width: 100%;">
             <clipper-basic
-              ratio="1"
+              :ratio="1"
               class="flex-grow-3"
               ref="clipper"
               :src="imgURL"

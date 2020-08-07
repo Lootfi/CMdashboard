@@ -20,7 +20,7 @@
     <!-- Picture preview -->
     <div class="flex" style="max-width: 100%;">
       <clipper-basic
-        ratio="1"
+        :ratio="1"
         bg-color="black"
         class="flex-grow-3"
         ref="clipper"
