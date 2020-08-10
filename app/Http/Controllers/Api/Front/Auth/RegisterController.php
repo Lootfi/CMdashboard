@@ -73,7 +73,7 @@ class RegisterController extends Controller
     public function validateEmail()
     {
         $validation = Validator::make(request()->only(['email']), [
-            'email' => ['email', 'max:255', 'unique:users']
+            'email' => ['required', 'email', 'max:255', 'unique:users']
         ]);
 
         if ($validation->fails()) return response()->json(['status' => 'invalid', 'errors' => $validation->errors()]);

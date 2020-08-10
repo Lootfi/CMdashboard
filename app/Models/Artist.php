@@ -17,7 +17,8 @@ class Artist extends Model
         'name' => '',
         'avatar' => '',
         'payment_method' => '',
-        'status' => false
+        'status' => false,
+        'username' => ''
     ];
 
 
@@ -31,7 +32,12 @@ class Artist extends Model
      *
      * @var array
      */
-    protected $appends = ['StatusName', 'PaymentMethodName', 'AvatarLink', 'ConnectedVia'];
+    protected $appends = [
+        'StatusName',
+        'PaymentMethodName',
+        'AvatarLink',
+        'ConnectedVia'
+    ];
 
 
     public $timestamps = false;
