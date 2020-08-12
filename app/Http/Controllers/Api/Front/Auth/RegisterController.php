@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Front\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -131,15 +132,17 @@ class RegisterController extends Controller
 
         $token = $this->login($artist);
 
-        return response()->json(['success' => true, 'token_info' => $token]);
+        return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }
 
-    public function setupProfile()
+    public function setupProfile(Request $request)
     {
-        $artist = Auth::guard('clients')->user();
+        $artist = $request->user('clients');
 
         $artist->name = request('name');
         $artist->password = Hash::make(request('password'));
+
+        $artist->save();
     }
 
 
