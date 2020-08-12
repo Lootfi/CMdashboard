@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 
-class Artist extends Model
+class Artist extends Authenticatable implements JWTSubject
 {
+    use Notifiable;
+
     /**
      * The table associated with the model.
      *
@@ -83,5 +88,15 @@ class Artist extends Model
     public static function fetchByEmail($email)
     {
         return self::where('email', $email)->first();
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

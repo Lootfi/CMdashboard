@@ -42,6 +42,11 @@ return [
             'provider' => 'admins',
             'hash' => false,
         ],
+        'clients' => [
+            'driver' => 'jwt',
+            'provider' => 'clients',
+            'hash' => false,
+        ]
     ],
 
     /*
@@ -67,10 +72,10 @@ return [
             'model' => App\Models\Administrator::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Artist::class,
+        ],
     ],
 
     /*
@@ -91,6 +96,12 @@ return [
     'passwords' => [
         'admins' => [
             'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'clients' => [
+            'provider' => 'clients',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

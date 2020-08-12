@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Front\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -118,21 +119,57 @@ class RegisterController extends Controller
 
     public function paypalPaymentConfirmed()
     {
-        $artist = Artist::where('email', request('email'))->first();
+        if (!$artist = Artist::where('email', request('email'))->first()) {
+            return response()->json(['error' => 'No user with given email'], 404);
+        }
 
         $artist->payment_method = 'paypal_' . request('order_id');
         $artist->name = request('name');
         $artist->payment_confirmed = true;
         $artist->status = true;
-
         $artist->save();
+
+        $token = $this->login($artist);
+
+        return response()->json(['success' => true, 'token_info' => $token]);
     }
 
     public function setupProfile()
     {
-        $artist = Artist::where('email', request('email'))->first();
+        $artist = Auth::guard('clients')->user();
 
         $artist->name = request('name');
         $artist->password = Hash::make(request('password'));
+    }
+
+
+
+    public function login($user)
+    {
+        if (!$token = Auth::guard('clients')->login($user)) {
+
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    public function logout()
+    {
+        Auth::guard('clients')->logout();
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Logged out Successfully.'
+        ], 200);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'expires_in'   => Auth::guard('clients')->factory()->getTTL() * 60,
+            'user' => Auth::guard('clients')->user(),
+        ]);
     }
 }
