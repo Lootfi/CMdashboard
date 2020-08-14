@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Front\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,12 +15,20 @@ class LoginController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (!$token = Auth::guard('clients')->attempt($credentials)) {
+        if (!$client = Artist::where('email', $credentials['email'])->first()) {
+            return response()->json(['error' => "This Account doesn't exist, please Sign up"]);
+        } else {
+            if (Hash::check($credentials['password'], $client->password)) {
+                if (!$token = Auth::guard('clients')->attempt($credentials)) {
 
-            return response()->json(['error' => 'Unauthorized'], 401);
+                    return response()->json(['error' => 'Unauthorized'], 401);
+                }
+
+                return $this->respondWithToken($token);
+            } else {
+                return response()->json(['error' => "Either the email or the password is wrong"]);
+            }
         }
-
-        return $this->respondWithToken($token);
     }
 
     public function logout()

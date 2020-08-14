@@ -108,10 +108,17 @@ Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
 
 Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::post('validate-email', 'Auth\RegisterController@validateEmail');
+	Route::get('price', 'PriceController@show');
 	Route::post('paypal-payment-complete', 'Auth\RegisterController@paypalPaymentConfirmed');
 	Route::post('setup-profile', 'Auth\RegisterController@setupProfile');
-	Route::get('price', 'PriceController@show');
+
+	Route::post('login', 'Auth\LoginController@login');
+
 	Route::group(['middleware' => 'clients'], function () {
-		Route::get('/auth/check', 'Auth\LoginController@check');
+		Route::get('auth/check', 'Auth\LoginController@check');
+		Route::get('user', function (Request $request) {
+			return response()->json($request->user('clients'));
+		});
+		Route::post('logout', 'Auth\RegisterController@logout');
 	});
 });
