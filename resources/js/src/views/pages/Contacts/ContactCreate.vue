@@ -35,7 +35,7 @@
           <vs-input
             class="w-full mt-4"
             v-validate="'alpha_num'"
-            label="Username"
+            label="Pseudo"
             name="username"
             v-model="username"
           />
@@ -60,7 +60,7 @@
       </div>
 
       <div class="vx-row">
-        <div class="vx-col md:w-1/2 w-full">
+        <div class="vx-col md:w-1/2 w-full mt-4">
           <label class="vs-input--label">Pays</label>
           <v-select
             class="py-2"
@@ -105,6 +105,17 @@
             v-model="title"
           />
           <span class="text-danger text-sm" v-show="errors.has('title')">{{ errors.first("title") }}</span>
+        </div>
+        <div class="vx-col md:w-1/2 w-full mt-4">
+          <label class="vs-input--label">Entreprise(s)</label>
+          <v-select
+            multiple
+            taggable
+            push-tags
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            v-model="entreprises"
+            :options="entrepriseOptions"
+          />
         </div>
       </div>
       <div class="my-4">

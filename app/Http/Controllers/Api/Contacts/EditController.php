@@ -16,9 +16,15 @@ class EditController extends Controller
 {
     public function edit($slug)
     {
-        $payload = request(['name', 'email', 'mobile', 'country', 'state', 'adresse', 'picture', 'instagram', 'twitter', 'linkedin']);
+        $payload = request(['username', 'prenom', 'name', 'email', 'mobile', 'country', 'state', 'title', 'picture', 'instagram', 'twitter', 'linkedin']);
 
         if ($contact = Contact::fetchBySlug($slug)) {
+            if (request('username')) {
+                $contact->name = $payload['username'];
+            }
+            if (request('prenom')) {
+                $contact->name = $payload['prenom'];
+            }
             if (request('name')) {
                 $contact->name = $payload['name'];
             }
@@ -34,9 +40,10 @@ class EditController extends Controller
             if (request('state')) {
                 $contact->state = $payload['state'];
             }
-            if (request('adresse')) {
-                $contact->adresse = $payload['adresse'];
+            if (request('title')) {
+                $contact->title = $payload['title'];
             }
+
             if (request('picture')) {
                 $contact->picture = $this->uploadPic(request()->get('picture'), $slug);
             }

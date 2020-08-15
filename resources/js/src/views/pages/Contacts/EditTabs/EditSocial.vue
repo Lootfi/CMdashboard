@@ -14,11 +14,11 @@
       <div class="vx-col w-full md:w-1/2">
         <vs-input
           class="w-full"
-          v-model="data_local.social.twitter"
           icon-pack="feather"
           icon="icon-twitter"
-          label="Twitter"
           icon-no-border
+          v-model="data_local.social.twitter"
+          label="Twitter"
           v-validate="'url:require_protocol'"
           name="twitter"
         />

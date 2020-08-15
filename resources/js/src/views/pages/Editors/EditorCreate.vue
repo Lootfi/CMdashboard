@@ -165,9 +165,9 @@ export default {
         { label: "Suspendu", value: "2" },
       ],
       roleOptions: [
-        { label: "Administrateur", value: "Admin" },
         { label: "Editeur", value: "Editor" },
         { label: "Commercial", value: "Commercial" },
+        { label: "Administrateur", value: "Admin" },
       ],
     };
   },

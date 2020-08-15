@@ -10,9 +10,9 @@
             <clipper-upload
               class="inline-block px-5 py-3 mx-2 cursor-pointer bg-dark text-white rounded"
               v-model="imgURL"
-            >Change Picture</clipper-upload>
+            >Changer la photo</clipper-upload>
 
-            <vs-button type="border" color="danger">Remove Picture</vs-button>
+            <vs-button type="border" color="danger">Supprimer la photo</vs-button>
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@
       <div class="vx-col md:w-1/2 w-full">
         <vs-input
           class="w-full mt-4"
-          label="Name"
+          label="Nom"
           v-model="data_local.name"
           v-validate="'required|alpha_spaces'"
           name="name"
@@ -49,71 +49,149 @@
           errors.first("name")
           }}
         </span>
+      </div>
+      <div class="vx-col md:w-1/2 w-full">
+        <vs-input
+          class="w-full mt-4"
+          v-validate="'alpha'"
+          label="Prénom"
+          type="prenom"
+          v-model="data_local.prenom"
+        />
+        <span class="text-danger text-sm" v-show="errors.has('prenom')">{{ errors.first("prenom") }}</span>
+      </div>
 
+      <div class="vx-col md:w-1/2 w-full">
+        <vs-input
+          class="w-full mt-4"
+          v-validate="'alpha_num'"
+          label="Pseudo"
+          name="username"
+          v-model="data_local.username"
+        />
+        <span
+          class="text-danger text-sm"
+          v-show="errors.has('username')"
+        >{{ errors.first("username") }}</span>
+      </div>
+      <div class="vx-col md:w-1/2 w-full">
         <vs-input
           class="w-full mt-4"
           label="Email"
           v-model="data_local.email"
           type="email"
-          v-validate="'required|email'"
+          v-validate="'required_if:mobile,|email'"
           name="email"
         />
         <span class="text-danger text-sm" v-show="errors.has('email')">{{ errors.first("email") }}</span>
-
+      </div>
+      <div class="vx-col md:w-1/2 w-full">
         <vs-input
           class="w-full mt-4"
           label="Mobile"
           v-model="data_local.mobile"
           type="tel"
-          v-validate="'required'"
+          v-validate="'required_if:email,'"
           name="mobile"
         />
         <span class="text-danger text-sm" v-show="errors.has('mobile')">{{ errors.first("mobile") }}</span>
       </div>
-
-      <!-- <div class="vx-col md:w-1/2 w-full">
-        <div class="mt-4">
-          <label class="vs-input--label">Status</label>
-          <v-select
-            v-model="status_local"
-            :clearable="false"
-            :options="statusOptions"
-            v-validate="'required'"
-            name="status"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-          />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('status')"
-          >{{ errors.first('status') }}</span>
-        </div>
-
-        <div class="mt-4">
-          <label class="vs-input--label">Role</label>
-          <v-select
-            v-model="role_local"
-            :clearable="false"
-            :options="roleOptions"
-            v-validate="'required'"
-            name="role"
-            :dir="$vs.rtl ? 'rtl' : 'ltr'"
-          />
-          <span class="text-danger text-sm" v-show="errors.has('role')">{{ errors.first('role') }}</span>
-        </div>
-
-        <vs-input
-          class="w-full mt-4"
-          label="Company"
-          v-model="data_local.company"
-          v-validate="'alpha_spaces'"
-          name="company"
+      <div class="vx-col md:w-1/2 w-full">
+        <label class="vs-input--label">Pays</label>
+        <v-select
+          class="py-2"
+          :clearable="false"
+          :options="countryOptions"
+          name="role"
+          :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          v-model="data_local.country"
+          v-validate="'required'"
         />
         <span
           class="text-danger text-sm"
-          v-show="errors.has('company')"
-        >{{ errors.first('company') }}</span>
-      </div>-->
+          v-show="errors.has('country')"
+        >{{ errors.first("country") }}</span>
+      </div>
+      <div class="vx-col md:w-1/2 w-full">
+        <vs-input
+          class="w-full mt-4"
+          label="Ville"
+          v-model="data_local.state"
+          name="state"
+          v-validate="'alpha_space'"
+        />
+      </div>
+      <div class="vx-col md:w-1/2 w-full">
+        <vs-input
+          class="w-full mt-4"
+          v-validate="'alpha_spaces|required'"
+          label="Titre de travail"
+          name="title"
+          v-model="data_local.title"
+        />
+        <span class="text-danger text-sm" v-show="errors.has('title')">{{ errors.first("title") }}</span>
+      </div>
     </div>
+
+    <v-divider style="padding: 20px 0" />
+
+    <!-- Social -->
+
+    <div class="vx-row">
+      <!-- Col 1 -->
+      <div class="vx-col w-full md:w-1/2">
+        <vs-input
+          class="w-full mt-4"
+          icon-pack="feather"
+          icon="icon-twitter"
+          icon-no-border
+          label="Twitter"
+          v-model="data_local.social.twitter"
+          v-validate="{regex: /^((https|http):\/\/)?(www\.)?twitter\.com\/@?[A-z0-9_]+\/?$/}"
+          name="twitter"
+        />
+        <span
+          class="text-danger text-sm"
+          v-show="errors.has('twitter')"
+        >{{ errors.first('twitter') }}</span>
+
+        <vs-input
+          class="w-full mt-4"
+          icon-pack="feather"
+          icon="icon-instagram"
+          icon-no-border
+          label="instagram"
+          v-model="data_local.social.instagram"
+          v-validate="{regex: /^((https|http):\/\/)?(www\.)?instagram\.com\/[A-z0-9_]+\/?$/}"
+          name="instagram"
+        />
+        <span
+          class="text-danger text-sm"
+          v-show="errors.has('instagram')"
+        >{{ errors.first('instagram') }}</span>
+
+        <vs-input
+          class="w-full mt-4"
+          icon-pack="feather"
+          icon="icon-linkedin"
+          icon-no-border
+          label="Linkedin"
+          v-model="data_local.social.linkedin"
+          v-validate="{regex: /^((https|http):\/\/)?(www\.)?linkedin\.com\/(in\/|company\/)[A-z0-9-_\.]+\/?$/}"
+          name="linkedin"
+        />
+
+        <span
+          class="text-danger text-sm"
+          v-show="errors.has('linkedin')"
+        >{{ errors.first('linkedin') }}</span>
+      </div>
+
+      <!-- Col 2 -->
+      <div class="vx-col w-full md:w-1/2"></div>
+    </div>
+
+    <!-- End Social -->
 
     <!-- Save & Reset Button -->
     <div class="vx-row">
@@ -151,6 +229,16 @@ export default {
       data_local: JSON.parse(JSON.stringify(this.data)),
       rotation: 0,
       imgURL: "",
+      countryOptions: [
+        { label: "France", value: "France" },
+        { label: "Belgique", value: "Belgique" },
+        { label: "Suisse", value: "Suisse" },
+        { label: "Etats-Unis", value: "Etats-Unis" },
+        { label: "Maroc", value: "Maroc" },
+        { label: "Canada", value: "Canada" },
+        { label: "Espagne", value: "Espagne" },
+        { label: "Allemagne", value: "Allemagne" },
+      ],
     };
   },
   computed: {
@@ -168,7 +256,8 @@ export default {
 
       let slug = this.$route.params.slug;
       let information = this.data_local;
-
+      information = { ...information, ...information.social };
+      information.social = null;
       if (this.imgURL)
         information["picture"] = this.$refs.clipper
           .clip()

@@ -26,6 +26,14 @@
             <span class="ml-2">Mon Profile</span>
           </li>
 
+          <li
+            class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
+            @click="$router.push('/profile-setting').catch(() => {})"
+          >
+            <feather-icon icon="SettingsIcon" svgClasses="w-4 h-4" />
+            <span class="ml-2">Mes Parametres</span>
+          </li>
+
           <vs-divider class="m-1" />
 
           <li

@@ -32,7 +32,7 @@
           <div class="vx-col flex-1" id="account-info-col-1">
             <table>
               <tr>
-                <td class="font-semibold">Name</td>
+                <td class="font-semibold">Nom</td>
                 <td>{{ contact.name }}</td>
               </tr>
               <tr>
@@ -51,7 +51,7 @@
           <div class="vx-col flex-1" id="account-info-col-2">
             <table>
               <tr>
-                <td class="font-semibold">Country</td>
+                <td class="font-semibold">Pays</td>
                 <td>{{ contact.country }}</td>
               </tr>
               <tr>
@@ -59,8 +59,8 @@
                 <td>{{ contact.state }}</td>
               </tr>
               <tr>
-                <td class="font-semibold">Adresse</td>
-                <td>{{ contact.adresse }}</td>
+                <td class="font-semibold">Titre de travail</td>
+                <td>{{ contact.title }}</td>
               </tr>
             </table>
           </div>
@@ -88,12 +88,8 @@
 
       <div class="vx-row">
         <div class="vx-col lg:w-1/2 w-full">
-          <vx-card title="Information" class="mb-base">
+          <vx-card title="Entreprise(s)" class="mb-base">
             <table>
-              <tr>
-                <td class="font-semibold">Mobile</td>
-                <td>{{ contact.mobile }}</td>
-              </tr>
               <tr>
                 <td class="font-semibold">Website</td>
                 <td>https://www.website.com/</td>
