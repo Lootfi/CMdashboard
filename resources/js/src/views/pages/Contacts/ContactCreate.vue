@@ -12,16 +12,17 @@
             label="Nom"
             name="name"
             v-model="name"
-            v-validate="'alpha|required'"
+            v-validate="{alpha, required: (username == '' && prenom == '')}"
           />
           <span class="text-danger text-sm" v-show="errors.has('name')">{{ errors.first("name") }}</span>
         </div>
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             class="w-full mt-4"
-            v-validate="'alpha'"
+            v-validate="{alpha,required: (username == '' && name == '')}"
             label="Prénom"
             type="prenom"
+            name="prenom"
             v-model="prenom"
           />
           <span
@@ -34,7 +35,7 @@
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             class="w-full mt-4"
-            v-validate="'alpha_num'"
+            v-validate="{alpha_num, required: (name == '' && prenom == '')}"
             label="Pseudo"
             name="username"
             v-model="username"
@@ -49,7 +50,7 @@
           <vs-input
             ref="email"
             class="w-full mt-4"
-            v-validate="'email|required_if:mobile,'"
+            v-validate="{email,required:mobile == ''}"
             label="Email"
             type="email"
             name="email"
@@ -85,11 +86,12 @@
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             ref="mobile"
-            v-validate="'required_if:email,'"
+            v-validate="{required:email == ''}"
             class="w-full mt-4"
             label="Mobile"
             v-model="mobile"
             name="mobile"
+            type="tel"
           />
           <span
             class="text-danger text-sm"
@@ -171,17 +173,17 @@ export default {
   },
   data() {
     return {
-      name: "AA",
-      email: "lo@g.com",
-      country: "France",
-      state: "AA",
-      mobile: "06666",
+      name: "",
+      email: "",
+      country: "",
+      state: "",
+      mobile: "",
       title: "",
       prenom: "",
       username: "",
       imgURL: "",
       rotation: 0,
-      adresse: "AAA",
+      adresse: "",
       avatar: "",
       isSending: false,
       countryOptions: [
