@@ -25,7 +25,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('queue:listen --timeout=0 ')->withoutOverlapping();
-        $schedule->command('command:PublishArticles')->withoutOverlapping();
     }
 
     /**
@@ -35,7 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

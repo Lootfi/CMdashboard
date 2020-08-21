@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Api\Front\Auth;
 
+use App\ClientPaymentAuthorization;
 use App\Http\Controllers\Controller;
+use App\Jobs\CapturePayment;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -126,11 +131,19 @@ class RegisterController extends Controller
 
         $artist->payment_method = 'paypal_' . request('order_id');
         $artist->name = request('name');
-        $artist->payment_confirmed = true;
+        $artist->payment_authorized = true;
+        $artist->payment_confirmed = false;
         $artist->status = true;
         $artist->save();
 
         $token = $this->login($artist);
+
+        $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
+
+        // Queue::later(Carbon::now()->addSeconds(20), new CapturePayment($artist));
+
+        CapturePayment::dispatch($artist)->delay(Carbon::now()->addSeconds(20))->onConnection('database');
+
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }
@@ -173,6 +186,15 @@ class RegisterController extends Controller
             'token_type'   => 'bearer',
             'expires_in'   => Auth::guard('clients')->factory()->getTTL() * 60,
             'user' => Auth::guard('clients')->user(),
+        ]);
+    }
+
+    protected function createPaymentAuth($info)
+    {
+        ClientPaymentAuthorization::create([
+            'client_id' => Auth::guard('clients')->user()->id,
+            'order_id' => $info['order_id'],
+            'auth_id' => $info['auth_id']
         ]);
     }
 }

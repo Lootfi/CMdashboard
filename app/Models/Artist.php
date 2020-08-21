@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use App\ClientPaymentAuthorization;
 
 class Artist extends Authenticatable implements JWTSubject
 {
@@ -20,10 +21,15 @@ class Artist extends Authenticatable implements JWTSubject
 
     protected $attributes = [
         'name' => '',
-        'avatar' => '',
+        'avatar' => 'default.jpg',
         'payment_method' => '',
+        'payment_authorized' => false,
         'status' => false,
         'username' => ''
+    ];
+
+    protected $hidden = [
+        'password', 'email_verified_at', 'remember_token'
     ];
 
 
@@ -46,6 +52,11 @@ class Artist extends Authenticatable implements JWTSubject
 
 
     public $timestamps = false;
+
+    public function payment_auth()
+    {
+        return $this->hasOne(ClientPaymentAuthorization::class, 'client_id', 'id');
+    }
 
 
     public function getStatusNameAttribute()

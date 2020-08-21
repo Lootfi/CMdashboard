@@ -122,3 +122,7 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 		Route::post('logout', 'Auth\RegisterController@logout');
 	});
 });
+
+Route::get('sub/token', 'Subscriptions\CreateController@getToken');
+Route::get('sub/create-product', 'Subscriptions\CreateController@createProduct');
+Route::get('sub/create-plan', 'Subscriptions\CreateController@createPlan');
