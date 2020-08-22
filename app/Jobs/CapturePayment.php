@@ -16,6 +16,7 @@ class CapturePayment implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $client;
+    public $tries = 5;
 
     /**
      * Create a new job instance.
@@ -50,13 +51,29 @@ class CapturePayment implements ShouldQueue
 
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
-            echo 'Error:' . curl_error($ch);
+            echo 'Error: ' . curl_error($ch);
+            $this->release();
         }
-        curl_close($ch);
+        echo 'FIRST ECHO: ' . json_encode($result);
+        echo 'STATUS: "' . json_decode($result)->status . '"';
 
-        if ($result['status'] == "COMPLETED") {
+        if (json_decode($result)->status == "COMPLETED") {
+            echo 'STATUS: ' . json_decode($result)->status;
             $this->client->payment_confirmed = true;
+            $this->client->payment_method = 'paypal_' . json_decode($result)->id;
+            $this->client->updated_at = now();
             $this->client->save();
+            $this->delete();
+            return;
         }
+        if (json_decode($result)->details) {
+            echo "ERROR: " . json_decode($result)->details[0]->issue;
+            if (json_decode($result)->details[0]->issue == "AUTHORIZATION_ALREADY_CAPTURED") {
+                echo "AUTHORIZATION_ALREADY_CAPTURED";
+                $this->fail();
+            } else $this->release();
+        }
+
+        curl_close($ch);
     }
 }

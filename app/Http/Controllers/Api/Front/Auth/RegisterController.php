@@ -89,6 +89,7 @@ class RegisterController extends Controller
 
         $user->email = request('email');
         $user->slug = explode('@', request('email'))[0] . '-' . substr(md5(mt_rand()), 0, 6);
+        $user->created_at = now();
         $user->save();
 
 
@@ -142,7 +143,7 @@ class RegisterController extends Controller
 
         // Queue::later(Carbon::now()->addSeconds(20), new CapturePayment($artist));
 
-        CapturePayment::dispatch($artist)->delay(Carbon::now()->addSeconds(20))->onConnection('database');
+        CapturePayment::dispatch($artist)->delay(Carbon::now()->addSeconds(2))->onConnection('database');
 
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
