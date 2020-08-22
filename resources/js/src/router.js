@@ -225,6 +225,28 @@ const router = new Router({
                         requiresAuth: true,
                         requiresAdmin: true
                     }
+                },
+                {
+                    path: "/templates/modifier",
+                    name: "modifier-template",
+                    component: () =>
+                        import("@/views/pages/Templates/EditTemplate.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
+                },
+                {
+                    path: "/templates/add",
+                    name: "add-template",
+                    component: () =>
+                        import("@/views/pages/Templates/AddTemplate.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
                 }
             ]
         },

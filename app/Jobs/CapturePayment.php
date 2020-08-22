@@ -17,6 +17,7 @@ class CapturePayment implements ShouldQueue
 
     public $client;
     public $tries = 5;
+    public $timeout = 20;
 
     /**
      * Create a new job instance.

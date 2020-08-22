@@ -91,5 +91,27 @@ export default [
                 i18n: "Clients"
             }
         ]
+    },
+    {
+        url: null,
+        name: "Emails Templates",
+        slug: "emails",
+        icon: "MailIcon",
+        i18n: "emails",
+        admin: true,
+        submenu: [
+            {
+                url: "/templates/add",
+                name: "Ajouter Template",
+                slug: "ajouter-template",
+                i18n: "Ajouter Template"
+            },
+            {
+                url: "/templates/modifier",
+                name: "Modifier Template",
+                slug: "modifier-template",
+                i18n: "Modifier Template"
+            }
+        ]
     }
 ];

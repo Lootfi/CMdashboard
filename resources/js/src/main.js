@@ -44,7 +44,23 @@ import acl from "./acl/acl";
 import store from "./store/store";
 
 import VeeValidate from "vee-validate";
-Vue.use(VeeValidate);
+import fr from "vee-validate/dist/locale/fr.js";
+import en from "vee-validate/dist/locale/en.js";
+Vue.use(VeeValidate, {
+    locale: "fr",
+    dictionary: {
+        en: { attributes: en.attributes },
+        fr: {
+            messages: fr.messages,
+            attributes: {
+                name: "Nom",
+                prenom: "Prénom",
+                username: "Pseudo",
+                title: "Titre de travail"
+            }
+        }
+    }
+});
 
 // Vuejs - Vue wrapper for hammerjs
 import { VueHammer } from "vue2-hammer";

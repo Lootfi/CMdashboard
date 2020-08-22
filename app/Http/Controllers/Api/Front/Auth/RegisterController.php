@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Wrappers\Mailer;
 
 class RegisterController extends Controller
 {
@@ -36,16 +37,17 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+    protected $mailer;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    // public function __construct()
-    // {
-    //     $this->middleware('guest');
-    // }
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
 
     /**
      * Get a validator for an incoming registration request.
@@ -79,6 +81,9 @@ class RegisterController extends Controller
 
     public function validateEmail()
     {
+        $this->mailer->send();
+        return;
+
         $validation = Validator::make(request()->only(['email']), [
             'email' => ['required', 'email', 'max:255', 'unique:users']
         ]);

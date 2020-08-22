@@ -64,6 +64,14 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 		Route::get('/{slug}/suspend', 'StatusController@suspend');
 		Route::post('/{slug}/edit', 'EditController@edit');
 	});
+
+	Route::group(['prefix' => 'templates', 'namespace' => 'Templates'], function () {
+		Route::get('/', 'TemplateController@index');
+		Route::post('/create', 'TemplateController@create');
+		Route::get('/{slug}', 'TemplateController@show');
+		Route::get('/{slug}/delete', 'TemplateController@delete');
+		Route::post('/{slug}/edit', 'TemplateController@edit');
+	});
 });
 
 
