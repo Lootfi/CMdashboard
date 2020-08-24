@@ -227,7 +227,7 @@ const router = new Router({
                     }
                 },
                 {
-                    path: "/templates/modifier",
+                    path: "/templates/:alias/edit",
                     name: "modifier-template",
                     component: () =>
                         import("@/views/pages/Templates/EditTemplate.vue"),
@@ -242,6 +242,17 @@ const router = new Router({
                     name: "add-template",
                     component: () =>
                         import("@/views/pages/Templates/AddTemplate.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
+                },
+                {
+                    path: "/templates",
+                    name: "liste-templates",
+                    component: () =>
+                        import("@/views/pages/Templates/TemplateIndex.vue"),
                     meta: {
                         rule: "Admin",
                         requiresAuth: true,
@@ -269,6 +280,17 @@ const router = new Router({
                         requiresAuth: true,
                         requiresAdmin: true
                     }
+                },
+                {
+                    path: "/service/prix",
+                    name: "modifier-prix",
+                    component: () =>
+                        import("@/views/components/price/Price.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
                 }
             ]
         },
@@ -288,7 +310,7 @@ const router = new Router({
             ]
         },
         {
-            path: "*",
+            path: "/404",
             name: "page-error-404",
             component: () => import("@/views/pages/Error404.vue"),
             meta: {

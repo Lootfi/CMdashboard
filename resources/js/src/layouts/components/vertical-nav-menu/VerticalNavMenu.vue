@@ -27,7 +27,7 @@
         <div class="header-sidebar flex items-center justify-between" slot="header">
           <!-- Logo -->
           <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/dashboard">
-            <img v-if="!verticalNavMenuItemsMin" src="/images/logos/logo-white.svg" />
+            <img width="100%" v-if="!verticalNavMenuItemsMin" src="/images/logos/logo-white.svg" />
           </router-link>
           <!-- /Logo -->
 

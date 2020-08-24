@@ -98,7 +98,7 @@ export default {
               htmlBody: this.htmlBody,
             })
             .then((res) => {
-              this.$router.push("/");
+              this.$router.push("/templates");
             })
             .catch((err) => console.log(err));
         }

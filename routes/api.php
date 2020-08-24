@@ -62,10 +62,11 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 
 	Route::group(['prefix' => 'templates', 'namespace' => 'Templates'], function () {
 		Route::get('/', 'TemplateController@index');
+		Route::get('/get/{alias}', 'TemplateController@getTemplate');
 		Route::post('/create', 'TemplateController@create');
-		Route::get('/{slug}', 'TemplateController@show');
-		Route::get('/{slug}/delete', 'TemplateController@delete');
-		Route::post('/{slug}/edit', 'TemplateController@edit');
+		Route::get('/{alias}', 'TemplateController@show');
+		Route::post('/{alias}/delete', 'TemplateController@delete');
+		Route::post('/{alias}/edit', 'TemplateController@edit');
 	});
 
 	Route::group(['prefix' => 'entreprises', 'namespace' => 'Entreprises'], function () {

@@ -11,7 +11,7 @@ if (userInfo && userInfo.role) initialRole = userInfo.role;
 
 export default new AclCreate({
     initial: initialRole,
-    notfound: "/dash",
+    notfound: { name: "page-login" },
     router,
     acceptLocalRules: true,
     globalRules: {

@@ -11,6 +11,7 @@ class Template extends Model
         "name",
         "active",
         "alias",
-        "templateType"
+        "templateType",
+        "subject"
     ];
 }

@@ -101,16 +101,16 @@ export default [
         admin: true,
         submenu: [
             {
+                url: "/templates",
+                name: "Liste des Templates",
+                slug: "templates-liste",
+                i18n: "Liste Templates"
+            },
+            {
                 url: "/templates/add",
                 name: "Ajouter Template",
                 slug: "ajouter-template",
                 i18n: "Ajouter Template"
-            },
-            {
-                url: "/templates/modifier",
-                name: "Modifier Template",
-                slug: "modifier-template",
-                i18n: "Modifier Template"
             }
         ]
     },
@@ -133,6 +133,22 @@ export default [
                 name: "Liste des Entreprise",
                 slug: "entreprises",
                 i18n: "Modifier Entreprise"
+            }
+        ]
+    },
+    {
+        url: null,
+        name: "Paramètres Service",
+        slug: "service",
+        icon: "SettingsIcon",
+        i18n: "service",
+        admin: true,
+        submenu: [
+            {
+                url: "/service/prix",
+                name: "Modifier Prix",
+                slug: "modifier-prix",
+                i18n: "Modifier Prix"
             }
         ]
     }
