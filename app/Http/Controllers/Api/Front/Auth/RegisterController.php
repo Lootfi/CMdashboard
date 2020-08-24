@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Wrappers\Mailer;
+use App\Jobs\SendEmail;
 
 class RegisterController extends Controller
 {
@@ -81,8 +82,6 @@ class RegisterController extends Controller
 
     public function validateEmail()
     {
-        $this->mailer->send();
-        return;
 
         $validation = Validator::make(request()->only(['email']), [
             'email' => ['required', 'email', 'max:255', 'unique:users']
@@ -96,6 +95,8 @@ class RegisterController extends Controller
         $user->slug = explode('@', request('email'))[0] . '-' . substr(md5(mt_rand()), 0, 6);
         $user->created_at = now();
         $user->save();
+
+        //SendEmail::dispatch($user, 'welcome')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
 
 
         return response()->json(['status' => 'valid', 'email' => $user->email]);
@@ -146,10 +147,8 @@ class RegisterController extends Controller
 
         $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
 
-        // Queue::later(Carbon::now()->addSeconds(20), new CapturePayment($artist));
-
-        CapturePayment::dispatch($artist)->delay(Carbon::now()->addSeconds(2))->onConnection('database');
-
+        //SendEmail::dispatch($artist, 'welcome')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
+        CapturePayment::dispatch($artist)->delay(Carbon::now()->addMinute())->onConnection('database');
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }

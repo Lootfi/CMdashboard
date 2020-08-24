@@ -247,6 +247,28 @@ const router = new Router({
                         requiresAuth: true,
                         requiresAdmin: true
                     }
+                },
+                {
+                    path: "/entreprises",
+                    name: "entreprises",
+                    component: () =>
+                        import("@/views/pages/Entreprises/EntripriseIndex.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
+                },
+                {
+                    path: "/entreprises/add",
+                    name: "add-entreprise",
+                    component: () =>
+                        import("@/views/pages/Entreprises/AddEntriprise.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
                 }
             ]
         },
@@ -266,16 +288,19 @@ const router = new Router({
             ]
         },
         {
-            path: "/404",
-            name: "page-error-404",
-            component: () => import("@/views/pages/Error404.vue")
-        },
-        // Redirect to 404 page, if no match found
-        {
             path: "*",
-            rule: "all",
-            redirect: "/404"
+            name: "page-error-404",
+            component: () => import("@/views/pages/Error404.vue"),
+            meta: {
+                rule: "all"
+            }
         }
+        // Redirect to 404 page, if no match found
+        // {
+        //     path: "*",
+        //     // rule: "all",
+        //     redirect: "/404"
+        // }
     ]
 });
 

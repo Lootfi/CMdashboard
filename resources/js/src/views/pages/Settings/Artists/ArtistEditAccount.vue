@@ -103,7 +103,7 @@ export default {
       rotation: 0,
       statusOptions: [
         { label: "Activé", value: "1" },
-        { label: "Suspendu", value: "2" },
+        { label: "Suspendu", value: "0" },
       ],
     };
   },
@@ -118,20 +118,21 @@ export default {
           this.isSending = true;
           const canvas = this.$refs.clipper.clip();
           const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+          console.log("sending");
           this.$http
             .post(`/api/artists/${this.$route.params.slug}/edit`, {
-              name: this.artist_local.name,
-              email: this.artist_local.email,
-              status: this.artist_local.StatusName,
+              name: this.artistData.name,
+              email: this.artistData.email,
+              status: this.artistData.StatusName,
               avatar: ResultAvatar,
             })
             .then((res) => {
               this.isSending = false;
               console.log(res.data);
-              //   this.$router.push(`/artists/${response.data.slug}`);
+              this.$router.push(`/clients`);
             })
-            .catch(function (err) {
-              console.log(err.response.data);
+            .catch((err) => {
+              console.log(err);
               this.isSending = false;
               this.$vs.dialog({
                 color: "danger",

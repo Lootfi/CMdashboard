@@ -113,5 +113,27 @@ export default [
                 i18n: "Modifier Template"
             }
         ]
+    },
+    {
+        url: null,
+        name: "Entreprises",
+        slug: "entreprises",
+        icon: "BoxIcon",
+        i18n: "entreprises",
+        admin: true,
+        submenu: [
+            {
+                url: "/entreprises/add",
+                name: "Ajouter Entreprise",
+                slug: "ajouter-entreprise",
+                i18n: "Ajouter Entreprise"
+            },
+            {
+                url: "/entreprises",
+                name: "Liste des Entreprise",
+                slug: "entreprises",
+                i18n: "Modifier Entreprise"
+            }
+        ]
     }
 ];

@@ -1,6 +1,6 @@
 <template>
   <vs-chip class="ag-grid-cell-chip" :color="chipColor(params.value)">
-    <span>{{ params.value }}</span>
+    <span>{{ params.value.label }}</span>
   </vs-chip>
 </template>
 
@@ -10,8 +10,8 @@ export default {
   computed: {
     chipColor() {
       return (value) => {
-        if (value === "Activé") return "success";
-        else if (value === "Suspendu") return "danger";
+        if (value.label === "Activé") return "success";
+        else if (value.label === "Suspendu") return "danger";
         else return "primary";
       };
     },

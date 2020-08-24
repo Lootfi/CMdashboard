@@ -28,4 +28,9 @@ class Contact extends Model
     {
         return $this->belongsTo(ContactType::class, 'type_id', 'id');
     }
+
+    public function entreprises()
+    {
+        return $this->belongsToMany(Entreprise::class, 'entreprise_contacts', 'contact_id', 'entreprise_id');
+    }
 }

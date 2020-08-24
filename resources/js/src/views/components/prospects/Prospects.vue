@@ -108,12 +108,6 @@ export default {
           headerCheckboxSelection: true,
         },
         {
-          headerName: "Nom",
-          field: "name",
-          filter: true,
-          width: 200,
-        },
-        {
           headerName: "Email",
           field: "email",
           filter: true,
@@ -156,7 +150,6 @@ export default {
     this.$http
       .get("/api/potential-clients")
       .then((res) => {
-        console.log(res.data);
         this.potentialClients = res.data;
       })
       .catch((err) => console.log(err.response.data));

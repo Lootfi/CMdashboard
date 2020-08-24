@@ -20,11 +20,14 @@
             >
               <span class="mr-2">
                 {{
-                currentPage * paginationPageSize - (paginationPageSize - 1)
+                currentPage * paginationPageSize -
+                (paginationPageSize - 1)
                 }}
                 -
                 {{
-                artistsData.length - currentPage * paginationPageSize > 0
+                artistsData.length -
+                currentPage * paginationPageSize >
+                0
                 ? currentPage * paginationPageSize
                 : artistsData.length
                 }}
@@ -157,6 +160,12 @@ export default {
           filter: true,
           width: 180,
         },
+        {
+          headerName: "Actions",
+          field: "transactions",
+          width: 150,
+          cellRendererFramework: "CellRendererActions",
+        },
       ],
 
       // Cell Renderer Components
@@ -225,13 +234,22 @@ export default {
     this.gridApi = this.gridOptions.api;
   },
   created() {
+    this.$vs.loading({
+      type: "default",
+      text: "Patientez s'il vous plait",
+    });
     if (!moduleArtistManagement.isRegistered) {
       this.$store.registerModule("artistManagement", moduleArtistManagement);
       moduleArtistManagement.isRegistered = true;
     }
-    this.$store.dispatch("artistManagement/fetchArtists").catch((err) => {
-      console.error(err.response.data);
-    });
+    this.$store
+      .dispatch("artistManagement/fetchArtists")
+      .catch((err) => {
+        console.error(err.response.data);
+      })
+      .then(() => {
+        this.$vs.loading.close();
+      });
   },
 };
 </script>

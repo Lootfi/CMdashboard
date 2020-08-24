@@ -64,11 +64,11 @@ class Artist extends Authenticatable implements JWTSubject
 
         if ($this->status == 1) {
 
-            return "Activé";
+            return ['label' => "Activé", 'value' => $this->status];
         }
-        if ($this->status == 2) {
+        if ($this->status == 0) {
 
-            return "suspended";
+            return ['label' => "Suspendu", 'value' => $this->status];
         }
     }
 

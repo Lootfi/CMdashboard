@@ -28,7 +28,7 @@ class EditController extends Controller
 					$artist->status = 1;
 				}
 				if (request('status')['label'] == "Suspendu") {
-					$artist->status = 2;
+					$artist->status = 0;
 				}
 			}
 			if (request('payment_method')) {
