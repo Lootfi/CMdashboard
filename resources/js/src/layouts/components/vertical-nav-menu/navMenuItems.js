@@ -138,7 +138,7 @@ export default [
     },
     {
         url: null,
-        name: "Paramètres Service",
+        name: "Paramètres",
         slug: "service",
         icon: "SettingsIcon",
         i18n: "service",
@@ -149,6 +149,12 @@ export default [
                 name: "Modifier Prix",
                 slug: "modifier-prix",
                 i18n: "Modifier Prix"
+            },
+            {
+                url: "/service/faq",
+                name: "Questions Fréquentes",
+                slug: "modifier-faq",
+                i18n: "Modifier FAQ"
             }
         ]
     }

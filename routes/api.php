@@ -60,6 +60,14 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 		Route::post('/{slug}/edit', 'EditController@edit');
 	});
 
+	Route::group(['prefix' => 'faqs', 'namespace' => 'Faqs'], function () {
+		Route::get('/', 'FaqController@index');
+		Route::get('/{id}', 'FaqController@show');
+		Route::post('/create', 'FaqController@create');
+		Route::post('/{id}/edit', 'FaqController@edit');
+		Route::post('/{id}/delete', 'FaqController@delete');
+	});
+
 	Route::group(['prefix' => 'templates', 'namespace' => 'Templates'], function () {
 		Route::get('/', 'TemplateController@index');
 		Route::get('/get/{alias}', 'TemplateController@getTemplate');

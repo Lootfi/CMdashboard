@@ -291,6 +291,16 @@ const router = new Router({
                         requiresAuth: true,
                         requiresAdmin: true
                     }
+                },
+                {
+                    path: "/service/faq",
+                    name: "faqs",
+                    component: () => import("@/views/pages/Faq/IndexFaq.vue"),
+                    meta: {
+                        rule: "Editor",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
                 }
             ]
         },

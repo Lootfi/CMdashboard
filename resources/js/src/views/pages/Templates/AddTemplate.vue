@@ -3,6 +3,7 @@
 
 <template>
   <div>
+    <h3 class="mb-6">Ajouter Template</h3>
     <div class="vx-row">
       <div class="vx-col w-full mb-2">
         <vs-input
