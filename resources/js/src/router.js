@@ -263,18 +263,7 @@ const router = new Router({
                     path: "/entreprises",
                     name: "entreprises",
                     component: () =>
-                        import("@/views/pages/Entreprises/EntripriseIndex.vue"),
-                    meta: {
-                        rule: "Admin",
-                        requiresAuth: true,
-                        requiresAdmin: true
-                    }
-                },
-                {
-                    path: "/entreprises/add",
-                    name: "add-entreprise",
-                    component: () =>
-                        import("@/views/pages/Entreprises/AddEntriprise.vue"),
+                        import("@/views/pages/Entreprises/EntrepriseIndex.vue"),
                     meta: {
                         rule: "Admin",
                         requiresAuth: true,

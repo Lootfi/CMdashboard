@@ -89,25 +89,7 @@
       <div class="vx-row">
         <div class="vx-col lg:w-1/2 w-full">
           <vx-card title="Entreprise(s)" class="mb-base">
-            <table>
-              <tr>
-                <td class="font-semibold">Website</td>
-                <td>https://www.website.com/</td>
-              </tr>
-              <!-- 
-              <tr>
-                <td class="font-semibold">Languages</td>
-                <td>{{ user_data.languages_known.join(", ") }}</td>
-              </tr>
-              <tr>
-                <td class="font-semibold">Gender</td>
-                <td>{{ user_data.gender }}</td>
-              </tr>
-              <tr>
-                <td class="font-semibold">Contact</td>
-                <td>{{ user_data.contact_options.join(", ") }}</td>
-              </tr>-->
-            </table>
+            <vs-chip v-for="(entreprise,index) in contact.entreprises">{{entreprise.name}}</vs-chip>
           </vx-card>
         </div>
 

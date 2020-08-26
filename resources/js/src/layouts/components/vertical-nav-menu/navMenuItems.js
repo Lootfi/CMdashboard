@@ -123,12 +123,6 @@ export default [
         admin: true,
         submenu: [
             {
-                url: "/entreprises/add",
-                name: "Ajouter Entreprise",
-                slug: "ajouter-entreprise",
-                i18n: "Ajouter Entreprise"
-            },
-            {
                 url: "/entreprises",
                 name: "Liste des Entreprise",
                 slug: "entreprises",

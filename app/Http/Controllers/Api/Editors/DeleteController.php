@@ -14,11 +14,12 @@ class DeleteController extends Controller
 
         if ($administrator = Administrator::fetchBySlug($slug)) {
             $oldAvatar = public_path('images/admin/users/avatars/') . $administrator->picture;
-            File::delete($oldAvatar);
+            if ($administrator->picture != "default.jpeg")
+                File::delete($oldAvatar);
             $administrator->delete();
-            return response()->json('Administrator deleted');
+            return response()->json(['success' => 'Administrator deleted']);
         }
 
-        return response()->json('Administrator not found ! ');
+        return response()->json('Administrator not found ! ', 404);
     }
 }

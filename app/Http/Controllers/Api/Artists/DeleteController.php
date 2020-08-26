@@ -13,7 +13,7 @@ class DeleteController extends Controller
     {
 
         if ($artist = Artist::fetchBySlug($slug)) {
-            if ($artist->avatar != 'default.jpg') {
+            if ($artist->avatar != 'default.jpeg') {
                 $oldAvatar = public_path('images/artists/') . $artist->avatar;
                 File::delete($oldAvatar);
             }

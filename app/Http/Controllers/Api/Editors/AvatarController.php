@@ -21,7 +21,8 @@ class AvatarController extends Controller
 				$fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
 				$AvatarPath = public_path('images/admin/users/avatars/') . $fileName;
 				$oldAvatar = public_path('images/admin/users/avatars/') . $administrator->picture;
-				File::delete($oldAvatar);
+				if ($administrator->picture != "default.jpeg")
+					File::delete($oldAvatar);
 				Image::make($request->get('avatar'))->save($AvatarPath);
 				ImageOptimizer::optimize($AvatarPath);
 				$administrator->picture = $fileName;

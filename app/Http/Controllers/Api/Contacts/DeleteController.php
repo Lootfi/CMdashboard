@@ -13,12 +13,14 @@ class DeleteController extends Controller
     {
 
         if ($contact = Contact::fetchBySlug($slug)) {
-            $oldPic = public_path('images/contacts/') . $contact->picture;
-            File::delete($oldPic);
+            if ($contact->picture != 'default.jpeg') {
+                $oldPic = public_path('images/contacts/') . $contact->picture;
+                File::delete($oldPic);
+            }
             $contact->delete();
-            return response()->json('Contact deleted');
+            return response()->json(['success' => 'Contact deleted', 'contacts' => Contact::all()]);
         }
 
-        return response()->json('Contact not found ! ');
+        return response()->json('Contact not found ! ', 404);
     }
 }

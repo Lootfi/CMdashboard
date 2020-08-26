@@ -18,20 +18,7 @@
     </vs-alert>
 
     <vx-card v-if="contact">
-      <div slot="no-body" class="tabs-container px-6 pt-6">
-        <vs-tabs v-model="activeTab" class="tab-action-btn-fill-conatiner">
-          <vs-tab label="Information" icon-pack="feather" icon="icon-info">
-            <div class="tab-text">
-              <edit-information class="mt-4" :data="contact" />
-            </div>
-          </vs-tab>
-          <vs-tab label="Social" icon-pack="feather" icon="icon-share-2">
-            <div class="tab-text">
-              <edit-social class="mt-4" :data="contact" />
-            </div>
-          </vs-tab>
-        </vs-tabs>
-      </div>
+      <edit-information class="mt-4" :data="contact" />
     </vx-card>
   </div>
 </template>

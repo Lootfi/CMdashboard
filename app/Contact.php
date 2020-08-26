@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
 
+    protected $attributes = [
+        'mobile' => '',
+        'title' => '',
+        'prenom' => '',
+        'username' => '',
+        'type_id' => 0
+    ];
     // protected $appends = ['Picture'];
 
     public static function fetchBySlug($slug)

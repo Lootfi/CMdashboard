@@ -106,7 +106,7 @@ Route::group(['middleware' => ['jwt.verify:Admin,Editor']], function () {
 		Route::post('/create', 'CreateController@create');
 		Route::get('/{slug}', 'ShowController@show');
 		Route::post('/{slug}/edit', 'EditController@edit');
-		Route::get('/{slug}/delete', 'DeleteController@delete');
+		Route::post('/{slug}/delete', 'DeleteController@delete');
 		Route::post('/{slug}/uploadPicture', 'PictureController@upload');
 	});
 });

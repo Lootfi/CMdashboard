@@ -131,6 +131,18 @@
         />
         <span class="text-danger text-sm" v-show="errors.has('title')">{{ errors.first("title") }}</span>
       </div>
+      <div class="vx-col md:w-1/2 w-full mt-4" v-show="entrepriseOptions !== []">
+        <label class="vs-input--label">Entreprise(s)</label>
+        <v-select
+          multiple
+          taggable
+          push-tags
+          :clearable="false"
+          :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          v-model="entreprises"
+          :options="entrepriseOptions"
+        />
+      </div>
     </div>
 
     <v-divider style="padding: 20px 0" />
@@ -239,12 +251,29 @@ export default {
         { label: "Espagne", value: "Espagne" },
         { label: "Allemagne", value: "Allemagne" },
       ],
+      entrepriseOptions: [],
+      entreprises: [],
     };
   },
   computed: {
     validateForm() {
       return !this.errors.any();
     },
+  },
+  mounted() {
+    this.$http.get("/api/entreprises").then((res) => {
+      let entreprises = [];
+      res.data.map((item, index) => {
+        entreprises[index] = { label: item.name, value: item.slug };
+      });
+      this.entrepriseOptions = entreprises;
+    });
+
+    let entreprises = [];
+    this.data_local.entreprises.map((item, index) => {
+      entreprises[index] = { label: item.name, value: item.slug };
+    });
+    this.entreprises = entreprises;
   },
   methods: {
     capitalize(str) {
@@ -256,7 +285,11 @@ export default {
 
       let slug = this.$route.params.slug;
       let information = this.data_local;
-      information = { ...information, ...information.social };
+      information = {
+        ...information,
+        ...information.social,
+        entreprises: this.entreprises,
+      };
       information.social = null;
       if (this.imgURL)
         information["picture"] = this.$refs.clipper

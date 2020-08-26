@@ -48,9 +48,9 @@ class EditController extends Controller
 				$imageData = request('avatar');
 				$fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
 				$AvatarPath = public_path('images/artists/') . $fileName;
-				$oldPicture = public_path('images/artists/') . Artist::where('slug', $slug)->first()->avatar;
-
-				File::delete($oldPicture);
+				$oldPicture = public_path('images/artists/') . $artist->avatar;
+				if ($artist->avatar != 'default.jpeg')
+					File::delete($oldPicture);
 				Image::make(request('avatar'))->save($AvatarPath);
 				$artist->avatar = $fileName;
 			}

@@ -108,12 +108,13 @@
           />
           <span class="text-danger text-sm" v-show="errors.has('title')">{{ errors.first("title") }}</span>
         </div>
-        <div class="vx-col md:w-1/2 w-full mt-4">
+        <div class="vx-col md:w-1/2 w-full mt-4" v-show="entrepriseOptions !== []">
           <label class="vs-input--label">Entreprise(s)</label>
           <v-select
             multiple
             taggable
             push-tags
+            :clearable="false"
             :dir="$vs.rtl ? 'rtl' : 'ltr'"
             v-model="entreprises"
             :options="entrepriseOptions"
@@ -173,12 +174,12 @@ export default {
   },
   data() {
     return {
-      name: "",
-      email: "",
-      country: "",
+      name: "Name",
+      email: "mail@gm.com",
+      country: { label: "France", value: "France" },
       state: "",
-      mobile: "",
-      title: "",
+      mobile: "0699499071",
+      title: "Title",
       prenom: "",
       username: "",
       imgURL: "",
@@ -196,35 +197,49 @@ export default {
         { label: "Espagne", value: "Espagne" },
         { label: "Allemagne", value: "Allemagne" },
       ],
+      entreprises: [],
+      entrepriseOptions: [],
     };
   },
-
+  mounted() {
+    this.$http.get("/api/entreprises").then((res) => {
+      let entreprises = [];
+      res.data.map((item, index) => {
+        entreprises[index] = { label: item.name, value: item.slug };
+      });
+      this.entrepriseOptions = entreprises;
+    });
+  },
   methods: {
     handleContactSubmit(e) {
       e.preventDefault();
       let self = this;
       this.$validator.validateAll().then((result) => {
         if (result) {
-          const canvas = self.$refs.clipper.clip();
-          const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+          let ResultAvatar = "";
+          if (this.imgURL) {
+            const canvas = self.$refs.clipper.clip();
+            ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+          }
           self.isSending = true;
           this.$http
             .post(`/api/contacts/create`, {
-              title: this.title,
-              prenom: this.prenom,
-              username: this.username,
+              title: self.title,
+              prenom: self.prenom,
+              username: self.username,
               name: self.name,
               email: self.email,
               mobile: self.mobile,
               country: self.country,
               state: self.state,
               picture: ResultAvatar,
+              entreprises: self.entreprises,
             })
             .then((response) => {
               console.log(response.data);
               self.isSending = false;
-              self.$vs.dialog({
-                color: "primary",
+              self.$vs.notify({
+                color: "success",
                 title: ``,
                 text: "Contact crée ! ",
               });
@@ -233,11 +248,19 @@ export default {
             .catch(function (error) {
               console.log(error.response.data);
               self.isSending = false;
-              self.$vs.dialog({
-                color: "danger",
-                title: ``,
-                text: "Erreur lors de la création",
-              });
+              if (error.response.data === "Contact exists") {
+                self.$vs.notify({
+                  color: "danger",
+                  title: ``,
+                  text: "Un contact avec le meme E-mail existe déja",
+                });
+              } else {
+                self.$vs.dialog({
+                  color: "danger",
+                  title: ``,
+                  text: "Erreur lors de la création",
+                });
+              }
             });
         }
       });

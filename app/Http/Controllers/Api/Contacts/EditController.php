@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\Contacts;
 
 use App\Contact;
 use App\ContactSocialLinks;
+use App\Entreprise;
+use App\EntrepriseContact;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -48,6 +50,31 @@ class EditController extends Controller
                 $contact->picture = $this->uploadPic(request()->get('picture'), $slug);
             }
 
+            EntrepriseContact::where('contact_id', $contact->id)->delete();
+            if (request('entreprises')) {
+
+                foreach (request('entreprises') as $var) {
+                    $item = collect($var);
+                    if ($item->has('value')) { //entreprise exists in database
+                        $entreprise = Entreprise::where('slug', $item['value'])->first();
+                        EntrepriseContact::firstOrCreate([
+                            'contact_id' => $contact->id,
+                            'entreprise_id' => $entreprise->id
+                        ]);
+                    } else { // entreprise doesn't exist in database
+                        $entreprise = Entreprise::create([
+                            'name' => ucfirst($item['label']),
+                            'slug' => str_slug($item['label']) . "-" . substr(md5(mt_rand()), 0, 6)
+                        ]);
+                        EntrepriseContact::create([
+                            'contact_id' => $contact->id,
+                            'entreprise_id' => $entreprise->id
+                        ]);
+                    }
+                }
+            }
+
+
             $social_links = $contact->social;
 
             if (request('twitter')) {
@@ -74,11 +101,13 @@ class EditController extends Controller
 
     public function uploadPic($imageData, $slug)
     {
+        $contact = Contact::where('slug', $slug)->first();
         $fileName = Carbon::now()->timestamp . '_' . uniqid() . '.' . explode('/', explode(':', substr($imageData, 0, strpos($imageData, ';')))[1])[1];
         $PicturePath = public_path('images/contacts/') . $fileName;
-        $oldPicture = public_path('images/contacts/') . Contact::where('slug', $slug)->first()->picture;
+        $oldPicture = public_path('images/contacts/') . $contact->picture;
 
-        File::delete($oldPicture);
+        if ($contact->picture != 'default.jpeg')
+            File::delete($oldPicture);
         Image::make($imageData)->save($PicturePath);
         ImageOptimizer::optimize($PicturePath);
 

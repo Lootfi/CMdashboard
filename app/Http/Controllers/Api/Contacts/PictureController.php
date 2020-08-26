@@ -24,7 +24,8 @@ class PictureController extends Controller
 				$PicturePath = public_path('images/contacts/') . $fileName;
 				$oldPicture = public_path('images/contacts/') . $contact->picture;
 
-				File::delete($oldPicture);
+				if ($contact->picture != 'default.jpeg')
+					File::delete($oldPicture);
 				Image::make($request->get('avatar'))->save($PicturePath);
 				ImageOptimizer::optimize($PicturePath);
 

@@ -136,7 +136,7 @@
                 icon="TrashIcon"
                 svgClasses="w-5 h-5 hover:text-danger stroke-current"
                 class="ml-2"
-                @click.stop="deleteData(tr.id)"
+                @click.stop="confirmDeleteRecord(tr)"
               />
             </vs-td>
           </vs-tr>
@@ -187,10 +187,50 @@ export default {
       this.sidebarData = {};
       this.toggleDataSidebar(true);
     },
-    deleteData(id) {
-      this.$store.dispatch("dataList/removeItem", id).catch((err) => {
-        console.error(err);
+    deleteData(slug) {
+      this.$http
+        .post(`/api/contacts/${slug}/delete`)
+        .then((res) => {
+          this.$router.push("/contacts");
+        })
+        .catch((err) => {
+          this.$vs.notify({
+            color: "danger",
+            title: "",
+            text: "Erreur lors de la suppression",
+          });
+        });
+    },
+    confirmDeleteRecord(contact) {
+      this.$vs.dialog({
+        type: "confirm",
+        color: "danger",
+        title: "Confirm Delete",
+        text: `Vous allez supprimer le contact "${contact.name}"`,
+        accept: () => this.deleteRecord(contact.slug),
+        acceptText: "Supprimer",
+        cancelText: "Annuler",
+        parametres: contact.slug,
       });
+    },
+    deleteRecord(slug) {
+      this.$http
+        .post(`/api/contacts/${slug}/delete`)
+        .then((res) => {
+          this.$vs.notify({
+            color: "success",
+            title: "",
+            text: "Contact supprimer!",
+          });
+          this.contacts = res.data.contacts;
+        })
+        .catch((err) => {
+          this.$vs.notify({
+            color: "danger",
+            title: "",
+            text: "Erreur lors de la suppression",
+          });
+        });
     },
     editData(slug) {
       // this.sidebarData = JSON.parse(JSON.stringify(this.blankData))
