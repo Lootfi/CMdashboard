@@ -14,7 +14,8 @@ export default [
         slug: "dashboard",
         icon: "HomeIcon",
         i18n: "Dashboard",
-        admin: false
+        admin: false,
+        meta: "all"
     },
 
     {
@@ -24,6 +25,7 @@ export default [
         icon: "HeadphonesIcon",
         i18n: "Contacts",
         admin: false,
+        meta: "editor",
         submenu: [
             {
                 url: "/contacts",
@@ -38,19 +40,13 @@ export default [
                 url: "/create-contact",
                 name: "Ajouter un Contact",
                 slug: "ajouter-contact",
-                i18n: "Contacts",
-                admin: true,
-                editor: true,
-                commercial: false
+                i18n: "Contacts"
             },
             {
                 url: "/types",
                 name: "Types des Contacts",
                 slug: "contact-types",
-                i18n: "Types",
-                admin: true,
-                editor: false,
-                commercial: false
+                i18n: "Types"
             }
         ]
     },
@@ -61,6 +57,7 @@ export default [
         icon: "UserIcon",
         i18n: "Editors",
         admin: true,
+        meta: "admin",
         submenu: [
             {
                 url: "/editors",
@@ -83,6 +80,7 @@ export default [
         icon: "MusicIcon",
         i18n: "clients",
         admin: false,
+        meta: "commercial",
         submenu: [
             {
                 url: "/clients",
@@ -99,6 +97,7 @@ export default [
         icon: "MailIcon",
         i18n: "emails",
         admin: true,
+        meta: "admin",
         submenu: [
             {
                 url: "/templates",
@@ -121,6 +120,7 @@ export default [
         icon: "BoxIcon",
         i18n: "entreprises",
         admin: true,
+        meta: "admin",
         submenu: [
             {
                 url: "/entreprises",
@@ -137,6 +137,7 @@ export default [
         icon: "SettingsIcon",
         i18n: "service",
         admin: true,
+        meta: "admin",
         submenu: [
             {
                 url: "/service/prix",

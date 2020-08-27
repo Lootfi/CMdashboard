@@ -114,7 +114,7 @@
               <!-- Nav-Group -->
               <template v-else>
                 <v-nav-menu-group
-                  v-if="showGroup(item.admin)"
+                  v-if="showGroup(item.meta)"
                   :key="`group-${index}`"
                   :openHover="openGroupHover"
                   :group="item"
@@ -290,15 +290,43 @@ export default {
     },
 
     showGroup(meta) {
-      if (
-        (meta == true &&
-          this.$store.state.AppActiveUser.user.role == "Admin") ||
-        meta == false
-      ) {
-        return true;
-      }
+      // if (
+      //   (meta == true &&
+      //     this.$store.state.AppActiveUser.user.role == "Admin") ||
+      //   meta == false
+      // ) {
+      //   return true;
+      // }
 
-      return false;
+      // return false;
+
+      switch (meta) {
+        case "all":
+          return true;
+          break;
+        case "admin":
+          if (this.$store.state.AppActiveUser.user.role == "Admin") return true;
+          else return false;
+          break;
+        case "editor":
+          if (
+            this.$store.state.AppActiveUser.user.role == "Admin" ||
+            this.$store.state.AppActiveUser.user.role == "Editor"
+          )
+            return true;
+          else return false;
+        case "commercial":
+          if (
+            this.$store.state.AppActiveUser.user.role == "Admin" ||
+            this.$store.state.AppActiveUser.user.role == "Commercial"
+          )
+            return true;
+          else return false;
+          break;
+        default:
+          return false;
+          break;
+      }
     },
     onSwipeAreaSwipe(event) {
       if (event.direction === 4 && !this.$vs.rtl) {
