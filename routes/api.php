@@ -134,16 +134,38 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::get('faqs', 'FaqController@index');
 
 	Route::post('login', 'Auth\LoginController@login');
-
-	Route::group(['middleware' => 'clients'], function () {
-		Route::get('auth/check', 'Auth\LoginController@check');
-		Route::get('user', function (Request $request) {
-			return response()->json($request->user('clients'));
-		});
-		Route::post('logout', 'Auth\RegisterController@logout');
-	});
 });
 
-Route::get('sub/token', 'Subscriptions\CreateController@getToken');
+Route::group(['prefix' => 'front', 'namespace' => 'Front', 'middleware' => 'clients'], function () {
+	Route::get('auth/check', 'Auth\LoginController@check');
+	Route::post('logout', 'Auth\RegisterController@logout');
+
+	Route::group(['prefix' => 'user', 'namespace' => 'Auth'], function () {
+		Route::get('/', function (Request $request) {
+			return response()->json($request->user('clients'));
+		});
+		Route::post('/edit', 'UserController@edit');
+		Route::post('/picture', 'UserController@uploadPicture');
+	});
+
+	Route::group(['prefix' => 'contacts', 'namespace' => 'Contacts'], function () {
+		Route::get('/', 'ContactController@index');
+		Route::get('/{slug}', 'ContactController@show');
+	});
+
+	Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
+		Route::get('/', 'PaymentController@info');
+	});
+
+	Route::group(['prefix' => 'entreprises', 'namespace' => 'Entreprises'], function () {
+		Route::get('/', 'EntrepriseController@index');
+		Route::get('/{slug}', 'EntrepriseController@show');
+	});
+});
+// Route::post('/front/payment/capture', 'Front\Payments\PaymentController@capture');
+
+
+//dev
+Route::get('sub/token', 'Subscriptions\CreateController@getToken'); //creates auth_token 
 Route::get('sub/create-product', 'Subscriptions\CreateController@createProduct');
 Route::get('sub/create-plan', 'Subscriptions\CreateController@createPlan');

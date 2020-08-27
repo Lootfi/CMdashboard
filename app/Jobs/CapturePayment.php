@@ -2,14 +2,19 @@
 
 namespace App\Jobs;
 
-use App\Models\Artist;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\Jobs\SyncJob;
 use Illuminate\Queue\SerializesModels;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Config;
+
+use PayPal\Rest\ApiContext;
+use PayPal\Auth\OAuthTokenCredential;
+
+use PayPal\Api\Amount;
+use PayPal\Api\Authorization;
+use PayPal\Api\Capture;
 
 class CapturePayment implements ShouldQueue
 {
@@ -18,6 +23,7 @@ class CapturePayment implements ShouldQueue
     public $client;
     public $tries = 5;
     public $timeout = 20;
+    protected $_api_context;
 
     /**
      * Create a new job instance.
@@ -27,6 +33,14 @@ class CapturePayment implements ShouldQueue
     public function __construct($artist)
     {
         $this->client = $artist;
+
+        //paypal config
+        $paypal_conf = Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential(
+            $paypal_conf['client_id'],
+            $paypal_conf['secret']
+        ));
+        $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
     /**
@@ -38,43 +52,33 @@ class CapturePayment implements ShouldQueue
     {
         $auth = $this->client->payment_auth;
 
-        $ch = curl_init();
+        try {
+            //code...
 
-        curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v2/payments/authorizations/' . $auth->auth_id . '/capture');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
+            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
+            $amt = new Amount();
+            $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: Bearer ' . env('PAYPAL_TOKEN');
-        $headers[] = 'Paypal-Request-Id: ' . Uuid::uuid1()->toString();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            $capture = new Capture();
+            $capture->setAmount($amt);
 
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            echo 'Error: ' . curl_error($ch);
-            $this->release();
-        }
-        echo 'FIRST ECHO: ' . json_encode($result);
-        echo 'STATUS: "' . json_decode($result)->status . '"';
+            $getCapture = $authorization->capture($capture, $this->_api_context);
 
-        if (json_decode($result)->status == "COMPLETED") {
-            echo 'STATUS: ' . json_decode($result)->status;
-            $this->client->payment_confirmed = true;
-            $this->client->payment_method = 'paypal_' . json_decode($result)->id;
-            $this->client->updated_at = now();
-            $this->client->save();
-            $this->delete();
-            return;
-        }
-        if (json_decode($result)->details) {
-            echo "ERROR: " . json_decode($result)->details[0]->issue;
-            if (json_decode($result)->details[0]->issue == "AUTHORIZATION_ALREADY_CAPTURED") {
-                echo "AUTHORIZATION_ALREADY_CAPTURED";
+            if ($getCapture->getState() == "completed") {
+                $this->client->payment_confirmed = true;
+                $this->client->payment_method = 'paypal_' . $getCapture->getId();
+                $this->client->updated_at = now();
+                $this->client->save();
+                // $auth->delete(); //deletes order_id and auth_id
+                $this->delete();
+                return;
+            }
+        } catch (\Exception $ex) {
+            if ($authorization->getState() == "captured") {
                 $this->fail();
-            } else $this->release();
+            } else {
+                $this->release();
+            }
         }
-
-        curl_close($ch);
     }
 }
