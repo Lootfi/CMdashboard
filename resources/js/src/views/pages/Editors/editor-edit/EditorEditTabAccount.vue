@@ -220,7 +220,7 @@ export default {
           this.ChangeIsSending = true;
           this.$http
             .post(
-              `/api/users/${this.data.slug}/edit`,
+              `/api/editors/${this.data.slug}/edit`,
               {
                 username: this.data_local.username,
                 full_name: this.data_local.full_name,

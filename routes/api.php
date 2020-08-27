@@ -162,7 +162,7 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front', 'middleware' => 'clie
 		Route::get('/{slug}', 'EntrepriseController@show');
 	});
 });
-// Route::post('/front/payment/capture', 'Front\Payments\PaymentController@capture');
+Route::post('/front/payment/capture', 'Front\Payments\PaymentController@capture');
 
 
 //dev

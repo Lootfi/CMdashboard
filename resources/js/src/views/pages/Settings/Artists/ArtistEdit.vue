@@ -62,46 +62,48 @@
       </div>
 
       <div class="block overflow-x-auto">
-        <vs-input
-          class="w-full mb-base"
-          v-validate="'required|min:3|max:35'"
-          label-placeholder="Mot de passe actuelle"
-          v-model="old_password"
-          name="old_password"
-          type="password"
-        />
-        <span class="text-danger text-sm" v-show="errors.has('old_password')">
-          {{
-          errors.first("old_password")
-          }}
-        </span>
-        <vs-input
-          class="w-full mb-base"
-          name="password"
-          ref="password"
-          v-validate="'required|min:3|max:35'"
-          label-placeholder="Nouveau Mot de passe"
-          v-model="password"
-          type="password"
-        />
-        <span class="text-danger text-sm" v-show="errors.has('password')">
-          {{
-          errors.first("password")
-          }}
-        </span>
-        <vs-input
-          class="w-full mb-base"
-          label-placeholder="Confirmation du nouveau mot de passe"
-          v-model="confirm_password"
-          name="confirm_password"
-          v-validate="'required|confirmed:password'"
-          type="password"
-        />
-        <span class="text-danger text-sm" v-show="errors.has('confirm_password')">
-          {{
-          errors.first("confirm_password")
-          }}
-        </span>
+        <div class="vx-col sm:w-1/2 w-full mb-2">
+          <vs-input
+            class="w-full mb-base"
+            name="password"
+            ref="password"
+            v-validate="'required|min:3|max:35'"
+            label-placeholder="Nouveau Mot de passe"
+            v-model="password"
+            type="password"
+          />
+          <span class="text-danger text-sm" v-show="errors.has('password')">
+            {{
+            errors.first("password")
+            }}
+          </span>
+        </div>
+        <div class="vx-col sm:w-1/2 w-full mb-2">
+          <vs-input
+            class="w-full mb-base"
+            label-placeholder="Confirmation du nouveau mot de passe"
+            v-model="confirm_password"
+            name="confirm_password"
+            v-validate="'required|confirmed:password'"
+            type="password"
+          />
+          <span class="text-danger text-sm" v-show="errors.has('confirm_password')">
+            {{
+            errors.first("confirm_password")
+            }}
+          </span>
+        </div>
+      </div>
+      <div class="vx-row">
+        <div class="vx-col w-full">
+          <div class="mt-8 flex flex-wrap items-center justify-end">
+            <vs-button
+              class="ml-auto mt-2"
+              @click="handleChangePassword"
+              :disabled="isSending"
+            >Changer le mot de passe</vs-button>
+          </div>
+        </div>
       </div>
     </vx-card>
 
@@ -166,9 +168,9 @@ export default {
     return {
       artistData: {},
       imgURL: "",
-      old_password: "",
       password: "",
       confirm_password: "",
+      isSending: false,
     };
   },
   mounted() {
@@ -194,6 +196,28 @@ export default {
       .catch(function (error) {
         console.error(error.response.data);
       });
+  },
+  methods: {
+    handleChangePassword() {
+      this.isSending = true;
+
+      this.$http
+        .post(`/api/artists/${this.$route.params.slug}/edit`, {
+          password: this.password,
+        })
+        .then((res) => {
+          this.isSending = false;
+          this.$router.push(`/clients`);
+        })
+        .catch((err) => {
+          this.isSending = false;
+          this.$vs.dialog({
+            color: "danger",
+            title: ``,
+            text: "Erreur lors de changement de mot de passe",
+          });
+        });
+    },
   },
 };
 </script>

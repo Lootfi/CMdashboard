@@ -29,10 +29,10 @@ export default [
                 url: "/contacts",
                 name: "Liste des contacts",
                 slug: "listecontacts",
-                i18n: "Contacts",
-                admin: true,
-                editor: true,
-                commercial: false
+                i18n: "Contacts"
+                // admin: true,
+                // editor: true,
+                // commercial: false
             },
             {
                 url: "/create-contact",

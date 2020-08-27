@@ -88,7 +88,7 @@ export default {
 
   mounted() {
     this.$http
-      .get(`/api/users/${this.$route.params.slug}`, {
+      .get(`/api/editors/${this.$route.params.slug}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("jwt")}`,
         },

@@ -66,10 +66,10 @@ class Administrator extends Authenticatable implements JWTSubject
     {
 
         if ($this->role == "Admin") {
-
             return "Administrateur";
+        } else if ($this->role == "Commercial") {
+            return "Commercial";
         }
-
         return "Editeur";
     }
 

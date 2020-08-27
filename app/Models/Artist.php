@@ -24,6 +24,7 @@ class Artist extends Authenticatable implements JWTSubject
         'avatar' => 'default.jpeg',
         'payment_method' => '',
         'payment_authorized' => false,
+        'payment_confirmed' => false,
         'status' => false,
         'username' => ''
     ];

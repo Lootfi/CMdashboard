@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class EditController extends Controller
 {

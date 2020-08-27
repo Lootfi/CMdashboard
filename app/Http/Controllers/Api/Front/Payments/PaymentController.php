@@ -36,19 +36,21 @@ class PaymentController extends Controller
     {
         try {
             $user = Artist::where('id', 30)->with('payment_auth')->first();
-            $authorization = Authorization::get($user->payment_auth->auth_id, $this->_api_context);
+            $authorization = Authorization::get('4UA01537HM049522A', $this->_api_context);
 
-            $amt = new Amount();
-            $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
+            dd($authorization);
 
-            $capture = new Capture();
-            $capture->setAmount($amt);
+            // $amt = new Amount();
+            // $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 
-            $getCapture = $authorization->capture($capture, $this->_api_context);
+            // $capture = new Capture();
+            // $capture->setAmount($amt);
 
-            dd($getCapture);
+            // $getCapture = $authorization->capture($capture, $this->_api_context);
+
+            // dd($getCapture);
         } catch (\Exception $ex) {
-            dd($capture, $authorization);
+            // dd($capture, $authorization);
         }
     }
 

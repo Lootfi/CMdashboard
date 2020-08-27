@@ -148,6 +148,7 @@ export default {
         { label: "Tout", value: "" },
         { label: "Administrateur", value: "Admin" },
         { label: "Editeur", value: "Editor" },
+        { label: "Commercial", value: "Commercial" },
       ],
       statusFilter: { label: "Tout", value: "" },
       statusOptions: [

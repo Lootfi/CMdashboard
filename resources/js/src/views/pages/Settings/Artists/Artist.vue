@@ -35,6 +35,38 @@
               </div>
             </div>
           </div>
+          <div class="vx-row">
+            <div class="vx-col flex-1" id="account-info-col-1">
+              <table>
+                <tr>
+                  <td class="font-semibold">Email</td>
+                  <td>{{ artist_data.email }}</td>
+                </tr>
+
+                <tr>
+                  <td class="font-semibold">Status</td>
+                  <td>{{ artist_data.StatusName.label }}</td>
+                </tr>
+              </table>
+            </div>
+            <!-- /Information - Col 1 -->
+
+            <!-- Information - Col 2 -->
+            <div class="vx-col flex-1" id="account-info-col-2">
+              <table>
+                <tr>
+                  <td class="font-semibold">Méthode de Paiement</td>
+                  <td>{{ ' ' +artist_data.PaymentMethodName }}</td>
+                </tr>
+                <tr>
+                  <td class="font-semibold">Paiement</td>
+                  <td v-if="artist_data.payment_confirmed">Capturé</td>
+                  <td v-else-if="artist_data.payment_authorized">Authorizé (Période d'essai)</td>
+                  <td v-else>Pas encore</td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </vx-card>
       </div>
     </div>
@@ -104,5 +136,49 @@ export default {
       opacity: 0.9;
     }
   }
+}
+
+table {
+  td {
+    vertical-align: top;
+    min-width: 140px;
+    padding-bottom: 0.8rem;
+    word-break: break-all;
+  }
+
+  &:not(.permissions-table) {
+    td {
+      @media screen and (max-width: 370px) {
+        display: block;
+      }
+    }
+  }
+}
+
+// #account-info-col-1 {
+//   // flex-grow: 1;
+//   width: 30rem !important;
+//   @media screen and (min-width:1200px) {
+//     & {
+//       flex-grow: unset !important;
+//     }
+//   }
+// }
+
+@media screen and (min-width: 1201px) and (max-width: 1211px),
+  only screen and (min-width: 636px) and (max-width: 991px) {
+  #account-info-col-1 {
+    width: calc(100% - 12rem) !important;
+  }
+
+  // #account-manage-buttons {
+  //   width: 12rem !important;
+  //   flex-direction: column;
+
+  //   > button {
+  //     margin-right: 0 !important;
+  //     margin-bottom: 1rem;
+  //   }
+  // }
 }
 </style>
