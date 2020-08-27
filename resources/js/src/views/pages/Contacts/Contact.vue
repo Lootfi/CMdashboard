@@ -89,7 +89,10 @@
       <div class="vx-row">
         <div class="vx-col lg:w-1/2 w-full">
           <vx-card title="Entreprise(s)" class="mb-base">
-            <vs-chip v-for="(entreprise,index) in contact.entreprises">{{entreprise.name}}</vs-chip>
+            <vs-chip
+              v-for="(entreprise,index) in contact.entreprises"
+              :key="index"
+            >{{entreprise.name}}</vs-chip>
           </vx-card>
         </div>
 

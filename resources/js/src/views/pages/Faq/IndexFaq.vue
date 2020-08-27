@@ -7,7 +7,10 @@
       :data="sidebarData"
     />
 
+    <faq-order v-if="changingOrder" :data="faqs" :changeOrder="changeOrder" />
+
     <vs-table
+      v-if="!changingOrder"
       ref="table"
       multiple
       v-model="selected"
@@ -44,6 +47,14 @@
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
             <span class="ml-2 text-base text-primary">Ajouter une nouvelle question</span>
+          </div>
+          <!-- Change Order -->
+          <div
+            class="p-3 mb-4 mr-4 rounded-lg cursor-pointer flex items-center justify-between text-lg font-medium text-base text-primary border border-solid border-primary"
+            @click="changeOrder"
+          >
+            <feather-icon icon="ListIcon" svgClasses="h-4 w-4" />
+            <span class="ml-2 text-base text-primary">Changer l'ordre des questions</span>
           </div>
         </div>
 
@@ -111,10 +122,11 @@
 
 <script>
 import SidebarData from "./SidebarData.vue";
-
+import FaqOrder from "./FaqOrder.vue";
 export default {
   components: {
     SidebarData,
+    FaqOrder,
   },
   data() {
     return {
@@ -126,6 +138,7 @@ export default {
       sidebarData: {},
       faqs: [],
       table: null,
+      changingOrder: false,
     };
   },
   computed: {
@@ -145,6 +158,9 @@ export default {
     },
   },
   methods: {
+    changeOrder() {
+      this.changingOrder = true;
+    },
     addNewData() {
       this.sidebarData = {};
       this.toggleDataSidebar(true);
@@ -166,7 +182,7 @@ export default {
       this.toggleDataSidebar(true);
     },
     toggleDataSidebar(val = false) {
-      if (!val) window.location.reload();
+      // if (!val) window.location.reload();
       this.addNewDataSidebar = val;
     },
   },

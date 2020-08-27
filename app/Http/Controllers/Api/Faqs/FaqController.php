@@ -5,12 +5,25 @@ namespace App\Http\Controllers\Api\Faqs;
 use App\Faq;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class FaqController extends Controller
 {
     public function index()
     {
-        return response()->json(Faq::all());
+        return response()->json(DB::table('faqs')->orderBy('order')->get());
+    }
+
+    public function changeOrder()
+    {
+        if (request('faqs')) {
+            foreach (request('faqs') as $key => $question) {
+                $faq = Faq::where('id', $question['id'])->first();
+                $faq->order = $key;
+                $faq->save();
+            }
+            return response()->json('success', 200);
+        }
     }
 
     public function show($id)
@@ -20,9 +33,11 @@ class FaqController extends Controller
 
     public function create()
     {
+        $order = DB::table('faqs')->count();
         Faq::create([
             'question' => request('question'),
-            'answer' => request('answer')
+            'answer' => request('answer'),
+            'order' => $order
         ]);
     }
 

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 	});
 
 	Route::group(['prefix' => 'faqs', 'namespace' => 'Faqs'], function () {
+		Route::post('/', 'FaqController@changeOrder');
 		Route::get('/', 'FaqController@index');
 		Route::get('/{id}', 'FaqController@show');
 		Route::post('/create', 'FaqController@create');
