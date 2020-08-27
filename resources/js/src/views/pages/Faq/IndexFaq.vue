@@ -31,7 +31,7 @@
             </div>
 
             <vs-dropdown-menu>
-              <vs-dropdown-item>
+              <vs-dropdown-item @click="deleteSelected">
                 <span class="flex items-center">
                   <feather-icon icon="TrashIcon" svgClasses="h-4 w-4" class="mr-2" />
                   <span>Supprimer</span>
@@ -184,6 +184,18 @@ export default {
     toggleDataSidebar(val = false) {
       // if (!val) window.location.reload();
       this.addNewDataSidebar = val;
+    },
+    deleteSelected() {
+      if (this.selected.length === 0) {
+        this.$vs.notify({
+          color: "danger",
+          text: "Pas de questions séléctionées",
+        });
+      } else {
+        this.$http
+          .post("/api/faqs/delete-selected", { faqs: this.selected })
+          .then((res) => window.location.reload());
+      }
     },
   },
   created() {

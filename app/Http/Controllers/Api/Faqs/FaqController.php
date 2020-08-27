@@ -57,4 +57,16 @@ class FaqController extends Controller
 
         $faq->delete();
     }
+
+    public function deleteSelected()
+    {
+        if (request('faqs')) {
+            foreach (request('faqs') as $question) {
+                Faq::where('id', $question['id'])->first()->delete();
+            }
+            return response()->json('success', 200);
+        } else {
+            return response()->json('no faqs selected', 404);
+        }
+    }
 }

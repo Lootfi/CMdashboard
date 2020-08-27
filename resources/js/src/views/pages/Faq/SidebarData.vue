@@ -145,12 +145,16 @@ export default {
               .post("/api/faqs/" + obj.id + "/edit", obj)
               .catch((err) => {
                 console.error(err);
-              });
+              })
+              .then(() => window.location.reload());
           } else {
             delete obj.id;
-            this.$http.post("/api/faqs/create", obj).catch((err) => {
-              console.error(err);
-            });
+            this.$http
+              .post("/api/faqs/create", obj)
+              .catch((err) => {
+                console.error(err);
+              })
+              .then(() => window.location.reload());
           }
 
           this.$emit("closeSidebar");
