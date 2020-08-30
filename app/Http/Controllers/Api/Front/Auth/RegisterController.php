@@ -202,4 +202,13 @@ class RegisterController extends Controller
             'auth_id' => $info['auth_id']
         ]);
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $validation = Validator::make(request()->only(['passwod', 'password_confirmation']), [
+            'password' => ['required', 'string', 'min:3', 'confirmed'],
+        ]);
+
+        if ($validation->fails()) return response()->json(['errors' => $validation->errors()]);
+    }
 }

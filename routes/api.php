@@ -129,6 +129,10 @@ Route::group(['middleware' => ['jwt.verify:Admin,Commercial']], function () {
 
 
 Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
+
+	Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+	Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+
 	Route::post('validate-email', 'Auth\RegisterController@validateEmail');
 	Route::get('price', 'PriceController@show');
 	Route::post('paypal-payment-complete', 'Auth\RegisterController@paypalPaymentConfirmed');
