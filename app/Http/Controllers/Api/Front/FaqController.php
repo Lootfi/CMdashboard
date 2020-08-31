@@ -10,7 +10,12 @@ class FaqController extends Controller
 {
     public function index()
     {
+        return response()->json(DB::table('faqs')->orderBy('order')->get());
+    }
 
-        return response()->json(DB::table('faqs')->where('frontpage',1)->orderBy('order')->get());
+    public function front()
+    {
+        $faqs = Faq::all();
+        return response()->json($faqs->where('frontpage', true)->sortBy('order'));
     }
 }

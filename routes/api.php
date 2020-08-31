@@ -138,6 +138,7 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::post('paypal-payment-complete', 'Auth\RegisterController@paypalPaymentConfirmed');
 	Route::post('setup-profile', 'Auth\RegisterController@setupProfile');
 	Route::get('faqs', 'FaqController@index');
+	Route::get('front-faqs', 'FaqController@front');
 
 	Route::post('login', 'Auth\LoginController@login');
 });
