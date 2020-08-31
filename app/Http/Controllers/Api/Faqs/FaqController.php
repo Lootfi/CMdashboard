@@ -37,7 +37,8 @@ class FaqController extends Controller
         Faq::create([
             'question' => request('question'),
             'answer' => request('answer'),
-            'order' => $order
+            'order' => $order,
+            'frontpage' => request('frontpage')
         ]);
     }
 
@@ -47,6 +48,7 @@ class FaqController extends Controller
 
         $faq->question = request('question');
         $faq->answer = request('answer');
+        $faq->frontpage = request('frontpage');
 
         $faq->save();
     }
