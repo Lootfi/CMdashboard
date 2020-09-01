@@ -2,7 +2,7 @@
   <div class="the-navbar__user-meta flex items-center" v-if="activeUserInfo.user.full_name">
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ activeUserInfo.user.full_name }}</p>
-      <small>{{ activeUserInfo.user.StatusName }}</small>
+      <small>{{ activeUserInfo.user.StatusName.label }}</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">

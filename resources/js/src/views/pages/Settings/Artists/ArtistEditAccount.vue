@@ -45,7 +45,7 @@
         <span class="text-danger text-sm" v-show="errors.has('status')">{{ errors.first("status") }}</span>
       </div>
     </div>
-    <div>
+    <!-- <div>
       <div style="max-width: 100%;">
         <div class="my-4">
           <clipper-upload
@@ -71,7 +71,43 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
+    <vs-button @click="activePrompt = true">Changer la photo de client</vs-button>
+    <vs-prompt
+      title="Changer La photo"
+      @cancel="val=''"
+      @accept="handlePhotoUpload"
+      @close="close"
+      :active.sync="activePrompt"
+      accept-text="Changer"
+      cancel-text="Annuler"
+    >
+      <div class="con-exemple-prompt">
+        <div class="my-4">
+          <clipper-upload
+            class="inline-block p-2 my-2 bg-primary rounded text-white"
+            v-model="imgURL"
+          >Importer La photo de client</clipper-upload>
+          <div class="flex" style="max-width: 100%;">
+            <clipper-basic
+              :ratio="1"
+              bg-color="black"
+              class="flex-grow-3"
+              ref="clipper"
+              :src="imgURL"
+              :init-width="100"
+              :init-height="100"
+              preview="my-preview"
+              :rotate="rotation"
+            ></clipper-basic>
+            <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
+          </div>
+          <div class="centerx" v-if="imgURL">
+            <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation" />
+          </div>
+        </div>
+      </div>
+    </vs-prompt>
     <div class="vx-row">
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
@@ -99,6 +135,7 @@ export default {
   data() {
     return {
       artist_local: this.artistData,
+      activePrompt: false,
       isSending: false,
       rotation: 0,
       statusOptions: [
@@ -111,6 +148,27 @@ export default {
     vSelect,
   },
   methods: {
+    handlePhotoUpload() {
+      this.isSending = true;
+      const canvas = this.$refs.clipper.clip();
+      const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+      this.$http
+        .post(`/api/artists/${this.$route.params.slug}/edit`, {
+          avatar: ResultAvatar,
+        })
+        .then((res) => {
+          this.isSending = false;
+          window.location.reload();
+        })
+        .catch((err) => {
+          this.isSending = false;
+          this.$vs.dialog({
+            color: "danger",
+            title: ``,
+            text: "Erreur lors de la modification",
+          });
+        });
+    },
     handleSave(e) {
       e.preventDefault();
       this.$validator.validateAll().then((result) => {
@@ -118,7 +176,6 @@ export default {
           this.isSending = true;
           const canvas = this.$refs.clipper.clip();
           const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
-          console.log("sending");
           this.$http
             .post(`/api/artists/${this.$route.params.slug}/edit`, {
               name: this.artistData.name,

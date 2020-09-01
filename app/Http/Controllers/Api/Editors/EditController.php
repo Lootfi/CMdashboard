@@ -38,7 +38,6 @@ class EditController extends Controller
             $administrator->updated_at = now();
             $administrator->save();
             return response()->json([
-
                 'user' => $administrator,
             ]);
         }

@@ -53,12 +53,12 @@ class Administrator extends Authenticatable implements JWTSubject
 
         if ($this->status == 1) {
 
-            return "Activé";
+            return ['label' => "Activé", 'value' => 1];
         }
 
         if ($this->status == 2) {
 
-            return "Suspendu";
+            return ['label' => "Suspendu", 'value' => 2];
         }
     }
 

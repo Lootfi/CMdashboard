@@ -1,6 +1,6 @@
 <template>
-  <vs-chip class="ag-grid-cell-chip" :color="chipColor(params.value)">
-    <span>{{ params.value }}</span>
+  <vs-chip class="ag-grid-cell-chip" :color="chipColor(params.value.label)">
+    <span>{{ params.value.label }}</span>
   </vs-chip>
 </template>
 

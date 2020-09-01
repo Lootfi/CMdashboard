@@ -212,7 +212,6 @@ export default {
           });
         });
     },
-
     handleAccountSubmit(e) {
       e.preventDefault();
       this.$validator.validateAll().then((result) => {
@@ -235,6 +234,16 @@ export default {
               }
             )
             .then((response) => {
+              if (
+                this.$store.state.AppActiveUser.user.slug ==
+                response.data.user.slug
+              ) {
+                localStorage.setItem(
+                  "user",
+                  JSON.stringify(response.data.user)
+                );
+                this.$store.state.AppActiveUser.user = response.data.user;
+              }
               this.ChangeIsSending = false;
               this.$vs.dialog({
                 color: "primary",
