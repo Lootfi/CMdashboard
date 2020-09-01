@@ -143,6 +143,15 @@
           :options="entrepriseOptions"
         />
       </div>
+      <div class="vx-col md:w-1/2 w-full mt-4" v-show="typeOptions !== []">
+        <label class="vs-input--label">Type</label>
+        <v-select
+          :clearable="false"
+          :dir="$vs.rtl ? 'rtl' : 'ltr'"
+          v-model="type"
+          :options="typeOptions"
+        />
+      </div>
     </div>
 
     <v-divider style="padding: 20px 0" />
@@ -253,6 +262,8 @@ export default {
       ],
       entrepriseOptions: [],
       entreprises: [],
+      type: "",
+      typeOptions: [],
     };
   },
   computed: {
@@ -269,11 +280,24 @@ export default {
       this.entrepriseOptions = entreprises;
     });
 
+    //contact's own entreprises
     let entreprises = [];
     this.data_local.entreprises.map((item, index) => {
       entreprises[index] = { label: item.name, value: item.slug };
     });
     this.entreprises = entreprises;
+
+    this.$http.get("/api/types").then((res) => {
+      let types = [];
+      res.data.map((item, index) => {
+        types[index] = { label: item.name, value: item.id };
+      });
+      this.typeOptions = types;
+    });
+    this.type = {
+      label: this.data_local.type.name,
+      value: this.data_local.type.id,
+    };
   },
   methods: {
     capitalize(str) {
@@ -289,6 +313,7 @@ export default {
         ...information,
         ...information.social,
         entreprises: this.entreprises,
+        type_id: this.type.value,
       };
       information.social = null;
       if (this.imgURL)

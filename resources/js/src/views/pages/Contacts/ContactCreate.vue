@@ -120,6 +120,15 @@
             :options="entrepriseOptions"
           />
         </div>
+        <div class="vx-col md:w-1/2 w-full mt-4" v-show="typeOptions !== []">
+          <label class="vs-input--label">Type</label>
+          <v-select
+            :clearable="false"
+            :dir="$vs.rtl ? 'rtl' : 'ltr'"
+            v-model="type"
+            :options="typeOptions"
+          />
+        </div>
       </div>
       <div class="my-4">
         <clipper-upload
@@ -174,12 +183,12 @@ export default {
   },
   data() {
     return {
-      name: "Name",
-      email: "mail@gm.com",
-      country: { label: "France", value: "France" },
+      name: "",
+      email: "",
+      country: {},
       state: "",
-      mobile: "0699499071",
-      title: "Title",
+      mobile: "",
+      title: "",
       prenom: "",
       username: "",
       imgURL: "",
@@ -199,6 +208,8 @@ export default {
       ],
       entreprises: [],
       entrepriseOptions: [],
+      type: null,
+      typeOptions: [],
     };
   },
   mounted() {
@@ -208,6 +219,14 @@ export default {
         entreprises[index] = { label: item.name, value: item.slug };
       });
       this.entrepriseOptions = entreprises;
+    });
+
+    this.$http.get("/api/types").then((res) => {
+      let types = [];
+      res.data.map((item, index) => {
+        types[index] = { label: item.name, value: item.id };
+      });
+      this.typeOptions = types;
     });
   },
   methods: {
@@ -234,6 +253,7 @@ export default {
               state: self.state,
               picture: ResultAvatar,
               entreprises: self.entreprises,
+              type_id: self.type.value,
             })
             .then((response) => {
               console.log(response.data);

@@ -41,7 +41,13 @@
               @input="updateSearchQuery"
               placeholder="Search..."
             />
-            <!-- <vs-button class="mb-4 md:mb-0" @click="gridApi.exportDataAsCsv()">Export as CSV</vs-button> -->
+            <vs-button
+              icon-pack="feather"
+              icon="icon-refresh-ccw"
+              class="mb-4 md:mb-0"
+              :disabled="refreshing"
+              @click="refreshTemplates()"
+            >Rafraîchir</vs-button>
           </div>
 
           <!-- AgGrid Table -->
@@ -87,7 +93,7 @@ export default {
   data() {
     return {
       templates: [],
-
+      refreshing: false,
       searchQuery: "",
 
       // AgGrid
@@ -164,6 +170,22 @@ export default {
   methods: {
     updateSearchQuery(val) {
       this.gridApi.setQuickFilter(val);
+    },
+    refreshTemplates() {
+      this.refreshing = true;
+      this.$http
+        .get("/api/templates/refresh-templates")
+        .then((res) => {
+          this.refreshing = false;
+          this.templates = res.data;
+        })
+        .catch((err) => {
+          this.refreshing = false;
+          this.$vs.notify({
+            color: "danger",
+            text: "Erreur lors de l'actualisation",
+          });
+        });
     },
   },
 };

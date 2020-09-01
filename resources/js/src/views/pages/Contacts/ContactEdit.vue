@@ -58,6 +58,10 @@ export default {
           if (res.data.social == null) {
             res.data.social = { twitter: "", linkedin: "", instagram: "" };
           }
+          res.data.country = {
+            label: res.data.country,
+            value: res.data.country,
+          };
           this.contact = res.data;
         })
         .catch((err) => {

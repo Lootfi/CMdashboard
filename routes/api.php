@@ -72,6 +72,7 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 
 	Route::group(['prefix' => 'templates', 'namespace' => 'Templates'], function () {
 		Route::get('/', 'TemplateController@index');
+		Route::get('/refresh-templates', 'TemplateController@refresh');
 		Route::get('/get/{alias}', 'TemplateController@getTemplate');
 		Route::post('/create', 'TemplateController@create');
 		Route::get('/{alias}', 'TemplateController@show');

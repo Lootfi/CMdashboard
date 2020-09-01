@@ -141,19 +141,13 @@ export default {
     Cropper,
     vSelect,
   },
-  // props: {
-  //   data: {
-  //     type: Object,
-  //     required: true,
-  //   },
-  // },
   data() {
     return {
-      username: "a",
-      name: "a",
-      email: "a@gmail.com",
-      password: "aaa",
-      confirmPassword: "aaa",
+      username: "",
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
       status: "",
       role: "",
       imgURL: "",

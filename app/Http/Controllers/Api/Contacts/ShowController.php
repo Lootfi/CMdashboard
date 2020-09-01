@@ -10,7 +10,7 @@ class ShowController extends Controller
 {
 	public function show($slug)
 	{
-		if ($contact = Contact::with(['social', 'entreprises'])->where('slug', $slug)->first()) {
+		if ($contact = Contact::with(['social', 'entreprises', 'type'])->where('slug', $slug)->first()) {
 			return $contact;
 		}
 
