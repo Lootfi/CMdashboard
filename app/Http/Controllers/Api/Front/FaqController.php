@@ -15,7 +15,6 @@ class FaqController extends Controller
 
     public function front()
     {
-        $faqs = Faq::all();
-        return response()->json($faqs->where('frontpage', true)->sortBy('order'));
+        return response()->json(DB::table('faqs')->where('frontpage', 1)->orderBy('order')->get());
     }
 }
