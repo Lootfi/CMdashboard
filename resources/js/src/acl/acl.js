@@ -5,9 +5,14 @@ import router from "@/router";
 Vue.use(AclInstaller);
 
 let initialRole = "public";
-
-const userInfo = JSON.parse(localStorage.getItem("user"));
-if (userInfo && userInfo.role) initialRole = userInfo.role;
+try {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    if (userInfo && userInfo.role !== "") {
+        initialRole = userInfo.role;
+    } else localStorage.clear();
+} catch (error) {
+    localStorage.clear();
+}
 
 export default new AclCreate({
     initial: initialRole,
@@ -24,4 +29,7 @@ export default new AclCreate({
             .or("Commercial")
             .generate()
     }
+    // middleware: async acl => {
+    //     //
+    // }
 });

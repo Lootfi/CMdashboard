@@ -10,7 +10,7 @@
 <template>
   <div id="page-user-list">
     <div class="vx-card p-6">
-      <h1 class="pb-4">Liste des clients</h1>
+      <h3 class="pb-6">Liste des clients</h3>
       <div class="flex flex-wrap items-center">
         <!-- ITEMS PER PAGE -->
         <div class="flex-grow">

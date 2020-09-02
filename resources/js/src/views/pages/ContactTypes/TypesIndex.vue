@@ -7,6 +7,8 @@
       :data="sidebarData"
     />
 
+    <h3 class="mb-6">Types des Contacts</h3>
+
     <vs-table
       ref="table"
       multiple

@@ -2,7 +2,7 @@
   <div id="data-list-thumb-view" class="data-list-container">
     <!-- add new data right sidebar -->
     <!-- <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" /> -->
-
+    <h3 class="mb-6">Liste des Contacts</h3>
     <vs-table
       ref="table"
       multiple

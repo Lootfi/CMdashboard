@@ -40,6 +40,8 @@ class FaqController extends Controller
             'order' => $order,
             'frontpage' => request('frontpage')
         ]);
+
+        return response()->json(DB::table('faqs')->orderBy('order')->get());
     }
 
     public function edit($id)
@@ -51,6 +53,8 @@ class FaqController extends Controller
         $faq->frontpage = request('frontpage');
 
         $faq->save();
+
+        return response()->json(DB::table('faqs')->orderBy('order')->get());
     }
 
     public function delete($id)
@@ -58,6 +62,8 @@ class FaqController extends Controller
         $faq = Faq::where('id', $id)->first();
 
         $faq->delete();
+
+        return response()->json(DB::table('faqs')->orderBy('order')->get());
     }
 
     public function deleteSelected()
@@ -66,7 +72,7 @@ class FaqController extends Controller
             foreach (request('faqs') as $question) {
                 Faq::where('id', $question['id'])->first()->delete();
             }
-            return response()->json('success', 200);
+            return response()->json(DB::table('faqs')->orderBy('order')->get());
         } else {
             return response()->json('no faqs selected', 404);
         }

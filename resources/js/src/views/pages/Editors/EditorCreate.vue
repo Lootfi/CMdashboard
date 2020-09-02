@@ -3,7 +3,7 @@
     <!-- Content Row -->
     <vs-card>
       <div slot="header">
-        <h3>Créer Un editeur</h3>
+        <h3>Ajouter Un Editeur</h3>
       </div>
       <div class="vx-row">
         <div class="vx-col md:w-1/2 w-full">
