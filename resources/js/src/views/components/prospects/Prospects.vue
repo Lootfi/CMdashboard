@@ -9,7 +9,7 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
     <!-- <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" /> -->
-    <h3 class="mb-6">En attente de payment</h3>
+    <h3 class="mb-6">Clients dans la period d'essai</h3>
     <vs-table
       ref="table"
       multiple
@@ -73,7 +73,7 @@
                 icon="TrashIcon"
                 svgClasses="w-5 h-5 hover:text-danger stroke-current"
                 class="ml-2"
-                @click.stop="deleteData(tr.id)"
+                @click.stop="deleteData(tr)"
               />
             </vs-td>
           </vs-tr>
@@ -120,10 +120,34 @@ export default {
       this.sidebarData = {};
       this.toggleDataSidebar(true);
     },
-    deleteData(id) {
-      this.$store.dispatch("dataList/removeItem", id).catch((err) => {
-        console.error(err);
+    deleteData(tr) {
+      this.$vs.dialog({
+        type: "confirm",
+        color: "danger",
+        title: "Confirmation",
+        text: `Vous allez supprimer le compte d'utilisateur "${tr.name}", et arrêter leur paiement.`,
+        accept: this.deleteRecord,
+        acceptText: "Supprimer",
+        cancelText: "Annuler",
+        parameters: tr.slug,
       });
+    },
+    deleteRecord(slug) {
+      // this.$store.dispatch("dataList/removeItem", slug).catch((err) => {
+      //   console.error(err);
+      // });
+      this.$http
+        .post(`/api/artists/${slug}/delete`, { return_prospects: true })
+        .then((res) => {
+          this.prospects = res.data;
+        })
+        .catch((err) => {
+          this.$vs.notify({
+            color: "danger",
+            title: "",
+            text: "Erreur lors de la suppression",
+          });
+        });
     },
     editData(data) {
       // this.sidebarData = JSON.parse(JSON.stringify(this.blankData))

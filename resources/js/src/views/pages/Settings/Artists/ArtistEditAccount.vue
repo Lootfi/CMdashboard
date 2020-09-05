@@ -158,6 +158,11 @@ export default {
         })
         .then((res) => {
           this.isSending = false;
+          this.$vs.notify({
+            color: "success",
+            title: ``,
+            text: "Photo de client modifié!",
+          });
           window.location.reload();
         })
         .catch((err) => {
@@ -174,14 +179,11 @@ export default {
       this.$validator.validateAll().then((result) => {
         if (result) {
           this.isSending = true;
-          const canvas = this.$refs.clipper.clip();
-          const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
           this.$http
             .post(`/api/artists/${this.$route.params.slug}/edit`, {
               name: this.artistData.name,
               email: this.artistData.email,
               status: this.artistData.StatusName,
-              avatar: ResultAvatar,
             })
             .then((res) => {
               this.isSending = false;

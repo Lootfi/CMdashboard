@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Wrappers\Mailer;
 use App\Jobs\SendEmail;
 
+use Illuminate\Support\Facades\Config;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
+use PayPal\Api\Authorization;
+
 class RegisterController extends Controller
 {
     /*
@@ -39,6 +44,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo = '/home';
     protected $mailer;
+    protected $_api_context;
 
     /**
      * Create a new controller instance.
@@ -48,6 +54,13 @@ class RegisterController extends Controller
     public function __construct(Mailer $mailer)
     {
         $this->mailer = $mailer;
+
+        $paypal_conf = Config::get('paypal');
+        $this->_api_context = new ApiContext(new OAuthTokenCredential(
+            $paypal_conf['client_id'],
+            $paypal_conf['secret']
+        ));
+        $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
     /**
@@ -135,6 +148,19 @@ class RegisterController extends Controller
         if (!$artist = Artist::where('email', request('email'))->first()) {
             return response()->json(['error' => 'No user with given email'], 404);
         }
+        try {
+            $authorization = Authorization::get(request('auth_id'), $this->_api_context);
+            if ($authorization->getState() != "created") {
+                $artist->delete();
+                return response()->json('Problem', 404);
+            }
+        } catch (\Exception $ex) {
+            if (json_decode($ex->getData())->name == "INVALID_RESOURCE_ID") {
+                $artist->delete();
+                return response()->json('Invalid auth_id', 404);
+            }
+        }
+
 
         $artist->payment_method = 'paypal_' . request('order_id');
         $artist->name = request('name');

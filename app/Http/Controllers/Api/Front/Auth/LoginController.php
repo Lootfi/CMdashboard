@@ -19,7 +19,7 @@ class LoginController extends Controller
             return response()->json(['error' => "This Account doesn't exist, please Sign up"]);
         } else {
             if (Hash::check($credentials['password'], $client->password)) {
-                if (!$token = Auth::guard('clients')->attempt($credentials)) {
+                if (!$token = Auth::guard('clients')->attempt($credentials) || $client->status == false) {
 
                     return response()->json(['error' => 'Unauthorized'], 401);
                 }
