@@ -43,11 +43,10 @@ class MailResetPasswordToken extends Notification
     public function toMail($notifiable)
     {
         return (new \Coconuts\Mail\MailMessage)
-            ->alias('reset-password')
+            ->alias('lost_password')
             ->from('support@contactmajor.com')
             ->include([
-                'name' => $notifiable->name,
-                'link' => 'https://www.contactmajor.com/password/reset/?token=' . $this->token . '&email=' . $notifiable->email
+                'link' => 'https://contactmajor.com/password/reset/?token=' . $this->token . '&email=' . $notifiable->email
             ]);
         // $this->mailer->sendEmailWithTemplate('support@contactmajor.com', 'test@blackhole.postmarkapp.com', 'reset-password', ['name' => "from database", 'link' => 'https://www.contactmajor.com/password/reset/?token=' . $this->token . '&email=' . $notifiable->email]);
     }

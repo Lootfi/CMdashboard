@@ -39,6 +39,6 @@ class SendEmail implements ShouldQueue
      */
     public function handle()
     {
-        $this->mailer->sendEmailWithTemplate('support@contactmajor.com', 'test@blackhole.postmarkapp.com', $this->template, ['name' => 'Lotfi']);
+        $this->mailer->sendEmailWithTemplate('support@contactmajor.com', $this->client->email, $this->template, ['name' => 'Lotfi']);
     }
 }

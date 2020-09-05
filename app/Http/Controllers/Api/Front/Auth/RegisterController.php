@@ -147,7 +147,7 @@ class RegisterController extends Controller
 
         $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
 
-        //SendEmail::dispatch($artist, 'welcome')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
+        SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
         CapturePayment::dispatch($artist)->delay(Carbon::now()->addMinute())->onConnection('database');
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
