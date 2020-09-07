@@ -16,17 +16,19 @@ class LoginController extends Controller
         $credentials = request(['email', 'password']);
 
         if (!$client = Artist::where('email', $credentials['email'])->first()) {
-            return response()->json(['error' => "This Account doesn't exist, please Sign up"]);
+            return response()->json(['error' => "« " . $credentials['email'] . " » n’est associé à aucun compte ContactMajor."]);
         } else {
             if (Hash::check($credentials['password'], $client->password)) {
-                if (!$token = Auth::guard('clients')->attempt($credentials) || $client->status == false) {
+                if (!$token = Auth::guard('clients')->attempt($credentials)) {
 
                     return response()->json(['error' => 'Unauthorized'], 401);
+                } elseif ($client->status == false) {
+                    return response()->json(['error' => 'suspended'], 401);
                 }
 
                 return $this->respondWithToken($token);
             } else {
-                return response()->json(['error' => "Either the email or the password is wrong"]);
+                return response()->json(['error' => "Le mot de passe entré est incorrect."]);
             }
         }
     }
