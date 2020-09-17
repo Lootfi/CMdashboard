@@ -109,9 +109,6 @@ class RegisterController extends Controller
         $user->created_at = now();
         $user->save();
 
-        //SendEmail::dispatch($user, 'welcome')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-
-
         return response()->json(['status' => 'valid', 'email' => $user->email]);
         // $curl = curl_init();
         // curl_setopt_array($curl, array(
@@ -150,14 +147,16 @@ class RegisterController extends Controller
         }
         try {
             $authorization = Authorization::get(request('auth_id'), $this->_api_context);
-            if ($authorization->getState() != "created") {
+            if ($authorization->getState() != "authorized") {
                 $artist->delete();
                 return response()->json('Problem', 404);
             }
         } catch (\Exception $ex) {
+            $artist->delete();
             if (json_decode($ex->getData())->name == "INVALID_RESOURCE_ID") {
-                $artist->delete();
                 return response()->json('Invalid auth_id', 404);
+            } else {
+                return;
             }
         }
 
@@ -174,7 +173,7 @@ class RegisterController extends Controller
         $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
 
         SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-        CapturePayment::dispatch($artist)->delay(Carbon::now()->addMinute())->onConnection('database');
+        CapturePayment::dispatch($artist)->delay(Carbon::now()->addMinutes(5))->onConnection('database');
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }
