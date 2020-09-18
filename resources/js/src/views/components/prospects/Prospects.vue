@@ -9,7 +9,7 @@
 <template>
   <div id="data-list-list-view" class="data-list-container">
     <!-- <data-view-sidebar :isSidebarActive="addNewDataSidebar" @closeSidebar="toggleDataSidebar" :data="sidebarData" /> -->
-    <h3 class="mb-6">Clients dans la period d'essai</h3>
+    <h3 class="mb-6">Nouveaux Clients</h3>
     <vs-table
       ref="table"
       multiple
@@ -50,6 +50,7 @@
       <template slot="thead">
         <vs-th sort-key="email">Email</vs-th>
         <vs-th sort-key="created_at">Crée lee</vs-th>
+        <vs-th>Status</vs-th>
         <vs-th>Action</vs-th>
       </template>
 
@@ -61,6 +62,13 @@
             </vs-td>
             <vs-td>
               <p class="product-name font-medium truncate">{{ tr.created_at }}</p>
+            </vs-td>
+            <vs-td>
+              <p
+                v-if="tr.payment_authorized"
+                class="product-name font-medium truncate"
+              >en Periode d'essai</p>
+              <p v-else class="product-name font-medium truncate">Nouveau Client</p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
