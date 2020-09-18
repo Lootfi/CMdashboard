@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth/login', 'Auth\LoginController@login');
 Route::get('/auth/logout', 'Auth\LoginController@logout');
-
+Route::post('/artists/{slug}/avatar', 'Artists\EditController@changeAvatar');
 
 Route::group(['middleware' => ['jwt.verify:Admin,Editor,Commercial']], function () {
 	Route::post('editors/{slug}/uploadAvatar', 'Editors\AvatarController@uploadAvatar');
@@ -142,6 +142,10 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::get('front-faqs', 'FaqController@front');
 
 	Route::post('login', 'Auth\LoginController@login');
+
+	Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
+		Route::get('/', 'PaymentController@info');
+	});
 });
 
 Route::group(['prefix' => 'front', 'namespace' => 'Front', 'middleware' => 'clients'], function () {
@@ -161,9 +165,9 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front', 'middleware' => 'clie
 		Route::get('/{slug}', 'ContactController@show');
 	});
 
-	Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
-		Route::get('/', 'PaymentController@info');
-	});
+	// Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
+	// 	Route::get('/', 'PaymentController@info');
+	// });
 
 	Route::group(['prefix' => 'entreprises', 'namespace' => 'Entreprises'], function () {
 		Route::get('/', 'EntrepriseController@index');

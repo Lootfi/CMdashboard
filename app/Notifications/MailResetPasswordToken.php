@@ -11,7 +11,7 @@ use Postmark\PostmarkClient;
 class MailResetPasswordToken extends Notification
 {
     use Queueable;
-    public $token, $mailer;
+    public $token;
     /**
      * Create a new notification instance.
      *
@@ -20,7 +20,6 @@ class MailResetPasswordToken extends Notification
     public function __construct($token)
     {
         $this->token = $token;
-        $this->mailer = new PostmarkClient(env('POSTMARK_SECRET'));
     }
 
     /**
@@ -48,7 +47,6 @@ class MailResetPasswordToken extends Notification
             ->include([
                 'link' => 'https://contactmajor.com/password/reset/?token=' . $this->token . '&email=' . $notifiable->email
             ]);
-        // $this->mailer->sendEmailWithTemplate('support@contactmajor.com', 'test@blackhole.postmarkapp.com', 'reset-password', ['name' => "from database", 'link' => 'https://www.contactmajor.com/password/reset/?token=' . $this->token . '&email=' . $notifiable->email]);
     }
 
     /**

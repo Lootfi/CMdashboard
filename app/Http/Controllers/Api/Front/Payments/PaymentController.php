@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Front\Payments;
 
 use App\Http\Controllers\Controller;
 use App\Models\Artist;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Config;
@@ -14,7 +15,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
 use PayPal\Api\Authorization;
 use PayPal\Api\Capture;
-
+use PayPal\Api\Payment;
 
 class PaymentController extends Controller
 {
@@ -63,54 +64,24 @@ class PaymentController extends Controller
     */
     public function info(Request $request)
     {
-        $user = $request->user('clients');
+        $user = Artist::find(31);
+        // $user = $request->user('clients');
+        $auth = $user->payment_auth;
 
         if ($user->payment_confirmed) {
-            //get payment captured details
-            $ch = curl_init();
+            $capture = Capture::get($auth->order_id, $this->_api_context);
 
-            curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v2/payments/captures/' . explode('_', $user->payment_method)[1]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            $headers = array();
-            $headers[] = 'Content-Type: application/json';
-            $headers[] = 'Authorization: Bearer ' . env('PAYPAL_TOKEN');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                echo 'Error:' . curl_error($ch);
-            }
-            curl_close($ch);
-
-            $info = json_decode($result); //id, amount = {value, currency_code}, final_capture(bool), status,create_time, links
-
-            return response()->json($info);
+            dd($capture);
         } else {
-            //payment authorized but not yet captured //
+            //payment authorized but not yet captured
             //get payment authorized details
 
-            $auth = $user->payment_auth;
+            //states == pending", "authorized", "partially_captured", "captured", "expired", "voided"
 
-            $ch = curl_init();
+            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
 
-            curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.paypal.com/v2/payments/authorizations/' . $auth->auth_id);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            $headers = array();
-            $headers[] = 'Content-Type: application/json';
-            $headers[] = 'Authorization: Bearer ' . env('PAYPAL_TOKEN');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-            $result = curl_exec($ch);
-            if (curl_errno($ch)) {
-                echo 'Error:' . curl_error($ch);
-            }
-            curl_close($ch);
-
-            $info = json_decode($result); //id, amount = {value, currency_code}, status, create_time, expiration_time, links
-
-            return response()->json($info);
+            dd($authorization);
         }
     }
 }

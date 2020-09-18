@@ -16,6 +16,6 @@ class IndexController extends Controller
 
     public function potentials()
     {
-        return Artist::where('payment_confirmed', false)->get();
+        return Artist::where('payment_confirmed', false)->orderBy('created_at', 'DESC')->get();
     }
 }

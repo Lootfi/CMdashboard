@@ -14,17 +14,18 @@ class Contact extends Model
         'username' => '',
         'type_id' => 0
     ];
-    // protected $appends = ['Picture'];
 
-    public static function fetchBySlug($slug)
-    {
-        return self::with('social')->where('slug', $slug)->first();
-    }
+    // protected $appends = ['Picture'];
 
     // public function getPictureAttribute()
     // {
     //     return "/images/contacts/" . $model->picture;
     // }
+
+    public static function fetchBySlug($slug)
+    {
+        return self::with('social')->where('slug', $slug)->first();
+    }
 
     public function social()
     {
