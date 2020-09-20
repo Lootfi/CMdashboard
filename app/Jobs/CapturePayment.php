@@ -21,8 +21,8 @@ class CapturePayment implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $client;
-    public $tries = 5;
-    public $timeout = 20;
+    public $tries = 25;
+    public $timeout = 120;
     protected $_api_context;
 
     /**
@@ -52,6 +52,23 @@ class CapturePayment implements ShouldQueue
     {
         $auth = $this->client->payment_auth;
 
+        if ($auth->stripe_customer_id) {
+            $pi_id = explode('stripe_', $this->client->payment_method)[1];
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $captured = $stripe->paymentIntents->capture($pi_id);
+
+            if ($captured->status == "succeeded") {
+                $this->client->payment_confirmed = true;
+                $this->client->updated_at = now();
+                $this->client->save();
+                // $auth->delete(); //deletes order_id and auth_id
+                $this->delete();
+            } else {
+                $this->release();
+            }
+            return;
+        }
+
         try {
             //code...
 
@@ -80,5 +97,11 @@ class CapturePayment implements ShouldQueue
                 $this->release();
             }
         }
+    }
+
+
+    public function retryUntil()
+    {
+        return now()->addSeconds(20);
     }
 }

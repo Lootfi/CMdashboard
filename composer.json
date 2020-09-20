@@ -27,6 +27,7 @@
         "spatie/laravel-feed": "^2.7",
         "spatie/laravel-image-optimizer": "^1.6",
         "spatie/laravel-sitemap": "^5.7",
+        "stripe/stripe-php": "^7.52",
         "symfony/css-selector": "3.*",
         "tymon/jwt-auth": "^1.0",
         "wildbit/postmark-php": "^3.0"

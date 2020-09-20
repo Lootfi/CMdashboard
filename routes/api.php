@@ -135,8 +135,12 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
 
 	Route::post('validate-email', 'Auth\RegisterController@validateEmail');
+	Route::post('create-customer', 'Auth\RegisterController@createCustomer');
+
 	Route::get('price', 'PriceController@show');
 	Route::post('paypal-payment-complete', 'Auth\RegisterController@paypalPaymentConfirmed');
+	Route::post('stripe-payment-complete', 'Auth\RegisterController@stripePaymentConfirmed');
+
 	Route::post('setup-profile', 'Auth\RegisterController@setupProfile');
 	Route::get('faqs', 'FaqController@index');
 	Route::get('front-faqs', 'FaqController@front');

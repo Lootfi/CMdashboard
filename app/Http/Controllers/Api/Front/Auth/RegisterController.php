@@ -8,32 +8,23 @@ use App\Jobs\CapturePayment;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use Illuminate\Queue\Jobs\Job;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Wrappers\Mailer;
 use App\Jobs\SendEmail;
-
+use App\Price;
 use Illuminate\Support\Facades\Config;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Rest\ApiContext;
 use PayPal\Api\Authorization;
 
+use Stripe\PaymentIntent;
+use Stripe\Exception\CardException;
+use Stripe\Stripe;
+
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
 
     use RegistersUsers;
 
@@ -43,7 +34,6 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
-    protected $mailer;
     protected $_api_context;
 
     /**
@@ -51,10 +41,8 @@ class RegisterController extends Controller
      *
      * @return void
      */
-    public function __construct(Mailer $mailer)
+    public function __construct()
     {
-        $this->mailer = $mailer;
-
         $paypal_conf = Config::get('paypal');
         $this->_api_context = new ApiContext(new OAuthTokenCredential(
             $paypal_conf['client_id'],
@@ -96,20 +84,6 @@ class RegisterController extends Controller
     public function validateEmail()
     {
 
-        $validation = Validator::make(request()->only(['email']), [
-            'email' => ['required', 'email', 'max:255', 'unique:users']
-        ]);
-
-        if ($validation->fails()) return response()->json(['status' => 'invalid', 'errors' => $validation->errors()]);
-
-        $user = new Artist();
-
-        $user->email = request('email');
-        $user->slug = explode('@', request('email'))[0] . '-' . substr(md5(mt_rand()), 0, 6);
-        $user->created_at = now();
-        $user->save();
-
-        return response()->json(['status' => 'valid', 'email' => $user->email]);
         // $curl = curl_init();
         // curl_setopt_array($curl, array(
         //     CURLOPT_URL => 'https://api.clearout.io/v2/email_verify/instant',
@@ -131,13 +105,83 @@ class RegisterController extends Controller
 
         // curl_close($curl);
 
-        // if ($err) {
-        //     return response()->json(['error' => $err]);
-        // } else {
+        // if (!$err && $response['data']['status'] == "invalid") {
         //     $response = json_decode($response, true);
         //     return response()->json(['status' => $response['data']['status']]);
         // }
+
+        if ($existingArtist = Artist::where('email', request('email'))->first()) {
+            if ($existingArtist->payment_authorized) {
+                $validation = Validator::make(request()->only(['email']), [
+                    'email' => ['required', 'email', 'max:255', 'unique:users']
+                ]);
+
+                if ($validation->fails()) return response()->json(['status' => 'invalid', 'errors' => $validation->errors()]);
+            } else {
+                return response()->json(['status' => 'valid', 'email' => $existingArtist->email]);
+            }
+        }
+
+        $validation = Validator::make(request()->only(['email']), [
+            'email' => ['required', 'email', 'max:255', 'unique:users']
+        ]);
+
+        if ($validation->fails()) return response()->json(['status' => 'invalid', 'errors' => $validation->errors()]);
+
+        $user = new Artist();
+
+        $user->email = request('email');
+        $user->slug = explode('@', request('email'))[0] . '-' . substr(md5(mt_rand()), 0, 6);
+        $user->created_at = now();
+        $user->save();
+
+        return response()->json(['status' => 'valid', 'email' => $user->email]);
+
         // return;
+    }
+
+    public function stripePaymentConfirmed()
+    {
+        if (!$artist = Artist::where('email', request('email'))->first()) {
+            return response()->json(['error' => 'No user with given email'], 404);
+        }
+
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+
+        $auth = $artist->payment_auth;
+
+        try {
+            $paymentIntent = $stripe->paymentIntents->create([
+                'amount' => Price::first()->amount,
+                'currency' => 'eur',
+                'customer' => $auth->stripe_customer_id,
+                'payment_method' => request('payment_method'),
+                'off_session' => true,
+                'confirm' => true,
+                'capture_method' => 'manual'
+            ]);
+        } catch (CardException $e) {
+            // Error code will be authentication_required if authentication is needed
+            return response()->json(['help', $e->getError()], 500);
+            echo 'Error code is:' . $e->getError()->code;
+            $payment_intent_id = $e->getError()->payment_intent->id;
+            $payment_intent = $stripe->paymentIntents->retrieve($payment_intent_id);
+        }
+
+        if ($paymentIntent->status == "requires_capture") {
+            $artist->payment_method = 'stripe_' . $paymentIntent->id;
+            $artist->payment_authorized = true;
+            $artist->payment_confirmed = false;
+            $artist->status = true;
+            $artist->save();
+
+            $token = $this->login($artist);
+
+            SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
+            CapturePayment::dispatch($artist)->delay(Carbon::now()->addDay())->onConnection('database');
+
+            return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
+        }
     }
 
     public function paypalPaymentConfirmed()
@@ -152,7 +196,6 @@ class RegisterController extends Controller
                 return response()->json('Problem', 404);
             }
         } catch (\Exception $ex) {
-            $artist->delete();
             if (json_decode($ex->getData())->name == "INVALID_RESOURCE_ID") {
                 return response()->json('Invalid auth_id', 404);
             } else {
@@ -235,5 +278,30 @@ class RegisterController extends Controller
         ]);
 
         if ($validation->fails()) return response()->json(['errors' => $validation->errors()]);
+    }
+
+    /*
+    *   Creating stripe customer and intent, returning intent client secret
+    */
+    public function createCustomer()
+    {
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $customer = \Stripe\Customer::create();
+        $artist = Artist::where('email', request('email'))->first();
+
+        $intent = \Stripe\SetupIntent::create([
+            'customer' => $customer->id
+        ]);
+
+
+        ClientPaymentAuthorization::where(['order_id' => '', 'auth_id' => '', 'capture_id' => '', 'client_id' => $artist->id])->delete();
+
+        ClientPaymentAuthorization::create([
+            'client_id' => $artist->id,
+            'stripe_customer_id' => $customer->id
+        ]);
+
+        return response()->json($intent->client_secret, 200);
     }
 }
