@@ -162,7 +162,7 @@ class RegisterController extends Controller
             ]);
         } catch (CardException $e) {
             // Error code will be authentication_required if authentication is needed
-            return response()->json(['help', $e->getError()], 500);
+            return response()->json($e->getError()->message, 500);
             echo 'Error code is:' . $e->getError()->code;
             $payment_intent_id = $e->getError()->payment_intent->id;
             $payment_intent = $stripe->paymentIntents->retrieve($payment_intent_id);
