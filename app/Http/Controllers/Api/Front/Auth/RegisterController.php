@@ -264,12 +264,16 @@ class RegisterController extends Controller
 
     protected function createPaymentAuth($info)
     {
-        ClientPaymentAuthorization::where('client_id', Auth::guard('clients')->user()->id)->delete();
-        ClientPaymentAuthorization::create([
-            'client_id' => Auth::guard('clients')->user()->id,
-            'order_id' => $info['order_id'],
-            'auth_id' => $info['auth_id']
-        ]);
+        if ($auth = ClientPaymentAuthorization::where('client_id', Auth::guard('clients')->user()->id)->first()) {
+            $auth->order_id = $info['order_id'];
+            $auth->auth_id = $info['auth_id'];
+            $auth->save();
+        } else
+            ClientPaymentAuthorization::create([
+                'client_id' => Auth::guard('clients')->user()->id,
+                'order_id' => $info['order_id'],
+                'auth_id' => $info['auth_id']
+            ]);
     }
 
     public function forgotPassword(Request $request)
