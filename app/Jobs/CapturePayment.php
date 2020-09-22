@@ -59,7 +59,7 @@ class CapturePayment implements ShouldQueue
                     $this->client->payment_confirmed = true;
                     $this->client->updated_at = now();
                     $this->client->save();
-                    $this->fail();
+                    $this->delete();
                 } else {
                     $amt = new Amount();
                     $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
