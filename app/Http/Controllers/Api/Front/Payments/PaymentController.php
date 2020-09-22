@@ -67,7 +67,7 @@ class PaymentController extends Controller
     {
         $user = Artist::find(31);
         // $user = $request->user('clients');
-        $auth = $user->payment_auth;
+        //$auth = $user->payment_auth;
         $authorization = Authorization::get("2DS75786JP9555728", $this->_api_context);
         dd($authorization);
         $amt = new Amount();
