@@ -53,8 +53,8 @@ class CapturePayment implements ShouldQueue
         $auth = $this->client->payment_auth;
 
         if (explode('_', $this->client->payment_method)[0] == "paypal") {
-            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
             try {
+                $authorization = Authorization::get($auth->auth_id, $this->_api_context);
                 $amt = new Amount();
                 $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 

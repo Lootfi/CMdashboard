@@ -65,20 +65,31 @@ class PaymentController extends Controller
     */
     public function info()
     {
-        $user = Artist::find(31);
-        // $user = $request->user('clients');
-        //$auth = $user->payment_auth;
-        $authorization = Authorization::get("2DS75786JP9555728", $this->_api_context);
-        dd($authorization);
-        $amt = new Amount();
-        $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
+        if ($user = Artist::find(111)) {
+            $auth = $user->payment_auth;
+            try {
+                $authorization = Authorization::get($auth->auth_id, $this->_api_context);
+                $amt = new Amount();
+                $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 
-        $capture = new Capture();
-        $capture->setAmount($amt);
+                $capture = new Capture();
+                $capture->setAmount($amt);
 
-        $getCapture = $authorization->capture($capture, $this->_api_context);
-        dd($authorization, $getCapture);
+                $getCapture = $authorization->capture($capture, $this->_api_context);
 
-        dump($authorization);
+                if ($getCapture->getState() == "completed") {
+                    $user->payment_confirmed = true;
+                    $user->payment_method = 'paypal_' . $getCapture->getId();
+                    $user->updated_at = now();
+                    $user->save();
+                }
+            } catch (\Exception $ex) {
+                if ($authorization->getState() == "captured") {
+                    $user->payment_confirmed = true;
+                    $user->updated_at = now();
+                    $user->save();
+                }
+            }
+        }
     }
 }
