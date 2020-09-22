@@ -53,33 +53,32 @@ class CapturePayment implements ShouldQueue
         $auth = $this->client->payment_auth;
 
         if (explode('_', $this->client->payment_method)[0] == "paypal") {
-            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
             try {
-                $amt = new Amount();
-                $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
-
-                $capture = new Capture();
-                $capture->setAmount($amt);
-
-                $getCapture = $authorization->capture($capture, $this->_api_context);
-
-                if ($getCapture->getState() == "completed") {
-                    $this->client->payment_confirmed = true;
-                    $this->client->payment_method = 'paypal_' . $getCapture->getId();
-                    $this->client->updated_at = now();
-                    $this->client->save();
-                    // $auth->delete(); //deletes order_id and auth_id
-                    $this->delete();
-                }
-            } catch (\Exception $ex) {
+                $authorization = Authorization::get($auth->auth_id, $this->_api_context);
                 if ($authorization->getState() == "captured") {
                     $this->client->payment_confirmed = true;
                     $this->client->updated_at = now();
                     $this->client->save();
                     $this->fail();
                 } else {
-                    $this->release();
+                    $amt = new Amount();
+                    $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
+
+                    $capture = new Capture();
+                    $capture->setAmount($amt);
+
+                    $getCapture = $authorization->capture($capture, $this->_api_context);
+
+                    if ($getCapture->getState() == "completed") {
+                        $this->client->payment_confirmed = true;
+                        $this->client->payment_method = 'paypal_' . $getCapture->getId();
+                        $this->client->updated_at = now();
+                        $this->client->save();
+                        // $auth->delete(); //deletes order_id and auth_id
+                        $this->delete();
+                    }
                 }
+            } catch (\Exception $ex) {
                 $this->release();
             }
         } else {
