@@ -15,6 +15,7 @@ use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Api\Amount;
 use PayPal\Api\Authorization;
 use PayPal\Api\Capture;
+use PayPal\Api\Order;
 use PayPal\Api\Payment;
 
 class PaymentController extends Controller
@@ -36,20 +37,20 @@ class PaymentController extends Controller
     public function capture()
     {
         try {
-            $user = Artist::where('id', 30)->with('payment_auth')->first();
+            // $user = Artist::where('id', 30)->with('payment_auth')->first();
             $authorization = Authorization::get('4UA01537HM049522A', $this->_api_context);
 
             dd($authorization);
 
-            // $amt = new Amount();
-            // $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
+            $amt = new Amount();
+            $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 
-            // $capture = new Capture();
-            // $capture->setAmount($amt);
+            $capture = new Capture();
+            $capture->setAmount($amt);
 
-            // $getCapture = $authorization->capture($capture, $this->_api_context);
+            $getCapture = $authorization->capture($capture, $this->_api_context);
 
-            // dd($getCapture);
+            dd($getCapture);
         } catch (\Exception $ex) {
             // dd($capture, $authorization);
         }
@@ -62,26 +63,22 @@ class PaymentController extends Controller
     *   else it returns auth info
     *   all info returned with links, [refund, capture ..etc]
     */
-    public function info(Request $request)
+    public function info()
     {
         $user = Artist::find(31);
         // $user = $request->user('clients');
         $auth = $user->payment_auth;
+        $authorization = Authorization::get("2DS75786JP9555728", $this->_api_context);
+        dd($authorization);
+        $amt = new Amount();
+        $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
 
-        if ($user->payment_confirmed) {
-            $capture = Capture::get($auth->order_id, $this->_api_context);
+        $capture = new Capture();
+        $capture->setAmount($amt);
 
-            dd($capture);
-        } else {
-            //payment authorized but not yet captured
-            //get payment authorized details
+        $getCapture = $authorization->capture($capture, $this->_api_context);
+        dd($authorization, $getCapture);
 
-            //states == pending", "authorized", "partially_captured", "captured", "expired", "voided"
-
-            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
-
-
-            dd($authorization);
-        }
+        dump($authorization);
     }
 }

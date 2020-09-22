@@ -264,6 +264,7 @@ class RegisterController extends Controller
 
     protected function createPaymentAuth($info)
     {
+        ClientPaymentAuthorization::where('client_id', Auth::guard('clients')->user()->id)->delete();
         ClientPaymentAuthorization::create([
             'client_id' => Auth::guard('clients')->user()->id,
             'order_id' => $info['order_id'],
@@ -289,18 +290,25 @@ class RegisterController extends Controller
 
         $customer = \Stripe\Customer::create();
         $artist = Artist::where('email', request('email'))->first();
-
         $intent = \Stripe\SetupIntent::create([
             'customer' => $customer->id
         ]);
 
+        if (
+            $auth = $artist->payment_auth
+        ) {
+            $auth->stripe_customer_id = $customer->id;
+            $auth->updated_at = now();
+            $auth->save();
+        } else {
+            ClientPaymentAuthorization::create([
+                'client_id' => $artist->id,
+                'stripe_customer_id' => $customer->id
+            ]);
+        }
 
-        ClientPaymentAuthorization::where(['order_id' => '', 'auth_id' => '', 'capture_id' => '', 'client_id' => $artist->id])->delete();
 
-        ClientPaymentAuthorization::create([
-            'client_id' => $artist->id,
-            'stripe_customer_id' => $customer->id
-        ]);
+
 
         return response()->json($intent->client_secret, 200);
     }

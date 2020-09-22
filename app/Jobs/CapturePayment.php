@@ -52,7 +52,37 @@ class CapturePayment implements ShouldQueue
     {
         $auth = $this->client->payment_auth;
 
-        if ($auth->stripe_customer_id) {
+        if (explode('_', $this->client->payment_method)[0] == "paypal") {
+            try {
+                $authorization = Authorization::get($auth->auth_id, $this->_api_context);
+                $amt = new Amount();
+                $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
+
+                $capture = new Capture();
+                $capture->setAmount($amt);
+
+                $getCapture = $authorization->capture($capture, $this->_api_context);
+
+                if ($getCapture->getState() == "completed") {
+                    $this->client->payment_confirmed = true;
+                    $this->client->payment_method = 'paypal_' . $getCapture->getId();
+                    $this->client->updated_at = now();
+                    $this->client->save();
+                    // $auth->delete(); //deletes order_id and auth_id
+                    $this->delete();
+                }
+            } catch (\Exception $ex) {
+                if ($authorization->getState() == "captured") {
+                    $this->client->payment_confirmed = true;
+                    $this->client->updated_at = now();
+                    $this->client->save();
+                    $this->fail();
+                } else {
+                    $this->release();
+                }
+                $this->release();
+            }
+        } else {
             $pi_id = explode('stripe_', $this->client->payment_method)[1];
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
             $captured = $stripe->paymentIntents->capture($pi_id);
@@ -63,36 +93,6 @@ class CapturePayment implements ShouldQueue
                 $this->client->save();
                 // $auth->delete(); //deletes order_id and auth_id
                 $this->delete();
-            } else {
-                $this->release();
-            }
-            return;
-        }
-
-        try {
-            //code...
-
-            $authorization = Authorization::get($auth->auth_id, $this->_api_context);
-            $amt = new Amount();
-            $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
-
-            $capture = new Capture();
-            $capture->setAmount($amt);
-
-            $getCapture = $authorization->capture($capture, $this->_api_context);
-
-            if ($getCapture->getState() == "completed") {
-                $this->client->payment_confirmed = true;
-                $this->client->payment_method = 'paypal_' . $getCapture->getId();
-                $this->client->updated_at = now();
-                $this->client->save();
-                // $auth->delete(); //deletes order_id and auth_id
-                $this->delete();
-                return;
-            }
-        } catch (\Exception $ex) {
-            if ($authorization->getState() == "captured") {
-                $this->fail();
             } else {
                 $this->release();
             }

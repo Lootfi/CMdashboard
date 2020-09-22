@@ -271,6 +271,19 @@ const router = new Router({
                     }
                 },
                 {
+                    path: "/create-entreprise",
+                    name: "create-entreprise",
+                    component: () =>
+                        import(
+                            "@/views/pages/Entreprises/EntrepriseCreate.vue"
+                        ),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
+                },
+                {
                     path: "/service/prix",
                     name: "modifier-prix",
                     component: () =>

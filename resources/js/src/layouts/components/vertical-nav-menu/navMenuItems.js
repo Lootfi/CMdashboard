@@ -124,9 +124,15 @@ export default [
         submenu: [
             {
                 url: "/entreprises",
-                name: "Liste des Entreprise",
+                name: "Liste des Labels",
                 slug: "entreprises",
-                i18n: "Modifier Entreprise"
+                i18n: "Liste Labels"
+            },
+            {
+                url: "/create-entreprise",
+                name: "Ajouter un Label",
+                slug: "entreprises",
+                i18n: "Ajouter Label"
             }
         ]
     },

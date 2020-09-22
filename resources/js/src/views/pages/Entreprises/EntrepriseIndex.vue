@@ -1,12 +1,5 @@
 <template>
   <div id="data-list-thumb-view" class="data-list-container">
-    <!-- add new data right sidebar -->
-    <sidebar-data
-      :isSidebarActive="addNewDataSidebar"
-      @closeSidebar="toggleDataSidebar"
-      :data="sidebarData"
-    />
-
     <h3 class="mb-6">Liste des Entreprises</h3>
 
     <vs-table
@@ -112,20 +105,12 @@
 </template>
 
 <script>
-import SidebarData from "./SidebarData.vue";
-
 export default {
-  components: {
-    SidebarData,
-  },
   data() {
     return {
       selected: [],
-      // products: [],
       itemsPerPage: 4,
       isMounted: false,
-      addNewDataSidebar: false,
-      sidebarData: {},
       entreprises: [],
       table: null,
     };
@@ -137,9 +122,6 @@ export default {
       }
       return 0;
     },
-    // products() {
-    //   return this.$store.state.dataList.products;
-    // },
     queriedItems() {
       return this.$refs.table
         ? this.$refs.table.queriedResults.length
@@ -148,8 +130,7 @@ export default {
   },
   methods: {
     addNewData() {
-      this.sidebarData = {};
-      this.toggleDataSidebar(true);
+      this.$router.push("/create-entreprise");
     },
     deleteData(slug) {
       this.$http.post("/api/enreprises/" + id + "/delete").catch((err) => {
@@ -161,15 +142,6 @@ export default {
         });
       });
       window.location.reload();
-    },
-    editData(data) {
-      // this.sidebarData = JSON.parse(JSON.stringify(this.blankData))
-      this.sidebarData = data;
-      this.toggleDataSidebar(true);
-    },
-    toggleDataSidebar(val = false) {
-      if (!val) window.location.reload();
-      this.addNewDataSidebar = val;
     },
   },
   created() {
