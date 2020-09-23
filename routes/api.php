@@ -148,7 +148,7 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 	Route::post('login', 'Auth\LoginController@login');
 
 	Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
-		Route::get('/', 'PaymentController@info');
+		Route::post('/', 'PaymentController@info');
 	});
 });
 
