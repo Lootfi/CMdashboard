@@ -243,7 +243,7 @@
           <vs-button
             class="ml-auto mt-2"
             id="save-button"
-            @click="handleAccountSubmit"
+            @click="handleLabelSubmit"
             :disabled="isSending"
             >{{ $t("save") }}</vs-button
           >
@@ -265,28 +265,27 @@ export default {
   },
   data() {
     return {
-      name: "",
-      website: "",
-      maison: "",
-      phone: "",
-      sous_labels: [],
-      artists: [],
-      genres: [],
-      address: "",
-      indepndant: true,
-      description: "",
-      facebook: "",
-      instagram: "",
-      twitter: "",
+      name: "Nom",
+      website: "https://www.site.com",
+      maison: "Maison",
+      phone: "+213699499071",
+      sous_labels: ["SL1", "SL2"],
+      artists: ["A1", "A2"],
+      genres: ["G1", "G2"],
+      address: "215 Cité Nom Nom",
+      indepndant: false,
+      description: "Lorem Ipsum Text",
+      facebook: "https://www.facebook.com/page",
+      instagram: "https://www.instagram.com/page",
+      twitter: "https://twitter.com/page",
       imgURL: "",
       rotation: 0,
       avatar: "",
       isSending: false,
     };
   },
-
   methods: {
-    handleAccountSubmit(e) {
+    handleLabelSubmit(e) {
       e.preventDefault();
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -299,34 +298,39 @@ export default {
           });
           let self = this;
           this.$http
-            .post(`/api/editors/create`, {
-              username: this.username,
-              full_name: this.name,
-              email: this.email,
-              status: this.status,
-              role: this.role,
-              password: this.password,
+            .post(`/api/entreprises/create`, {
+              name: this.name,
+              website: this.website,
+              maison: this.maison,
+              phone: this.phone,
+              sous_labels: this.sous_labels,
+              artists: this.artists,
+              genres: this.genres,
+              address: this.address,
+              indepndant: this.indepndant,
+              description: this.description,
+              facebook: this.facebook,
+              instagram: this.instagram,
+              twitter: this.twitter,
               avatar: ResultAvatar,
             })
-            .then((response) => {
+            .then((res) => {
               self.isSending = false;
-              console.log(response.data);
               self.$vs.loading.close("#save-button > .con-vs-loading");
               self.$vs.dialog({
                 color: "primary",
                 title: ``,
                 text: "Editeur crée ! ",
               });
-              this.$router.push("/editors");
+              this.$router.push("/entreprises");
             })
             .catch(function (err) {
-              console.log(err.response.data);
               self.isSending = false;
               self.$vs.loading.close("#save-button > .con-vs-loading");
               self.$vs.dialog({
                 color: "danger",
                 title: ``,
-                text: "Erreur lors de la création",
+                text: err.response.data,
               });
             });
         }

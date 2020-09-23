@@ -115,7 +115,7 @@ export default [
     },
     {
         url: null,
-        name: "Entreprises",
+        name: "Labels",
         slug: "entreprises",
         icon: "BoxIcon",
         i18n: "entreprises",
@@ -131,7 +131,7 @@ export default [
             {
                 url: "/create-entreprise",
                 name: "Ajouter un Label",
-                slug: "entreprises",
+                slug: "create-entreprise",
                 i18n: "Ajouter Label"
             }
         ]

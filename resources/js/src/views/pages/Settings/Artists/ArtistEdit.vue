@@ -1,6 +1,10 @@
 <template>
   <div class="my-4">
-    <artist-edit-account :imgURL="imgURL" v-if="artistData" :artistData="artistData" />
+    <artist-edit-account
+      :imgURL="imgURL"
+      v-if="artistData"
+      :artistData="artistData"
+    />
     <!-- <div class="vx-row">
       <div class="vx-col sm:w-1/2 w-full mb-2">
         <vs-input
@@ -73,9 +77,7 @@
             type="password"
           />
           <span class="text-danger text-sm" v-show="errors.has('password')">
-            {{
-            errors.first("password")
-            }}
+            {{ errors.first("password") }}
           </span>
         </div>
         <div class="vx-col sm:w-1/2 w-full mb-2">
@@ -87,10 +89,11 @@
             v-validate="'required|confirmed:password'"
             type="password"
           />
-          <span class="text-danger text-sm" v-show="errors.has('confirm_password')">
-            {{
-            errors.first("confirm_password")
-            }}
+          <span
+            class="text-danger text-sm"
+            v-show="errors.has('confirm_password')"
+          >
+            {{ errors.first("confirm_password") }}
           </span>
         </div>
       </div>
@@ -101,7 +104,8 @@
               class="ml-auto mt-2"
               @click="handleChangePassword"
               :disabled="isSending"
-            >Changer le mot de passe</vs-button>
+              >Changer le mot de passe</vs-button
+            >
           </div>
         </div>
       </div>
@@ -194,6 +198,7 @@ export default {
         this.imgURL = response.data.AvatarLink;
       })
       .catch(function (error) {
+        this.$vs.loading.close();
         console.error(error.response.data);
       });
   },

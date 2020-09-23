@@ -284,6 +284,17 @@ const router = new Router({
                     }
                 },
                 {
+                    path: "/entreprises/:slug/edit",
+                    name: "edit-entreprise",
+                    component: () =>
+                        import("@/views/pages/Entreprises/EntrepriseEdit.vue"),
+                    meta: {
+                        rule: "Admin",
+                        requiresAuth: true,
+                        requiresAdmin: true
+                    }
+                },
+                {
                     path: "/service/prix",
                     name: "modifier-prix",
                     component: () =>

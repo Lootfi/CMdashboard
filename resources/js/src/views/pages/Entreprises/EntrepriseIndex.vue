@@ -11,7 +11,10 @@
       search
       :data="entreprises"
     >
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <div class="flex flex-wrap-reverse items-center">
           <!-- ACTION - DROPDOWN -->
           <vs-dropdown vs-trigger-click class="cursor-pointer mr-4 mb-4">
@@ -25,7 +28,11 @@
             <vs-dropdown-menu>
               <vs-dropdown-item>
                 <span class="flex items-center">
-                  <feather-icon icon="TrashIcon" svgClasses="h-4 w-4" class="mr-2" />
+                  <feather-icon
+                    icon="TrashIcon"
+                    svgClasses="h-4 w-4"
+                    class="mr-2"
+                  />
                   <span>Supprimer</span>
                 </span>
               </vs-dropdown-item>
@@ -38,7 +45,9 @@
             @click="addNewData"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Ajouter une nouvelle entreprise</span>
+            <span class="ml-2 text-base text-primary"
+              >Ajouter une nouvelle entreprise</span
+            >
           </div>
         </div>
 
@@ -47,23 +56,29 @@
           <div
             class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
           >
-            <span
-              class="mr-2"
-            >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ entreprises.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : entreprises.length }} of {{ queriedItems }}</span>
+            <span class="mr-2"
+              >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
+              {{
+                entreprises.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : entreprises.length
+              }}
+              of {{ queriedItems }}</span
+            >
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
           <vs-dropdown-menu>
-            <vs-dropdown-item @click="itemsPerPage=4">
+            <vs-dropdown-item @click="itemsPerPage = 4">
               <span>4</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=10">
+            <vs-dropdown-item @click="itemsPerPage = 10">
               <span>10</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=15">
+            <vs-dropdown-item @click="itemsPerPage = 15">
               <span>15</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=20">
+            <vs-dropdown-item @click="itemsPerPage = 20">
               <span>20</span>
             </vs-dropdown-item>
           </vs-dropdown-menu>
@@ -76,7 +91,7 @@
         <vs-th>Actions</vs-th>
       </template>
 
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
@@ -87,7 +102,7 @@
               <feather-icon
                 icon="EditIcon"
                 svgClasses="w-5 h-5 hover:text-primary stroke-current"
-                @click.stop="editData(tr)"
+                @click.stop="editData(tr.slug)"
                 class="ml-2"
               />
               <feather-icon
@@ -132,8 +147,11 @@ export default {
     addNewData() {
       this.$router.push("/create-entreprise");
     },
+    editData(slug) {
+      this.$router.push(`/entreprises/${slug}/edit`);
+    },
     deleteData(slug) {
-      this.$http.post("/api/enreprises/" + id + "/delete").catch((err) => {
+      this.$http.post("/api/enreprises/" + slug + "/delete").catch((err) => {
         console.error(err);
         self.$vs.dialog({
           color: "danger",
