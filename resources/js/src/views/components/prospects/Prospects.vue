@@ -18,22 +18,25 @@
       :max-items="itemsPerPage"
       :data="prospects"
     >
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <!-- ITEMS PER PAGE -->
-        <vs-dropdown vs-trigger-click class="cursor-pointer mb-4 mr-4 items-per-page-handler">
+        <vs-dropdown
+          vs-trigger-click
+          class="cursor-pointer mb-4 mr-4 items-per-page-handler"
+        >
           <div
             class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
           >
             <span class="mr-2">
-              {{
-              currentPage * itemsPerPage - (itemsPerPage - 1)
-              }}
+              {{ currentPage * itemsPerPage - (itemsPerPage - 1) }}
               -
               {{
-              prospects.length - currentPage * itemsPerPage >
-              0
-              ? currentPage * itemsPerPage
-              : prospects.length
+                prospects.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : prospects.length
               }}
               of {{ queriedItems }}
             </span>
@@ -71,20 +74,27 @@
               <p class="product-name font-medium truncate">{{ tr.email }}</p>
             </vs-td>
             <vs-td>
-              <p class="product-name font-medium truncate">{{ tr.created_at }}</p>
+              <p class="product-name font-medium truncate">
+                {{ tr.created_at }}
+              </p>
             </vs-td>
             <vs-td>
               <p
                 v-if="tr.payment_authorized"
                 class="product-name font-medium truncate"
-              >en Periode d'essai</p>
-              <p v-else class="product-name font-medium truncate">Paiement non finalisé</p>
+              >
+                en Periode d'essai
+              </p>
+              <p v-else class="product-name font-medium truncate">
+                Paiement non finalisé
+              </p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
               <feather-icon
+                v-if="tr.payment_authorized && tr.can_capture"
                 icon="CreditCardIcon"
-                svgClasses="w-10 h-10 hover:text-primary stroke-current"
+                svgClasses="w-5 h-5 hover:text-primary stroke-current"
                 @click.stop="capturePayment(tr.id)"
               />
               <feather-icon

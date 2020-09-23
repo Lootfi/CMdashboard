@@ -211,6 +211,7 @@ class RegisterController extends Controller
         $artist->payment_authorized = true;
         $artist->payment_confirmed = false;
         $artist->status = true;
+        $artist->updated_at = now();
         $artist->save();
 
         $token = $this->login($artist);
