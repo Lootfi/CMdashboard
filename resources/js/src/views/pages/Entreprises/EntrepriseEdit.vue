@@ -23,8 +23,8 @@
             :ratio="1"
             bg-color="black"
             class="flex-grow-3"
-            init-width="100"
-            init-height="100"
+            :init-width="100"
+            :init-height="100"
             ref="clipper"
             :src="imgURL"
             preview="my-preview"
@@ -319,25 +319,26 @@ export default {
       type: "corners",
       text: "Patientez s'il vous plait",
     });
+    let self = this;
 
-    this.$http
-      .get(`/api/entreprises/${this.$route.params.slug}`)
+    self.$http
+      .get(`/api/entreprises/${self.$route.params.slug}`)
       .then((response) => {
         if (response.data == "Entreprise not found") {
-          this.$router.push("/entreprises");
+          self.$router.push("/entreprises");
         }
-        this.$vs.loading.close();
+        self.$vs.loading.close();
         let entreprise = response.data;
         entreprise.sous_labels = JSON.parse(response.data.sous_labels);
         entreprise.artists = JSON.parse(entreprise.artists);
         entreprise.genres = JSON.parse(entreprise.genres);
-        this.entreprise = entreprise;
-        this.imgURL = response.data.LogoLink;
+        self.entreprise = entreprise;
+        self.imgURL = response.data.LogoLink;
       })
       .catch(function (error) {
-        this.$vs.loading.close();
+        self.$vs.loading.close();
         console.error(error.response.data);
-        this.$vs.dialog({
+        self.$vs.dialog({
           color: "danger",
           title: ``,
           text: "Erreur",
