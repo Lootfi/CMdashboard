@@ -65,7 +65,7 @@ class PaymentController extends Controller
     */
     public function info()
     {
-        if ($user = Artist::find(111)) {
+        if ($user = Artist::find(request('id'))) {
             $auth = $user->payment_auth;
             try {
                 $authorization = Authorization::get($auth->auth_id, $this->_api_context);
