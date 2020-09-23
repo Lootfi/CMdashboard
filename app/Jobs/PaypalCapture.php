@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Artist;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -21,7 +22,7 @@ class PaypalCapture implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $client, $auth_id;
-    public $tries = 25;
+    public $tries = 15;
     public $timeout = 120;
     protected $_api_context;
 
@@ -32,7 +33,7 @@ class PaypalCapture implements ShouldQueue
      */
     public function __construct($artist_id, $auth_id)
     {
-        $this->client = Artist::where('id', $artist_id);
+        $this->client = Artist::where('id', $artist_id)->first();
         $this->auth_id = $auth_id;
 
         //paypal config

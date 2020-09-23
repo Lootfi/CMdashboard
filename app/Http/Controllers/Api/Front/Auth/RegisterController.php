@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Front\Auth;
 use App\ClientPaymentAuthorization;
 use App\Http\Controllers\Controller;
 use App\Jobs\CapturePayment;
+use App\Jobs\PaypalCapture;
 use App\Models\Artist;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\SendEmail;
+use App\Jobs\StripeCapture;
 use App\Price;
 use Illuminate\Support\Facades\Config;
 use PayPal\Auth\OAuthTokenCredential;
@@ -178,7 +180,7 @@ class RegisterController extends Controller
             $token = $this->login($artist);
 
             SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-            CapturePayment::dispatch($artist)->delay(Carbon::now()->addDay())->onConnection('database');
+            StripeCapture::dispatch($artist->id)->delay(Carbon::now()->addMinute())->onConnection('database');
 
             return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
         }
@@ -216,7 +218,7 @@ class RegisterController extends Controller
         $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
 
         SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-        CapturePayment::dispatch($artist)->delay(Carbon::now()->addDay())->onConnection('database');
+        PaypalCapture::dispatch($artist->id, $artist->payment_auth->auth_id)->delay(Carbon::now()->addMinute())->onConnection('database');
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }
