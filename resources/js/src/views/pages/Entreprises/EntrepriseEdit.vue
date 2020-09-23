@@ -13,8 +13,13 @@
               <clipper-upload
                 class="inline-block px-5 py-3 mx-2 cursor-pointer bg-dark text-white rounded"
                 v-model="imgURL"
+                name="logo"
+                v-validate="'required'"
                 >Changer la photo</clipper-upload
               >
+              <span class="text-danger text-sm" v-show="errors.has('logo')">{{
+                errors.first("logo")
+              }}</span>
             </div>
           </div>
         </div>

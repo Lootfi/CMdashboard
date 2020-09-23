@@ -35,6 +35,8 @@ class EntrepriseController extends Controller
             return response()->json('Un Label de meme nom déja existe', 500);
         }
 
+        return response()->json(explode('/', explode(':', substr(request('avatar'), 0, strpos(request('avatar'), ';')))[1])[1]);
+
         $entreprise = Entreprise::create([
             'name' => request('name'),
             'slug' => str_slug(request('name', str_slug(now()))) . "-" . substr(md5(mt_rand()), 0, 6),

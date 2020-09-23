@@ -151,9 +151,14 @@
         <div class="my-4">
           <clipper-upload
             class="inline-block p-2 my-2 bg-primary rounded text-white"
+            name="logo"
             v-model="imgURL"
+            v-validate="'required'"
             >Importer Le logo de label</clipper-upload
           >
+          <span class="text-danger text-sm" v-show="errors.has('logo')">{{
+            errors.first("logo")
+          }}</span>
           <div class="flex" style="max-width: 100%">
             <clipper-basic
               :ratio="1"
@@ -289,8 +294,11 @@ export default {
       e.preventDefault();
       this.$validator.validateAll().then((result) => {
         if (result) {
-          const canvas = this.$refs.clipper.clip();
-          const ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+          let ResultAvatar = "";
+          if (this.imgURL) {
+            const canvas = this.$refs.clipper.clip();
+            ResultAvatar = canvas.toDataURL("image/jpeg", 1);
+          }
           this.isSending = true;
           this.$vs.loading({
             container: "#save-button",
