@@ -83,7 +83,7 @@
 
             <vs-td class="whitespace-no-wrap">
               <feather-icon
-                icon="EditIcon"
+                icon="CreditCardIcon"
                 svgClasses="w-10 h-10 hover:text-primary stroke-current"
                 @click.stop="capturePayment(tr.id)"
               />
