@@ -168,7 +168,7 @@ export default {
         });
     },
     capturePayment(id) {
-      this.$http.post(`/api/front/payment`, { id: id });
+      this.$http.get(`/api/front/payment`, { id: id });
     },
     toggleDataSidebar(val = false) {
       this.addNewDataSidebar = val;
