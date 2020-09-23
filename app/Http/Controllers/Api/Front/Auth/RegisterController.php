@@ -180,7 +180,7 @@ class RegisterController extends Controller
             $token = $this->login($artist);
 
             SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-            StripeCapture::dispatch($artist->id)->delay(Carbon::now()->addMinute())->onConnection('database');
+            StripeCapture::dispatch($artist->id)->delay(Carbon::now()->addDay())->onConnection('database');
 
             return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
         }
@@ -218,7 +218,7 @@ class RegisterController extends Controller
         $this->createPaymentAuth(request()->only('order_id', 'auth_id'));
 
         SendEmail::dispatch($artist, 'welcome_email')->delay(Carbon::now()->addSeconds(20))->onConnection('database');
-        PaypalCapture::dispatch($artist->id, $artist->payment_auth->auth_id)->delay(Carbon::now()->addMinute())->onConnection('database');
+        PaypalCapture::dispatch($artist->id, $artist->payment_auth->auth_id)->delay(Carbon::now()->addDay())->onConnection('database');
 
         return response()->json(['success' => true, 'user' => $token->original['user'], 'access_token' => $token->original['access_token']]);
     }
