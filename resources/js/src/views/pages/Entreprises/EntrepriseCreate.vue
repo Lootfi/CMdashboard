@@ -15,22 +15,25 @@
             v-model="name"
             v-validate="'alpha_spaces|required'"
           />
-          <span class="text-danger text-sm" v-show="errors.has('name')">{{ errors.first("name") }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('name')">{{
+            errors.first("name")
+          }}</span>
         </div>
         <!-- website -->
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             class="w-full mt-4"
-            v-validate="{regex: /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ }"
+            v-validate="{
+              regex: /(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+            }"
             label="Site Web"
             type="text"
             name="website"
             v-model="website"
           />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('website')"
-          >{{ errors.first("website") }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('website')">{{
+            errors.first("website")
+          }}</span>
         </div>
         <!-- maison -->
         <div class="vx-col md:w-1/2 w-full">
@@ -41,52 +44,77 @@
             v-model="maison"
             v-validate="'alpha_spaces|required'"
           />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('maison')"
-          >{{ errors.first("maison") }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('maison')">{{
+            errors.first("maison")
+          }}</span>
         </div>
         <!-- phone -->
         <div class="vx-col md:w-1/2 w-full">
           <vs-input
             class="w-full mt-4"
-            v-validate="{regex: /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/}"
+            v-validate="{
+              regex: /^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$/,
+            }"
             label="Numéro de téléphone"
             type="text"
             name="phone"
             v-model="phone"
           />
-          <span class="text-danger text-sm" v-show="errors.has('phone')">{{ errors.first("phone") }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('phone')">{{
+            errors.first("phone")
+          }}</span>
         </div>
 
         <!-- sous_labels -->
         <div class="vx-col md:w-1/2 w-full mt-4">
           <label class="vs-input--label">Divisions / Sous-labels</label>
-          <v-select multiple taggable push-tags :clearable="false" v-model="sous_labels" />
+          <v-select
+            multiple
+            taggable
+            push-tags
+            :clearable="false"
+            v-model="sous_labels"
+          />
           <span
             class="text-danger text-sm"
             v-show="errors.has('sous_labels')"
-          >{{ errors.first("sous_labels") }}</span>
+            >{{ errors.first("sous_labels") }}</span
+          >
         </div>
 
         <!-- artists -->
         <div class="vx-col md:w-1/2 w-full mt-4">
           <label class="vs-input--label">Artistes signés</label>
-          <v-select multiple taggable push-tags :clearable="false" v-model="artists" />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('artists')"
-          >{{ errors.first("artists") }}</span>
+          <v-select
+            multiple
+            taggable
+            push-tags
+            :clearable="false"
+            v-model="artists"
+          />
+          <span class="text-danger text-sm" v-show="errors.has('artists')">{{
+            errors.first("artists")
+          }}</span>
         </div>
 
         <!-- genres -->
         <div class="vx-col md:w-1/2 w-full mt-4">
           <label class="vs-input--label">Genre musicaux</label>
-          <v-select multiple taggable push-tags :clearable="false" v-model="genres" />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('genres')"
-          >{{ errors.first("genres") }}</span>
+          <v-select
+            multiple
+            taggable
+            push-tags
+            :clearable="false"
+            v-model="genres"
+          />
+          <span class="text-danger text-sm" v-show="errors.has('genres')">{{
+            errors.first("genres")
+          }}</span>
+        </div>
+
+        <!-- indepndant -->
+        <div class="vx-col md:w-1/2 w-full mt-10 mb-5">
+          <vs-checkbox v-model="indepndant">Indépendant</vs-checkbox>
         </div>
 
         <!-- address -->
@@ -98,15 +126,9 @@
             v-model="address"
             v-validate="'required'"
           />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('address')"
-          >{{ errors.first("address") }}</span>
-        </div>
-
-        <!-- indepndant -->
-        <div class="vx-col md:w-1/2 w-full mt-4">
-          <vs-checkbox v-model="indepndant">Indépendant</vs-checkbox>
+          <span class="text-danger text-sm" v-show="errors.has('address')">{{
+            errors.first("address")
+          }}</span>
         </div>
 
         <!-- description -->
@@ -120,7 +142,8 @@
           <span
             class="text-danger text-sm"
             v-show="errors.has('description')"
-          >{{ errors.first("description") }}</span>
+            >{{ errors.first("description") }}</span
+          >
         </div>
       </div>
 
@@ -129,8 +152,9 @@
           <clipper-upload
             class="inline-block p-2 my-2 bg-primary rounded text-white"
             v-model="imgURL"
-          >Importer Le logo de label</clipper-upload>
-          <div class="flex" style="max-width: 100%;">
+            >Importer Le logo de label</clipper-upload
+          >
+          <div class="flex" style="max-width: 100%">
             <clipper-basic
               :ratio="1"
               class="flex-grow-3"
@@ -139,10 +163,19 @@
               preview="my-preview"
               :rotate="rotation"
             ></clipper-basic>
-            <clipper-preview name="my-preview" class="flex-grow-2 ml-2 my-clipper"></clipper-preview>
+            <clipper-preview
+              name="my-preview"
+              class="flex-grow-2 ml-2 my-clipper"
+            ></clipper-preview>
           </div>
           <div class="centerx" v-if="imgURL">
-            <vs-input-number min="0" max="360" step="90" v-model="rotation" label="Rotation" />
+            <vs-input-number
+              min="0"
+              max="360"
+              step="90"
+              v-model="rotation"
+              label="Rotation"
+            />
           </div>
         </div>
       </div>
@@ -158,13 +191,14 @@
             icon-no-border
             label="Twitter"
             v-model="twitter"
-            v-validate="{regex: /^((https|http):\/\/)?(www\.)?twitter\.com\/@?[A-z0-9_]+\/?$/}"
+            v-validate="{
+              regex: /^((https|http):\/\/)?(www\.)?twitter\.com\/@?[A-z0-9_]+\/?$/,
+            }"
             name="twitter"
           />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('twitter')"
-          >{{ errors.first('twitter') }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('twitter')">{{
+            errors.first("twitter")
+          }}</span>
 
           <vs-input
             class="w-full mt-4"
@@ -173,13 +207,14 @@
             icon-no-border
             label="instagram"
             v-model="instagram"
-            v-validate="{regex: /^((https|http):\/\/)?(www\.)?instagram\.com\/[A-z0-9_]+\/?$/}"
+            v-validate="{
+              regex: /^((https|http):\/\/)?(www\.)?instagram\.com\/[A-z0-9_]+\/?$/,
+            }"
             name="instagram"
           />
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('instagram')"
-          >{{ errors.first('instagram') }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('instagram')">{{
+            errors.first("instagram")
+          }}</span>
 
           <vs-input
             class="w-full mt-4"
@@ -188,14 +223,15 @@
             icon-no-border
             label="facebook"
             v-model="facebook"
-            v-validate="{regex: /^((https|http):\/\/)?(www\.)?facebook\.com\/[A-z0-9_]+\/?$/}"
+            v-validate="{
+              regex: /^((https|http):\/\/)?(www\.)?facebook\.com\/[A-z0-9_]+\/?$/,
+            }"
             name="facebook"
           />
 
-          <span
-            class="text-danger text-sm"
-            v-show="errors.has('facebook')"
-          >{{ errors.first('facebook') }}</span>
+          <span class="text-danger text-sm" v-show="errors.has('facebook')">{{
+            errors.first("facebook")
+          }}</span>
         </div>
       </div>
 
@@ -209,7 +245,8 @@
             id="save-button"
             @click="handleAccountSubmit"
             :disabled="isSending"
-          >{{ $t("save") }}</vs-button>
+            >{{ $t("save") }}</vs-button
+          >
         </div>
       </div>
     </div>
@@ -238,6 +275,9 @@ export default {
       address: "",
       indepndant: true,
       description: "",
+      facebook: "",
+      instagram: "",
+      twitter: "",
       imgURL: "",
       rotation: 0,
       avatar: "",
