@@ -1,5 +1,5 @@
 <template>
-  <div id="page-user-view" v-show="entreprise != {}">
+  <div id="page-user-view">
     <!-- Content Row -->
     <vs-card>
       <div class="vx-row">
@@ -334,9 +334,12 @@ export default {
         }
         self.$vs.loading.close();
         let entreprise = response.data;
-        entreprise.sous_labels = JSON.parse(response.data.sous_labels);
-        entreprise.artists = JSON.parse(entreprise.artists);
-        entreprise.genres = JSON.parse(entreprise.genres);
+        if (response.data.sous_labels)
+          entreprise.sous_labels = JSON.parse(response.data.sous_labels);
+        if (entreprise.artists)
+          entreprise.artists = JSON.parse(entreprise.artists);
+        if (entreprise.genres)
+          entreprise.genres = JSON.parse(entreprise.genres);
         self.entreprise = entreprise;
         self.imgURL = response.data.LogoLink;
       })
