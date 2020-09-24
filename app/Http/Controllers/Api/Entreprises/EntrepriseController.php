@@ -112,7 +112,14 @@ class EntrepriseController extends Controller
         if (!$entreprise = Entreprise::where('slug', $slug)->first()) {
             return response()->json('Not Found', 404);
         }
+        $ecs = $entreprise->entreprise_contacts;
+
+        foreach ($ecs as $key => $ec) {
+            $ec->delete();
+        }
+
         $entreprise->delete();
+
 
         return response()->json('Entreprise Deleted', 200);
     }

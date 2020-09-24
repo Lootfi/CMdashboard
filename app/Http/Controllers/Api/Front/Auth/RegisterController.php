@@ -293,17 +293,23 @@ class RegisterController extends Controller
     */
     public function createCustomer()
     {
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
-        $customer = \Stripe\Customer::create();
+        $customer = $stripe->customers->create();
         $artist = Artist::where('email', request('email'))->first();
-        $intent = \Stripe\SetupIntent::create([
+        $intent = $stripe->setupIntents->create([
             'customer' => $customer->id
         ]);
 
         if (
             $auth = $artist->payment_auth
         ) {
+            if ($auth->stripe_customer_id) {
+                try {
+                    $stripe->customers->delete($auth->stripe_customer_id, []);
+                } catch (\Throwable $th) {
+                }
+            }
             $auth->stripe_customer_id = $customer->id;
             $auth->updated_at = now();
             $auth->save();

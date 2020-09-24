@@ -85,7 +85,7 @@ Route::group(['middleware' => ['jwt.verify:Admin']], function () {
 		Route::post('/create', 'EntrepriseController@create');
 		Route::get('/{slug}', 'EntrepriseController@show');
 		Route::post('/{slug}/edit', 'EntrepriseController@edit');
-		Route::get('/{slug}/delete', 'EntrepriseController@delete');
+		Route::post('/{slug}/delete', 'EntrepriseController@delete');
 	});
 });
 

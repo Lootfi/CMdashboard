@@ -390,7 +390,7 @@ export default {
               self.$vs.dialog({
                 color: "primary",
                 title: ``,
-                text: "Editeur crée ! ",
+                text: "Editeur modifié ! ",
               });
               this.$router.push("/entreprises");
             })

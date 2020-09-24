@@ -109,7 +109,7 @@
                 icon="TrashIcon"
                 svgClasses="w-5 h-5 hover:text-danger stroke-current"
                 class="ml-2"
-                @click.stop="deleteData(tr.slug)"
+                @click.stop="deleteData(tr)"
               />
             </vs-td>
           </vs-tr>
@@ -150,16 +150,32 @@ export default {
     editData(slug) {
       this.$router.push(`/entreprises/${slug}/edit`);
     },
-    deleteData(slug) {
-      this.$http.post("/api/enreprises/" + slug + "/delete").catch((err) => {
-        console.error(err);
-        self.$vs.dialog({
-          color: "danger",
-          title: ``,
-          text: "Erreur lors de suppression ",
-        });
+    deleteData(tr) {
+      this.$vs.dialog({
+        type: "confirm",
+        color: "danger",
+        title: "Confirmation",
+        text: `Vous allez supprimer le label ${tr.name}`,
+        accept: this.confirmDeleteData,
+        acceptText: "Supprimer",
+        cancelText: "Annuler",
+        parameters: tr.slug,
       });
-      window.location.reload();
+    },
+    confirmDeleteData(slug) {
+      this.$http
+        .post("/api/entreprises/" + slug + "/delete")
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.error(err);
+          self.$vs.dialog({
+            color: "danger",
+            title: ``,
+            text: "Erreur lors de suppression ",
+          });
+        });
     },
   },
   created() {

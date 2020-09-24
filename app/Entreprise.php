@@ -37,4 +37,9 @@ class Entreprise extends Model
     {
         return $this->belongsToMany(Contact::class, 'entreprise_contacts', 'entreprise_id', 'contact_id');
     }
+
+    public function entreprise_contacts()
+    {
+        return $this->hasMany(EntrepriseContact::class, 'entreprise_id', 'id');
+    }
 }
