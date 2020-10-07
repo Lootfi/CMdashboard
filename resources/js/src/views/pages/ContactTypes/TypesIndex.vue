@@ -18,7 +18,10 @@
       search
       :data="types"
     >
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <div class="flex flex-wrap-reverse items-center">
           <!-- ACTION - DROPDOWN -->
           <vs-dropdown vs-trigger-click class="cursor-pointer mr-4 mb-4">
@@ -32,7 +35,11 @@
             <vs-dropdown-menu>
               <vs-dropdown-item>
                 <span class="flex items-center">
-                  <feather-icon icon="TrashIcon" svgClasses="h-4 w-4" class="mr-2" />
+                  <feather-icon
+                    icon="TrashIcon"
+                    svgClasses="h-4 w-4"
+                    class="mr-2"
+                  />
                   <span>Supprimer</span>
                 </span>
               </vs-dropdown-item>
@@ -45,7 +52,9 @@
             @click="addNewData"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Ajouter un nouveau type</span>
+            <span class="ml-2 text-base text-primary"
+              >Ajouter un nouveau type</span
+            >
           </div>
         </div>
 
@@ -54,23 +63,29 @@
           <div
             class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
           >
-            <span
-              class="mr-2"
-            >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ types.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : types.length }} of {{ queriedItems }}</span>
+            <span class="mr-2"
+              >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
+              {{
+                types.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : types.length
+              }}
+              of {{ queriedItems }}</span
+            >
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
           <vs-dropdown-menu>
-            <vs-dropdown-item @click="itemsPerPage=4">
+            <vs-dropdown-item @click="itemsPerPage = 4">
               <span>4</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=10">
+            <vs-dropdown-item @click="itemsPerPage = 10">
               <span>10</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=15">
+            <vs-dropdown-item @click="itemsPerPage = 15">
               <span>15</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=20">
+            <vs-dropdown-item @click="itemsPerPage = 20">
               <span>20</span>
             </vs-dropdown-item>
           </vs-dropdown-menu>
@@ -84,7 +99,7 @@
         <vs-th>Actions</vs-th>
       </template>
 
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td>
@@ -92,7 +107,7 @@
             </vs-td>
 
             <vs-td>
-              <p class="type-contacts-num">{{tr.contacts_num}}</p>
+              <p class="type-contacts-num">{{ tr.contacts_num }}</p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
@@ -178,12 +193,18 @@ export default {
   },
   created() {
     let self = this;
+    self.$vs.loading({
+      type: "default",
+      text: "Patientez s'il vous plait",
+    });
     this.$http
       .get("/api/types")
       .then((res) => {
+        self.$vs.loading.close();
         self.types = res.data;
       })
       .catch((err) => {
+        self.$vs.loading.close();
         console.log(err.response.data);
         self.$vs.dialog({
           color: "danger",

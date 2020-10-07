@@ -12,7 +12,10 @@
       search
       :data="contacts"
     >
-      <div slot="header" class="flex flex-wrap-reverse items-center flex-grow justify-between">
+      <div
+        slot="header"
+        class="flex flex-wrap-reverse items-center flex-grow justify-between"
+      >
         <div class="flex flex-wrap-reverse items-center">
           <!-- ADD NEW -->
           <div
@@ -20,7 +23,9 @@
             @click="$router.push('/create-contact').catch(() => {})"
           >
             <feather-icon icon="PlusIcon" svgClasses="h-4 w-4" />
-            <span class="ml-2 text-base text-primary">Ajouter un nouveau Contact</span>
+            <span class="ml-2 text-base text-primary"
+              >Ajouter un nouveau Contact</span
+            >
           </div>
         </div>
 
@@ -29,23 +34,29 @@
           <div
             class="p-4 border border-solid d-theme-border-grey-light rounded-full d-theme-dark-bg cursor-pointer flex items-center justify-between font-medium"
           >
-            <span
-              class="mr-2"
-            >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} - {{ contacts.length - currentPage * itemsPerPage > 0 ? currentPage * itemsPerPage : contacts.length }} of {{ queriedItems }}</span>
+            <span class="mr-2"
+              >{{ currentPage * itemsPerPage - (itemsPerPage - 1) }} -
+              {{
+                contacts.length - currentPage * itemsPerPage > 0
+                  ? currentPage * itemsPerPage
+                  : contacts.length
+              }}
+              of {{ queriedItems }}</span
+            >
             <feather-icon icon="ChevronDownIcon" svgClasses="h-4 w-4" />
           </div>
           <!-- <vs-button class="btn-drop" type="line" color="primary" icon-pack="feather" icon="icon-chevron-down"></vs-button> -->
           <vs-dropdown-menu>
-            <vs-dropdown-item @click="itemsPerPage=4">
+            <vs-dropdown-item @click="itemsPerPage = 4">
               <span>4</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=10">
+            <vs-dropdown-item @click="itemsPerPage = 10">
               <span>10</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=15">
+            <vs-dropdown-item @click="itemsPerPage = 15">
               <span>15</span>
             </vs-dropdown-item>
-            <vs-dropdown-item @click="itemsPerPage=20">
+            <vs-dropdown-item @click="itemsPerPage = 20">
               <span>20</span>
             </vs-dropdown-item>
           </vs-dropdown-menu>
@@ -61,11 +72,14 @@
         <vs-th>Action</vs-th>
       </template>
 
-      <template slot-scope="{data}">
+      <template slot-scope="{ data }">
         <tbody>
           <vs-tr :data="tr" :key="indextr" v-for="(tr, indextr) in data">
             <vs-td class="img-container">
-              <img :src="'/images/contacts/' + tr.picture" class="product-img" />
+              <img
+                :src="'/images/contacts/' + tr.picture"
+                class="product-img"
+              />
             </vs-td>
 
             <vs-td>
@@ -77,7 +91,9 @@
             </vs-td>
 
             <vs-td>
-              <p class="contact-country font-medium truncate">{{ tr.country }}</p>
+              <p class="contact-country font-medium truncate">
+                {{ tr.country }}
+              </p>
             </vs-td>
 
             <vs-td class="whitespace-no-wrap">
@@ -218,11 +234,10 @@ export default {
   },
   created() {
     let self = this;
-    // if (!moduleDataList.isRegistered) {
-    //   this.$store.registerModule("dataList", moduleDataList);
-    //   moduleDataList.isRegistered = true;
-    // }
-    // this.$store.dispatch("dataList/fetchDataListItems");
+    self.$vs.loading({
+      type: "default",
+      text: "Patientez s'il vous plait",
+    });
     this.$http
       .get("/api/contacts", {
         headers: {
@@ -231,9 +246,11 @@ export default {
       })
       .then((res) => {
         self.contacts = res.data;
+        self.$vs.loading.close();
       })
       .catch((err) => {
         console.log(err.response.data);
+        self.$vs.loading.close();
         self.$vs.dialog({
           color: "danger",
           title: ``,

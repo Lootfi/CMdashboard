@@ -272,6 +272,7 @@
         <div class="mt-8 flex flex-wrap items-center justify-end">
           <vs-button
             class="ml-auto mt-2"
+            id="save-button"
             @click="save_changes"
             :disabled="!validateForm"
             >Save Changes</vs-button
@@ -380,13 +381,21 @@ export default {
           .clip()
           .toDataURL("image/jpeg", 1);
       else information["picture"] = null;
+      this.$vs.loading({
+        container: "#save-button",
+        scale: 0.45,
+      });
 
       this.$http
         .post("/api/contacts/" + slug + "/edit", information)
         .then((res) => {
+          this.$vs.loading.close();
           this.$router.push("/contacts/" + slug);
         })
-        .catch((err) => console.log(err.response.data));
+        .catch((err) => {
+          console.log(err.response.data);
+          this.$vs.loading.close();
+        });
 
       /* eslint-enable */
     },

@@ -211,6 +211,7 @@
       <div class="vx-col w-full">
         <div class="mt-8 flex flex-wrap items-center justify-end">
           <vs-button
+            id="save-button"
             class="ml-auto mt-2"
             @click="handleContactSubmit"
             :disabled="isSending"
@@ -299,6 +300,10 @@ export default {
             ResultAvatar = canvas.toDataURL("image/jpeg", 1);
           }
           self.isSending = true;
+          this.$vs.loading({
+            container: "#save-button",
+            scale: 0.45,
+          });
           this.$http
             .post(`/api/contacts/create`, {
               title: self.title,
@@ -316,6 +321,7 @@ export default {
               type_id: self.type.value,
             })
             .then((response) => {
+              this.$vs.loading.close();
               console.log(response.data);
               self.isSending = false;
               self.$vs.notify({
@@ -326,6 +332,7 @@ export default {
               self.$router.push("/contacts");
             })
             .catch(function (error) {
+              this.$vs.loading.close();
               console.log(error.response.data);
               self.isSending = false;
               if (error.response.data === "Contact exists") {
