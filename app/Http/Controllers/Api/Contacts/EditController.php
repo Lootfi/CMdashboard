@@ -18,7 +18,16 @@ class EditController extends Controller
 {
     public function edit($slug)
     {
-        $payload = request(['username', 'prenom', 'name', 'email', 'mobile', 'country', 'state', 'title', 'picture', 'instagram', 'twitter', 'linkedin', 'type_id']);
+        $payload = request([
+            'username', 'prenom', 'name', 'email', 'mobile', 'country', 'state', 'title',
+            'picture',
+            'instagram',
+            'twitter',
+            'linkedin',
+            'type_id',
+            'description_poste',
+            'description_media'
+        ]);
 
         if ($contact = Contact::fetchBySlug($slug)) {
             if (request('username')) {
@@ -48,6 +57,14 @@ class EditController extends Controller
 
             if (request('type_id')) {
                 $contact->type_id = $payload['type_id'];
+            }
+
+            if (request('description_poste')) {
+                $contact->description_poste = $payload['description_poste'];
+            }
+
+            if (request('description_media')) {
+                $contact->description_media = $payload['description_media'];
             }
 
             if (request('picture')) {

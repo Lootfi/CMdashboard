@@ -20,7 +20,12 @@ class CreateController extends Controller
 	{
 
 		$payload = request([
-			'name', 'email', 'mobile', 'country', 'state', 'picture', 'title', 'prenom', 'username', 'entreprises', 'type_id'
+			'name', 'email', 'mobile', 'country', 'state', 'picture', 'title', 'prenom',
+			'username',
+			'entreprises',
+			'type_id',
+			'description_poste',
+			'description_media'
 		]);
 
 
@@ -59,6 +64,14 @@ class CreateController extends Controller
 
 				if (request('type_id')) {
 					$contact->type_id = $payload['type_id'];
+				}
+
+				if (request('description_poste')) {
+					$contact->description_poste = $payload['description_poste'];
+				}
+
+				if (request('description_media')) {
+					$contact->description_media = $payload['description_media'];
 				}
 
 
