@@ -34,24 +34,14 @@ class PaymentController extends Controller
         $this->_api_context->setConfig($paypal_conf['settings']);
     }
 
-    public function capture()
+    public function get_info()
     {
         try {
-            // $user = Artist::where('id', 30)->with('payment_auth')->first();
-            $authorization = Authorization::get('4UA01537HM049522A', $this->_api_context);
+            $authorization = Authorization::get('7LS07389ED560333S', $this->_api_context);
 
             dd($authorization);
-
-            $amt = new Amount();
-            $amt->setCurrency($authorization->getAmount()->getCurrency())->setTotal($authorization->getAmount()->getTotal());
-
-            $capture = new Capture();
-            $capture->setAmount($amt);
-
-            $getCapture = $authorization->capture($capture, $this->_api_context);
-
-            dd($getCapture);
         } catch (\Exception $ex) {
+            dd($ex);
             // dd($capture, $authorization);
         }
     }

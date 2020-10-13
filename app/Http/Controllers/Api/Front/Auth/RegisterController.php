@@ -295,10 +295,12 @@ class RegisterController extends Controller
     {
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
 
-        $customer = $stripe->customers->create();
         $artist = Artist::where('email', request('email'))->first();
+        $customer = $stripe->customers->create([
+            'email' => $artist->email
+        ]);
         $intent = $stripe->setupIntents->create([
-            'customer' => $customer->id
+            'customer' => $customer->id,
         ]);
 
         if (

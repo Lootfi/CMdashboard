@@ -149,6 +149,7 @@ Route::group(['prefix' => 'front', 'namespace' => 'Front'], function () {
 
 	Route::group(['prefix' => 'payment', 'namespace' => 'Payments'], function () {
 		Route::post('/', 'PaymentController@info');
+		Route::post('/info', 'PaymentController@get_info');
 	});
 });
 
