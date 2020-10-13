@@ -86,31 +86,31 @@ class RegisterController extends Controller
     public function validateEmail()
     {
 
-        // $curl = curl_init();
-        // curl_setopt_array($curl, array(
-        //     CURLOPT_URL => 'https://api.clearout.io/v2/email_verify/instant',
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_ENCODING => '',
-        //     CURLOPT_MAXREDIRS => 10,
-        //     CURLOPT_TIMEOUT => 30,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST => 'POST',
-        //     CURLOPT_POSTFIELDS => '{"email": "' . request('email') . '"}',
-        //     CURLOPT_HTTPHEADER => array(
-        //         "Content-Type: application/json",
-        //         "Authorization: Bearer:" . env('CLEAROUT_TOKEN')
-        //     ),
-        // ));
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.clearout.io/v2/email_verify/instant',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{"email": "' . request('email') . '"}',
+            CURLOPT_HTTPHEADER => array(
+                "Content-Type: application/json",
+                "Authorization: Bearer:" . env('CLEAROUT_TOKEN')
+            ),
+        ));
 
-        // $response = curl_exec($curl);
-        // $err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
 
-        // curl_close($curl);
 
-        // if (!$err && $response['data']['status'] == "invalid") {
-        //     $response = json_decode($response, true);
-        //     return response()->json(['status' => $response['data']['status']]);
-        // }
+        curl_close($curl);
+
+        if (!$err && json_decode($response)->data->status == "invalid") {
+            return response()->json(['status' => "invalid"]);
+        }
 
         if ($existingArtist = Artist::where('email', request('email'))->first()) {
             if ($existingArtist->payment_authorized) {
